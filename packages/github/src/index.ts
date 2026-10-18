@@ -5,12 +5,43 @@ export {
   CONNECTOR_KEY,
   CONNECTOR_NAME,
   CONNECTOR_VERSION,
+  GITHUB_ISSUE_GET_TOOL,
+  GITHUB_ISSUE_LIST_TOOL,
   GITHUB_REPOSITORY_GET_TOOL,
   GITHUB_TOKEN_ENV,
+  ISSUE_LIST_DEFAULT_PER_PAGE,
+  ISSUE_LIST_MAX_PAGE,
+  ISSUE_LIST_MAX_PER_PAGE,
+  MAX_LABEL_NAME_LENGTH,
+  MAX_LABELS_PER_ISSUE,
 } from "./constants.js";
-export type { GithubRepositoryClient } from "./github-client.js";
-export { createOctokitRepositoryClient } from "./octokit-client.js";
-export type { CreateOctokitRepositoryClientOptions } from "./octokit-client.js";
+export type {
+  GithubClient,
+  GithubIssueRecord,
+  GithubListIssuesResult,
+  GithubRepositoryClient,
+  GithubRepositoryRecord,
+} from "./github-client.js";
+export {
+  createOctokitGithubClient,
+  createOctokitRepositoryClient,
+} from "./octokit-client.js";
+export type {
+  CreateOctokitGithubClientOptions,
+  CreateOctokitRepositoryClientOptions,
+} from "./octokit-client.js";
+export {
+  issueGetInputSchema,
+  issueListInputSchema,
+  issueListOutputSchema,
+  normalizedIssueSchema,
+} from "./issue-schemas.js";
+export type {
+  IssueGetInput,
+  IssueListInput,
+  IssueListOutput,
+  NormalizedIssue,
+} from "./issue-schemas.js";
 export {
   repositoryGetInputSchema,
   repositoryGetOutputSchema,

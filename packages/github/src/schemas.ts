@@ -1,7 +1,7 @@
 import type { DefineToolOptions } from "@osva-ai/connector-sdk";
 import { z } from "zod";
 
-const githubSlugSchema = z
+export const githubSlugSchema = z
   .string()
   .trim()
   .min(1, "Value is required.")

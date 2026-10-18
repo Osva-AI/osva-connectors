@@ -3,7 +3,11 @@ import { InMemoryTransport } from "@modelcontextprotocol/client";
 import { createMcpServerFromConnector } from "@osva-ai/connector-sdk";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { GITHUB_REPOSITORY_GET_TOOL } from "../src/constants.js";
+import {
+  GITHUB_ISSUE_GET_TOOL,
+  GITHUB_ISSUE_LIST_TOOL,
+  GITHUB_REPOSITORY_GET_TOOL,
+} from "../src/constants.js";
 import { createGithubConnector } from "../src/connector.js";
 import {
   createMockGithubClient,
@@ -40,9 +44,15 @@ describe("MCP compatibility", () => {
     await client.connect(clientTransport);
 
     const tools = await client.listTools({});
-    expect(tools.tools.map((tool) => tool.name)).toContain(
-      GITHUB_REPOSITORY_GET_TOOL,
+    const toolNames = tools.tools.map((tool) => tool.name);
+    expect(toolNames).toEqual(
+      expect.arrayContaining([
+        GITHUB_REPOSITORY_GET_TOOL,
+        GITHUB_ISSUE_LIST_TOOL,
+        GITHUB_ISSUE_GET_TOOL,
+      ]),
     );
+    expect(new Set(toolNames).size).toBe(toolNames.length);
 
     const result = await client.callTool({
       name: GITHUB_REPOSITORY_GET_TOOL,
@@ -54,6 +64,44 @@ describe("MCP compatibility", () => {
       name: sampleRepository.name,
       fullName: sampleRepository.full_name,
       htmlUrl: sampleRepository.html_url,
+    });
+  });
+
+  it("calls github.issue.list via MCP with default pagination when optional fields are omitted", async () => {
+    const mockClient = createMockGithubClient();
+    const connector = createGithubConnector({ client: mockClient });
+    const server = createMcpServerFromConnector(connector);
+    const [clientTransport, serverTransport] =
+      InMemoryTransport.createLinkedPair();
+
+    const client = new Client({ name: "test-client", version: "1.0.0" });
+    clients.push(client);
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: GITHUB_ISSUE_LIST_TOOL,
+      arguments: { owner: "Osva-AI", repo: "osva" },
+    });
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      page: 1,
+      perPage: 20,
+      issues: expect.any(Array),
+    });
+    expect(JSON.stringify(result)).not.toMatch(
+      /pull_request|Octokit|HttpError/i,
+    );
+    expect(mockClient.listIssues).toHaveBeenCalledTimes(1);
+    expect(mockClient.listIssues).toHaveBeenCalledWith({
+      owner: "Osva-AI",
+      repo: "osva",
+      state: "open",
+      perPage: 20,
+      page: 1,
+      signal: undefined,
     });
   });
 
