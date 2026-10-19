@@ -6,17 +6,20 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   POSTGRES_COLUMN_LIST_TOOL,
   POSTGRES_CONNECTION_TEST_TOOL,
+  POSTGRES_QUERY_READ_TOOL,
   POSTGRES_SCHEMA_LIST_TOOL,
   POSTGRES_TABLE_LIST_TOOL,
 } from "../src/constants.js";
 import { createPostgresConnector } from "../src/connector.js";
 import { createMockPostgresDatabase } from "./helpers/mock-postgres-database.js";
+import { defaultConnectorOptions } from "./helpers/test-config.js";
 
 const EXPECTED_TOOLS = [
   POSTGRES_CONNECTION_TEST_TOOL,
   POSTGRES_SCHEMA_LIST_TOOL,
   POSTGRES_TABLE_LIST_TOOL,
   POSTGRES_COLUMN_LIST_TOOL,
+  POSTGRES_QUERY_READ_TOOL,
 ];
 
 describe("MCP compatibility", () => {
@@ -34,10 +37,10 @@ describe("MCP compatibility", () => {
     );
   });
 
-  it("discovers all four postgres tools", async () => {
-    const connector = createPostgresConnector({
-      database: createMockPostgresDatabase(),
-    });
+  it("discovers all five postgres tools", async () => {
+    const connector = createPostgresConnector(
+      defaultConnectorOptions(createMockPostgresDatabase()),
+    );
     const server = createMcpServerFromConnector(connector);
     const [clientTransport, serverTransport] =
       InMemoryTransport.createLinkedPair();
@@ -57,9 +60,9 @@ describe("MCP compatibility", () => {
   });
 
   it("supports tools/call for postgres.connection.test", async () => {
-    const connector = createPostgresConnector({
-      database: createMockPostgresDatabase(),
-    });
+    const connector = createPostgresConnector(
+      defaultConnectorOptions(createMockPostgresDatabase()),
+    );
     const server = createMcpServerFromConnector(connector);
     const [clientTransport, serverTransport] =
       InMemoryTransport.createLinkedPair();
@@ -83,11 +86,15 @@ describe("MCP compatibility", () => {
   });
 
   it("returns sanitized errors without stack traces or credentials", async () => {
-    const connector = createPostgresConnector({
-      database: createMockPostgresDatabase({
-        queryError: Object.assign(new Error("28P01 secret"), { code: "28P01" }),
-      }),
-    });
+    const connector = createPostgresConnector(
+      defaultConnectorOptions(
+        createMockPostgresDatabase({
+          queryError: Object.assign(new Error("28P01 secret"), {
+            code: "28P01",
+          }),
+        }),
+      ),
+    );
     const server = createMcpServerFromConnector(connector);
     const [clientTransport, serverTransport] =
       InMemoryTransport.createLinkedPair();

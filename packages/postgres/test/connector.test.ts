@@ -7,6 +7,7 @@ import {
 } from "../src/constants.js";
 import { createPostgresConnector } from "../src/connector.js";
 import { createMockPostgresDatabase } from "./helpers/mock-postgres-database.js";
+import { defaultConnectorOptions } from "./helpers/test-config.js";
 
 describe("postgres.connection.test", () => {
   it("executes only the fixed health query", async () => {
@@ -16,7 +17,9 @@ describe("postgres.connection.test", () => {
         queries.push(sql);
       },
     });
-    const connector = createPostgresConnector({ database });
+    const connector = createPostgresConnector(
+      defaultConnectorOptions(database),
+    );
     const tool = connector.tools.find(
       (t) => t.name === POSTGRES_CONNECTION_TEST_TOOL,
     );
@@ -34,9 +37,9 @@ describe("postgres.connection.test", () => {
   });
 
   it("rejects unexpected input properties", async () => {
-    const connector = createPostgresConnector({
-      database: createMockPostgresDatabase(),
-    });
+    const connector = createPostgresConnector(
+      defaultConnectorOptions(createMockPostgresDatabase()),
+    );
     const tool = connector.tools.find(
       (t) => t.name === POSTGRES_CONNECTION_TEST_TOOL,
     )!;
@@ -49,11 +52,15 @@ describe("postgres.connection.test", () => {
   });
 
   it("maps connection failures to sanitized connector errors", async () => {
-    const connector = createPostgresConnector({
-      database: createMockPostgresDatabase({
-        queryError: Object.assign(new Error("boom"), { code: "ECONNREFUSED" }),
-      }),
-    });
+    const connector = createPostgresConnector(
+      defaultConnectorOptions(
+        createMockPostgresDatabase({
+          queryError: Object.assign(new Error("boom"), {
+            code: "ECONNREFUSED",
+          }),
+        }),
+      ),
+    );
     const tool = connector.tools.find(
       (t) => t.name === POSTGRES_CONNECTION_TEST_TOOL,
     )!;

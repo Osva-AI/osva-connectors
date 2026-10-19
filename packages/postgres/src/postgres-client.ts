@@ -1,11 +1,28 @@
 import { Pool, type PoolConfig } from "pg";
 
 import { parsePostgresConnectionUrl } from "./parse-connection-url.js";
+import { executeReadOnlySelect } from "./query-read/read-only-transaction.js";
 import type { PostgresConfig } from "./schemas.js";
 import { resolveNodePostgresSslOption } from "./ssl.js";
 
 export interface PostgresQueryResult {
   readonly rows: ReadonlyArray<Record<string, unknown>>;
+}
+
+export interface PostgresReadOnlySelectOptions {
+  readonly sql: string;
+  readonly params: readonly unknown[];
+  readonly maxRows: number;
+  readonly statementTimeoutMs: number;
+  readonly lockTimeoutMs: number;
+  readonly signal?: AbortSignal;
+}
+
+export interface PostgresReadOnlySelectResult {
+  readonly columns: ReadonlyArray<{ name: string; dataType: string }>;
+  readonly rows: unknown[][];
+  readonly rowCount: number;
+  readonly truncated: boolean;
 }
 
 export interface PostgresDatabase {
@@ -16,15 +33,12 @@ export interface PostgresDatabase {
       readonly signal?: AbortSignal;
     },
   ): Promise<PostgresQueryResult>;
+  runReadOnlySelect(
+    options: PostgresReadOnlySelectOptions,
+  ): Promise<PostgresReadOnlySelectResult>;
   end(): Promise<void>;
 }
 
-/**
- * Pool-level PostgreSQL `statement_timeout` (milliseconds) is enforced by the
- * server and cancels long-running statements. This avoids client-only
- * Promise.race timeouts that leave queries running while pool connections stay
- * busy.
- */
 export function createPostgresPoolConfig(config: PostgresConfig): PoolConfig {
   const { connectionString } = parsePostgresConnectionUrl(config.connectionUrl);
   return {
@@ -40,32 +54,25 @@ export function createPostgresPool(config: PostgresConfig): Pool {
   return new Pool(createPostgresPoolConfig(config));
 }
 
-function isAbortError(error: unknown): boolean {
-  if (error instanceof DOMException && error.name === "AbortError") {
-    return true;
-  }
-  return error instanceof Error && error.name === "AbortError";
-}
-
-export function createPgDatabase(pool: Pool): PostgresDatabase {
+export function createPgDatabase(
+  pool: Pool,
+  config: PostgresConfig,
+): PostgresDatabase {
+  void config;
   return {
     async query(sql, values = [], options) {
       if (options?.signal?.aborted) {
         throw new DOMException("Aborted", "AbortError");
       }
 
-      try {
-        const result = await pool.query(sql, values as unknown[]);
-        if (options?.signal?.aborted) {
-          throw new DOMException("Aborted", "AbortError");
-        }
-        return { rows: result.rows as Record<string, unknown>[] };
-      } catch (error) {
-        if (isAbortError(error)) {
-          throw error;
-        }
-        throw error;
+      const result = await pool.query(sql, values as unknown[]);
+      if (options?.signal?.aborted) {
+        throw new DOMException("Aborted", "AbortError");
       }
+      return { rows: result.rows as Record<string, unknown>[] };
+    },
+    async runReadOnlySelect(options) {
+      return executeReadOnlySelect(pool, options);
     },
     async end() {
       await pool.end();

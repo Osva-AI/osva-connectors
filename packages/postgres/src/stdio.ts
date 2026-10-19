@@ -31,12 +31,13 @@ function registerShutdownHandlers(database: { end(): Promise<void> }): void {
 
 const config = loadPostgresConfig(process.env);
 const pool = createPostgresPool(config);
-const database = createPgDatabase(pool);
+const database = createPgDatabase(pool, config);
 registerShutdownHandlers(database);
 
 const connector = createPostgresConnector({
   database,
   allowedSchemas: config.allowedSchemas,
+  queryTimeoutMs: config.queryTimeoutMs,
 });
 
 try {

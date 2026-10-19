@@ -15,13 +15,15 @@ import type {
 import { SCHEMA_LIST_SQL, TABLE_LIST_SQL } from "../src/discovery/queries.js";
 import { encodeTableCursor } from "../src/discovery/cursor.js";
 import { createMockPostgresDatabase } from "./helpers/mock-postgres-database.js";
+import { defaultConnectorOptions } from "./helpers/test-config.js";
 
 describe("postgres discovery tools", () => {
   function connector(allowedSchemas?: readonly string[]) {
-    return createPostgresConnector({
-      database: createMockPostgresDatabase(),
-      allowedSchemas,
-    });
+    return createPostgresConnector(
+      defaultConnectorOptions(createMockPostgresDatabase(), {
+        allowedSchemas,
+      }),
+    );
   }
 
   function tool(name: string) {
@@ -39,7 +41,7 @@ describe("postgres discovery tools", () => {
     const database = createMockPostgresDatabase({
       onQuery: (sql, values) => queries.push({ sql, values }),
     });
-    const c = createPostgresConnector({ database });
+    const c = createPostgresConnector(defaultConnectorOptions(database));
     const schemaTool = c.tools.find(
       (t) => t.name === POSTGRES_SCHEMA_LIST_TOOL,
     )!;
@@ -137,7 +139,7 @@ describe("postgres discovery tools", () => {
     const database = createMockPostgresDatabase({
       onQuery: (sql, values) => queries.push({ sql, values }),
     });
-    const c = createPostgresConnector({ database });
+    const c = createPostgresConnector(defaultConnectorOptions(database));
     const tableTool = c.tools.find((t) => t.name === POSTGRES_TABLE_LIST_TOOL)!;
     await tableTool.handler(
       { schema: "app" },
@@ -158,9 +160,9 @@ describe("postgres discovery tools", () => {
       }
       return originalQuery(sql, values, options);
     };
-    const schemaTool = createPostgresConnector({ database }).tools.find(
-      (t) => t.name === POSTGRES_SCHEMA_LIST_TOOL,
-    )!;
+    const schemaTool = createPostgresConnector(
+      defaultConnectorOptions(database),
+    ).tools.find((t) => t.name === POSTGRES_SCHEMA_LIST_TOOL)!;
     await expect(
       schemaTool.handler({}, { signal: new AbortController().signal }),
     ).rejects.toBeInstanceOf(ConnectorSdkError);

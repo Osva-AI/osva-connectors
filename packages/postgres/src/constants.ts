@@ -7,6 +7,7 @@ export const POSTGRES_CONNECTION_TEST_TOOL = "postgres.connection.test";
 export const POSTGRES_SCHEMA_LIST_TOOL = "postgres.schema.list";
 export const POSTGRES_TABLE_LIST_TOOL = "postgres.table.list";
 export const POSTGRES_COLUMN_LIST_TOOL = "postgres.column.list";
+export const POSTGRES_QUERY_READ_TOOL = "postgres.query.read";
 
 export const POSTGRES_URL_ENV = "OSVA_CONNECTOR_POSTGRES_URL";
 export const POSTGRES_ALLOWED_SCHEMAS_ENV =

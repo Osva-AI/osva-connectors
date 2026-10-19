@@ -1,8 +1,8 @@
 # @osva-ai/connector-postgres
 
-PostgreSQL **read-only** connector for [OSVA Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md): connection health checks and **catalog discovery** using fixed SQL only.
+PostgreSQL **read-only** connector for [OSVA Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md): connection health checks, **catalog discovery** (fixed SQL), and **bounded parameterized SELECT** queries (`postgres.query.read`).
 
-**Not supported:** arbitrary SQL, writes, credential exposure, or unbounded catalog dumps.
+**Not supported:** writes, credential exposure, or unbounded result dumps. Arbitrary SQL is **not** a complete sandbox—database grants, RLS, and PostgreSQL execution semantics remain authoritative.
 
 ## Configuration
 
@@ -105,6 +105,63 @@ Lists columns for one table/view/matview (no defaults, comments, or generated ex
 
 **Output:** `{ columns: [{ name, dataType, nullable, ordinalPosition }], nextCursor? }`
 
+### `postgres.query.read`
+
+Runs **one** parameterized **SELECT** (including `WITH`, `UNION`, `VALUES`) inside an explicit **`BEGIN READ ONLY`** transaction on a single checked-out pool client, with transaction-local **`statement_timeout`** and **`lock_timeout`**, then **`ROLLBACK`**.
+
+**Input**
+
+| Field     | Type            | Default | Limits                                                               |
+| --------- | --------------- | ------- | -------------------------------------------------------------------- |
+| `sql`     | string          | —       | Required, max **8192** chars                                         |
+| `params`  | array of scalar | `[]`    | Max **50** items (`string`, finite `number`, `boolean`, `null` only) |
+| `maxRows` | integer         | `100`   | 1–**500**                                                            |
+
+Use PostgreSQL placeholders **`$1`, `$2`, …** only. The connector never concatenates parameter values into SQL.
+
+**Output**
+
+| Field       | Description                                                                                                                                                                        |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `columns`   | Ordered `{ name, dataType }` (PostgreSQL-oriented type names)                                                                                                                      |
+| `rows`      | **Positional** arrays aligned with `columns` (preserves duplicate column names)                                                                                                    |
+| `rowCount`  | Rows returned after connector limits                                                                                                                                               |
+| `truncated` | `true` when limited by `maxRows` or the structured JSON budget; `false` means no connector-level truncation was applied, not that the query represents a complete business dataset |
+| `maxRows`   | Echo of the effective row cap for this call                                                                                                                                        |
+
+**SQL admission (defense in depth)**
+
+Parsed with **`pgsql-ast-parser`**. Permitted: a single top-level read query. Rejected examples: multiple statements, `INSERT`/`UPDATE`/`DELETE`, data-modifying CTEs, `SELECT INTO`, locking clauses (`FOR UPDATE` / `FOR SHARE` / `SKIP LOCKED`), and non-SELECT statement types.
+
+Comment, dollar-quote, or trailing-semicolon tricks that yield multiple statements are rejected. This layer does **not** prove safety against all hostile PostgreSQL SQL (for example expensive or side-effecting functions in `SELECT` lists).
+
+**Execution and timeouts**
+
+1. Validate MCP input
+2. Check MCP cancellation before acquiring a connection
+3. `pool.connect()` (bounded by connect timeout)
+4. `BEGIN READ ONLY` → `SET LOCAL statement_timeout` / `lock_timeout` → **`pg-cursor`** portal with bounded batch fetches (`rowMode: array`) → close cursor → `ROLLBACK` → `release()`
+5. If cursor close, rollback, or connection state is uncertain, the client is **destroyed** (`release(true)`) instead of returned to the pool
+
+No automatic retries. Pool-level `statement_timeout` still applies to discovery/health queries; read queries also set transaction-local limits from `OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS` (default lock timeout **5s** unless overridden at connector construction).
+
+**Permissions, allowlist, and RLS**
+
+- **`OSVA_CONNECTOR_POSTGRES_ALLOWED_SCHEMAS` applies to discovery tools only.** It does **not** restrict table references inside `postgres.query.read` SQL. Query authorization relies on **database grants** (and RLS policies evaluated for the connected role).
+- **`READ ONLY`** blocks ordinary writes to permanent relations but is **not** a substitute for revoking DML/DDL, restricting functions, or securing security-definer routines.
+- **RLS** is enforced by PostgreSQL when enabled on tables the role can `SELECT`.
+- Temporary objects and session effects are possible depending on SQL and role capabilities—treat the role as least-privilege.
+
+**Result mapping**
+
+Common PostgreSQL types are mapped to JSON-safe values: `null`, booleans, finite numbers, strings (per-cell cap **8192** chars), `bigint`/`numeric` as strings when needed, ISO timestamps, UUID strings, JSON/JSONB objects, bytea as base64, arrays recursively. Unsupported driver values → sanitized `PROVIDER_ERROR`. Max **256** columns per result.
+
+**Result limits**
+
+- Rows: `maxRows` (default 100, max **500**), enforced while fetching via cursor batches (fixed batch size **32**, plus a one-row lookahead when the row cap is reached)
+- Structured MCP JSON: **256 KiB** total (`structuredContent`); a single row that alone exceeds the budget → `PROVIDER_ERROR` (not silently dropped)
+- Connector memory stays bounded to returned rows plus at most one batch/lookahead fetch; PostgreSQL may still execute a large scan on the server (**not** a hard database execution-cost cap)
+
 ## Pagination
 
 - Keyset pagination (`ORDER BY` name / `attnum`, `LIMIT n+1`).
@@ -133,6 +190,7 @@ pnpm --filter @osva-ai/connector-postgres test
 ```bash
 docker compose -f packages/postgres/docker/integration-compose.yml up -d
 set OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL=postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration
+set OSVA_CONNECTOR_POSTGRES_WRITER_INTEGRATION_URL=postgresql://osva_writer:writer_pass@127.0.0.1:55432/osva_integration
 pnpm --filter @osva-ai/connector-postgres test
 ```
 
@@ -142,10 +200,12 @@ Hermetic unit tests run without Docker. The integration suite runs when `OSVA_CO
 
 ## Known limitations
 
-- Read-only discovery only—no data queries
-- No cross-call snapshot consistency
+- No cross-call snapshot consistency (discovery or ad-hoc SELECT)
 - Mid-flight MCP cancel is bounded by `statement_timeout`, not instant cancel
-- Connector allowlist is defense in depth; grants and RLS remain authoritative
+- Discovery allowlist does not filter arbitrary SQL in `postgres.query.read`
+- SQL admission + `READ ONLY` do not sandbox untrusted arbitrary SQL
+- No pagination tokens for query results
+- Very wide rows can still be expensive to serialize even within batch fetches
 
 ## License
 

@@ -7,6 +7,8 @@ import {
 import type {
   PostgresDatabase,
   PostgresQueryResult,
+  PostgresReadOnlySelectOptions,
+  PostgresReadOnlySelectResult,
 } from "../../src/postgres-client.js";
 import {
   FIXTURE_COLUMNS,
@@ -23,6 +25,9 @@ export interface MockPostgresDatabaseOptions {
   readonly queryError?: unknown;
   readonly queryDelayMs?: number;
   readonly useCatalogFixtures?: boolean;
+  readonly runReadOnlySelect?: (
+    options: PostgresReadOnlySelectOptions,
+  ) => Promise<PostgresReadOnlySelectResult>;
 }
 
 function filterSchemas(
@@ -123,6 +128,12 @@ export function createMockPostgresDatabase(
 
       const result: PostgresQueryResult = { rows };
       return result;
+    },
+    async runReadOnlySelect(readOptions) {
+      if (options.runReadOnlySelect !== undefined) {
+        return options.runReadOnlySelect(readOptions);
+      }
+      throw new Error("runReadOnlySelect is not configured on this mock.");
     },
     async end() {
       endCalls += 1;

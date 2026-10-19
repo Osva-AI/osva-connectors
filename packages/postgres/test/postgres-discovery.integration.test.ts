@@ -45,8 +45,9 @@ function buildConnector(allowedSchemas?: readonly string[]): {
   const pool = createPostgresPool(config);
   return {
     connector: createPostgresConnector({
-      database: createPgDatabase(pool),
+      database: createPgDatabase(pool, config),
       allowedSchemas: config.allowedSchemas,
+      queryTimeoutMs: config.queryTimeoutMs,
     }),
     close: async () => {
       await pool.end();

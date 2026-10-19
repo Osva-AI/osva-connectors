@@ -86,6 +86,23 @@ export function mapPostgresError(error: unknown): ConnectorSdkError {
   }
 
   if (isDatabaseError(error)) {
+    if (error.code === "42501") {
+      return new ConnectorSdkError(
+        "FORBIDDEN",
+        "PostgreSQL denied permission for this query.",
+      );
+    }
+    if (error.code === "25006") {
+      return new ConnectorSdkError(
+        "INVALID_INPUT",
+        "Write operations are not permitted in read-only query mode.",
+      );
+    }
+    if (error.code === "55P03") {
+      return new ConnectorSdkError("TIMEOUT", "PostgreSQL lock timeout.", {
+        retryable: true,
+      });
+    }
     if (error.code === "28P01") {
       return new ConnectorSdkError(
         "UNAUTHORIZED",
