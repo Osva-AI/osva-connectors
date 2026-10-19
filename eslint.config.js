@@ -10,6 +10,7 @@ export default tseslint.config(
       "packages/github/src/**/*.ts",
       "packages/postgres/src/**/*.ts",
       "packages/shopify/src/**/*.ts",
+      "packages/ga4/src/**/*.ts",
     ],
     rules: {
       "no-restricted-imports": [

@@ -53,6 +53,9 @@ jobs:
       - name: Shopify package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:shopify
 
+      - name: GA4 package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:ga4
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

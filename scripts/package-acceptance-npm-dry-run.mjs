@@ -12,6 +12,9 @@ export const NPM_BIN_STRIP_PATTERN_POSTGRES =
 export const NPM_BIN_STRIP_PATTERN_SHOPIFY =
   /bin\[osva-connector-shopify\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_GA4 =
+  /bin\[osva-connector-ga4\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
