@@ -1,12 +1,29 @@
 {
   "name": "@osva-ai/connector-github",
-  "version": "0.2.0",
-  "description": "OSVA Connector Profile V1 GitHub connector (read and issue create)",
+  "version": "0.3.0",
+  "description": "OSVA Connector Profile V1 GitHub MCP connector (repository and issue read, issue create, issue comment create)",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/Osva-AI/osva-connectors/tree/main/packages/github",
+  "bugs": {
+    "url": "https://github.com/Osva-AI/osva-connectors/issues"
+  },
+  "keywords": [
+    "osva",
+    "mcp",
+    "model-context-protocol",
+    "github",
+    "connector",
+    "stdio",
+    "octokit"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Osva-AI/osva-connectors.git",
     "directory": "packages/github"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "type": "module",
   "exports": {

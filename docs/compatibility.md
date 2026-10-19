@@ -46,3 +46,11 @@ Tool names use dot-separated segments and remain stable for a connector version.
 ## Node.js
 
 Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
+
+## Release status
+
+| Package                     | npm version (target)           | Published                                                                            |
+| --------------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
+| `@osva-ai/connector-github` | `0.3.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish` |
+
+See [INSTALL.md](./INSTALL.md) and [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md).

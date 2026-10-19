@@ -1,0 +1,157 @@
+# Manual npm release for @osva-ai/connector-github.
+# Does NOT run on push or pull_request. Requires operator workflow_dispatch.
+#
+# Prerequisites (configure outside this repository):
+# - npm package @osva-ai/connector-github with public access
+# - npm trusted publisher for GitHub Actions OIDC (recommended), OR
+#   NPM_TOKEN in GitHub Environment "npm" (fallback — avoid long-lived tokens when OIDC is available)
+# - GitHub Environment "npm" with required reviewers
+#
+# Trusted publishing is NOT active until configured on npmjs.com — dry_run validates without publishing.
+
+name: Release to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_version:
+        description: Must match packages/github/package.json version
+        required: true
+        default: "0.3.0"
+      dry_run:
+        description: When true, run npm publish --dry-run only (no registry upload)
+        type: boolean
+        default: true
+      confirm_publish:
+        description: When true and dry_run is false, upload to npm (requires npm environment approval)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release:
+    name: Verify and publish @osva-ai/connector-github
+    runs-on: ubuntu-24.04
+    environment: npm
+    defaults:
+      run:
+        working-directory: packages/github
+
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Verify branch
+        working-directory: .
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "Release workflow must run from main (got ${{ github.ref }})."
+            exit 1
+          fi
+
+      - name: Verify clean working tree
+        working-directory: .
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Working tree is not clean; refusing to release."
+            git status --porcelain
+            exit 1
+          fi
+
+      - name: Verify package name and version
+        run: |
+          node <<'EOF'
+          import fs from "node:fs";
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const expected = process.env.EXPECTED_VERSION;
+          if (pkg.name !== "@osva-ai/connector-github") {
+            console.error(`Unexpected package name: ${pkg.name}`);
+            process.exit(1);
+          }
+          if (pkg.version !== expected) {
+            console.error(`Version mismatch: package.json=${pkg.version} expected=${expected}`);
+            process.exit(1);
+          }
+          console.log(`Release target: ${pkg.name}@${pkg.version}`);
+          EOF
+        env:
+          EXPECTED_VERSION: ${{ inputs.expected_version }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.4.1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install workspace dependencies
+        working-directory: .
+        run: pnpm install --frozen-lockfile
+
+      - name: Format check
+        working-directory: .
+        run: pnpm format:check
+
+      - name: Lint and typecheck
+        working-directory: .
+        run: pnpm lint && pnpm typecheck
+
+      - name: Test and build
+        working-directory: .
+        run: |
+          pnpm build
+          pnpm --filter @osva-ai/connector-github build:test-stdio-fixture
+          pnpm test
+
+      - name: Package boundaries
+        working-directory: .
+        run: pnpm verify:boundaries
+
+      - name: Packaged-artifact acceptance
+        working-directory: .
+        run: pnpm test:package-acceptance
+
+      - name: Check npm for existing version
+        run: |
+          if npm view "@osva-ai/connector-github@${{ inputs.expected_version }}" version 2>/dev/null; then
+            echo "Version ${{ inputs.expected_version }} is already published; aborting."
+            exit 1
+          fi
+          echo "Version ${{ inputs.expected_version }} is not published (ok)."
+
+      - name: Validate tarball contents
+        run: |
+          pnpm pack --pack-destination "${{ runner.temp }}/pack"
+          TARBALL=$(ls "${{ runner.temp }}/pack"/*.tgz | head -1)
+          echo "Inspecting ${TARBALL}"
+          tar -tzf "${TARBALL}" | tee "${{ runner.temp }}/tar-list.txt"
+          if grep -E 'package/(test/|\.env)' "${{ runner.temp }}/tar-list.txt"; then
+            echo "Forbidden paths in tarball."
+            exit 1
+          fi
+          grep -q 'package/dist/stdio.js' "${{ runner.temp }}/tar-list.txt"
+          grep -q 'package/LICENSE' "${{ runner.temp }}/tar-list.txt"
+
+      - name: npm publish (dry run)
+        if: inputs.dry_run == true
+        run: npm publish --dry-run --access public
+
+      - name: npm publish
+        if: inputs.dry_run == false && inputs.confirm_publish == true
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Refuse publish without confirmation
+        if: inputs.dry_run == false && inputs.confirm_publish != true
+        run: |
+          echo "Refusing upload: set dry_run=true for validation-only, or confirm_publish=true after review."
+          exit 1
