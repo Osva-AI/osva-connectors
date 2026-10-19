@@ -16,6 +16,7 @@ export interface Ga4HttpError {
   readonly status: number;
   readonly googleStatus?: string;
   readonly googleMessage?: string;
+  readonly retryAfterMs?: number;
 }
 
 interface GoogleErrorBody {
@@ -39,7 +40,11 @@ export interface CreateGa4RestClientOptions {
 async function readBoundedResponseText(
   response: Response,
   maxBytes: number,
+  signal?: AbortSignal,
 ): Promise<string> {
+  if (signal?.aborted) {
+    throw new DOMException("Aborted", "AbortError");
+  }
   const lengthHeader = response.headers.get("content-length");
   if (lengthHeader !== null) {
     const declared = Number(lengthHeader);
@@ -60,6 +65,10 @@ async function readBoundedResponseText(
   let total = 0;
 
   for (;;) {
+    if (signal?.aborted) {
+      await reader.cancel();
+      throw new DOMException("Aborted", "AbortError");
+    }
     const { done, value } = await reader.read();
     if (done) {
       break;
@@ -142,6 +151,14 @@ function isRetryableHttpError(error: unknown): boolean {
   return false;
 }
 
+function isRetryableNetworkError(error: unknown): boolean {
+  return (
+    error instanceof TypeError ||
+    (error instanceof Error &&
+      (error.message.includes("fetch") || error.message.includes("network")))
+  );
+}
+
 export function createGa4RestClient(
   options: CreateGa4RestClientOptions,
 ): Ga4Client {
@@ -149,6 +166,86 @@ export function createGa4RestClient(
   const dataApiHost = options.dataApiHost ?? ANALYTICS_DATA_API_HOST;
   const adminApiHost = options.adminApiHost ?? ANALYTICS_ADMIN_API_HOST;
   const requestTimeoutMs = options.requestTimeoutMs;
+
+  async function requestJsonAttempt<T>(
+    url: string,
+    init: {
+      readonly method: "GET" | "POST";
+      readonly body?: unknown;
+      readonly signal?: AbortSignal;
+    },
+    attemptTimeoutMs: number,
+  ): Promise<T> {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort(new Error("Google Analytics request timed out."));
+    }, attemptTimeoutMs);
+
+    const onAbort = (): void => {
+      controller.abort(init.signal?.reason);
+    };
+    if (init.signal !== undefined) {
+      if (init.signal.aborted) {
+        clearTimeout(timeout);
+        throw new DOMException("Aborted", "AbortError");
+      }
+      init.signal.addEventListener("abort", onAbort, { once: true });
+    }
+
+    try {
+      const authorization = await options.tokenProvider.getAuthorizationHeader({
+        signal: init.signal,
+        deadlineMs: attemptTimeoutMs,
+      });
+
+      const response = await fetchImpl(url, {
+        method: init.method,
+        headers: {
+          Authorization: authorization,
+          Accept: "application/json",
+          ...(init.body !== undefined
+            ? { "Content-Type": "application/json" }
+            : {}),
+        },
+        body: init.body !== undefined ? JSON.stringify(init.body) : undefined,
+        signal: controller.signal,
+      });
+
+      const text = await readBoundedResponseText(
+        response,
+        MAX_HTTP_RESPONSE_BYTES,
+        controller.signal,
+      );
+
+      if (!response.ok) {
+        const googleBody = parseGoogleErrorBody(text);
+        const retryAfterMs = parseRetryAfterMs(response);
+        const httpError: Ga4HttpError = {
+          kind: "http",
+          status: response.status,
+          googleStatus: googleBody?.error?.status,
+          googleMessage: googleBody?.error?.message,
+          ...(retryAfterMs !== undefined ? { retryAfterMs } : {}),
+        };
+        throw httpError;
+      }
+
+      if (text.length === 0) {
+        return {} as T;
+      }
+      try {
+        return JSON.parse(text) as T;
+      } catch {
+        throw new ConnectorSdkError(
+          "PROVIDER_ERROR",
+          "Google Analytics returned invalid JSON.",
+        );
+      }
+    } finally {
+      clearTimeout(timeout);
+      init.signal?.removeEventListener("abort", onAbort);
+    }
+  }
 
   async function requestJson<T>(
     url: string,
@@ -158,114 +255,61 @@ export function createGa4RestClient(
       readonly signal?: AbortSignal;
     },
   ): Promise<T> {
-    let retriesRemaining = READ_ONLY_MAX_RETRIES;
-    let lastError: unknown;
+    const deadlineMs = Date.now() + requestTimeoutMs;
+    let attempt = 0;
 
     for (;;) {
-      const attemptStarted = Date.now();
-      const controller = new AbortController();
-      const timeout = setTimeout(() => {
-        controller.abort(new Error("Google Analytics request timed out."));
-      }, requestTimeoutMs);
+      if (init.signal?.aborted) {
+        throw new DOMException("Aborted", "AbortError");
+      }
 
-      const onAbort = (): void => {
-        controller.abort(init.signal?.reason);
-      };
-      if (init.signal !== undefined) {
-        if (init.signal.aborted) {
-          clearTimeout(timeout);
-          throw new DOMException("Aborted", "AbortError");
-        }
-        init.signal.addEventListener("abort", onAbort, { once: true });
+      const remainingMs = deadlineMs - Date.now();
+      if (remainingMs <= 0) {
+        throw new Error("Google Analytics request timed out.");
       }
 
       try {
-        const authorization =
-          await options.tokenProvider.getAuthorizationHeader(init.signal);
-
-        const response = await fetchImpl(url, {
-          method: init.method,
-          headers: {
-            Authorization: authorization,
-            Accept: "application/json",
-            ...(init.body !== undefined
-              ? { "Content-Type": "application/json" }
-              : {}),
-          },
-          body: init.body !== undefined ? JSON.stringify(init.body) : undefined,
-          signal: controller.signal,
-        });
-
-        const text = await readBoundedResponseText(
-          response,
-          MAX_HTTP_RESPONSE_BYTES,
-        );
-
-        if (!response.ok) {
-          const googleBody = parseGoogleErrorBody(text);
-          const httpError: Ga4HttpError = {
-            kind: "http",
-            status: response.status,
-            googleStatus: googleBody?.error?.status,
-            googleMessage: googleBody?.error?.message,
-          };
-          if (retriesRemaining > 0 && isRetryableHttpError(httpError)) {
-            const elapsed = Date.now() - attemptStarted;
-            const retryAfter =
-              parseRetryAfterMs(response) ?? READ_ONLY_RETRY_DELAY_MS;
-            if (elapsed + retryAfter < requestTimeoutMs) {
-              retriesRemaining -= 1;
-              lastError = httpError;
-              await sleepMs(retryAfter, init.signal);
-              continue;
-            }
-          }
-          throw httpError;
-        }
-
-        if (text.length === 0) {
-          return {} as T;
-        }
-        try {
-          return JSON.parse(text) as T;
-        } catch {
-          throw new ConnectorSdkError(
-            "PROVIDER_ERROR",
-            "Google Analytics returned invalid JSON.",
-          );
-        }
+        return await requestJsonAttempt<T>(url, init, remainingMs);
       } catch (error) {
         if (error instanceof ConnectorSdkError) {
           throw error;
         }
+
+        const canRetry =
+          attempt < READ_ONLY_MAX_RETRIES &&
+          (isRetryableHttpError(error) || isRetryableNetworkError(error));
+        if (!canRetry) {
+          throw error;
+        }
+
+        attempt += 1;
+        const remainingAfterError = deadlineMs - Date.now();
+        if (remainingAfterError <= 0) {
+          throw error;
+        }
+
+        let delayMs = READ_ONLY_RETRY_DELAY_MS;
+        let retryAfterRequested: number | undefined;
         if (
           error !== null &&
           typeof error === "object" &&
           "kind" in error &&
           (error as Ga4HttpError).kind === "http"
         ) {
-          throw error;
+          const httpError = error as Ga4HttpError;
+          retryAfterRequested = httpError.retryAfterMs;
+          delayMs = httpError.retryAfterMs ?? READ_ONLY_RETRY_DELAY_MS;
         }
         if (
-          retriesRemaining > 0 &&
-          (error instanceof TypeError ||
-            (error instanceof Error &&
-              (error.message.includes("fetch") ||
-                error.message.includes("network"))))
+          retryAfterRequested !== undefined &&
+          retryAfterRequested > remainingAfterError
         ) {
-          retriesRemaining -= 1;
-          lastError = error;
-          await sleepMs(READ_ONLY_RETRY_DELAY_MS, init.signal);
-          continue;
+          throw error;
         }
-        throw error;
-      } finally {
-        clearTimeout(timeout);
-        init.signal?.removeEventListener("abort", onAbort);
+        delayMs = Math.min(delayMs, remainingAfterError);
+        await sleepMs(delayMs, init.signal);
       }
     }
-
-    throw lastError ?? new Error("Google Analytics request failed.");
   }
 
   return {

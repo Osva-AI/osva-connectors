@@ -133,6 +133,18 @@ export function mapGa4Error(
     (error as Ga4HttpError).kind === "http"
   ) {
     const httpError = error as Ga4HttpError;
+    if (
+      httpError.googleStatus !== undefined ||
+      httpError.googleMessage !== undefined
+    ) {
+      const mapped = mapGoogleErrorStatus(
+        httpError.googleStatus,
+        httpError.googleMessage ?? "",
+      );
+      if (mapped !== undefined) {
+        return mapped;
+      }
+    }
     if (httpError.status === 401) {
       return new ConnectorSdkError(
         "UNAUTHORIZED",
@@ -160,18 +172,6 @@ export function mapGa4Error(
         "Google Analytics is temporarily unavailable.",
         { retryable: true },
       );
-    }
-    if (
-      httpError.googleStatus !== undefined ||
-      httpError.googleMessage !== undefined
-    ) {
-      const mapped = mapGoogleErrorStatus(
-        httpError.googleStatus,
-        httpError.googleMessage ?? "",
-      );
-      if (mapped !== undefined) {
-        return mapped;
-      }
     }
   }
 

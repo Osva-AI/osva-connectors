@@ -18,4 +18,31 @@ describe("GA4 auth providers", () => {
       ConnectorSdkError,
     );
   });
+
+  it("honours abort while waiting on a slow auth provider", async () => {
+    const slowProvider = {
+      getAuthorizationHeader(options?: {
+        signal?: AbortSignal;
+        deadlineMs?: number;
+      }) {
+        return new Promise<string>((resolve, reject) => {
+          const timer = setTimeout(() => resolve("Bearer slow-token"), 10_000);
+          options?.signal?.addEventListener(
+            "abort",
+            () => {
+              clearTimeout(timer);
+              reject(new DOMException("Aborted", "AbortError"));
+            },
+            { once: true },
+          );
+        });
+      },
+    };
+    const controller = new AbortController();
+    const pending = slowProvider.getAuthorizationHeader({
+      signal: controller.signal,
+    });
+    controller.abort();
+    await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+  });
 });

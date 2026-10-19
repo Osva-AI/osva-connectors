@@ -18,6 +18,26 @@ describe("mapGa4Error", () => {
     expect(mapped.code).toBe("RATE_LIMITED");
   });
 
+  it("maps 403 RESOURCE_EXHAUSTED to rate limit, not forbidden", () => {
+    const mapped = mapGa4Error({
+      kind: "http",
+      status: 403,
+      googleStatus: "RESOURCE_EXHAUSTED",
+      googleMessage: "Quota exceeded for quota metric.",
+    });
+    expect(mapped.code).toBe("RATE_LIMITED");
+  });
+
+  it("maps 403 PERMISSION_DENIED to forbidden", () => {
+    const mapped = mapGa4Error({
+      kind: "http",
+      status: 403,
+      googleStatus: "PERMISSION_DENIED",
+      googleMessage: "User does not have sufficient permissions.",
+    });
+    expect(mapped.code).toBe("FORBIDDEN");
+  });
+
   it("redacts bearer tokens from error messages", () => {
     const mapped = mapGa4Error(
       new Error(`Bearer ${FAKE_GA4_ACCESS_TOKEN} failed`),

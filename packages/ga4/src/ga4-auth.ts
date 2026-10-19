@@ -4,8 +4,59 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 
 import { GA4_READONLY_SCOPE } from "./constants.js";
 
+export interface Ga4TokenProviderOptions {
+  readonly signal?: AbortSignal;
+  /** Remaining wall-clock budget for this outbound operation (milliseconds). */
+  readonly deadlineMs?: number;
+}
+
 export interface Ga4TokenProvider {
-  getAuthorizationHeader(signal?: AbortSignal): Promise<string>;
+  getAuthorizationHeader(options?: Ga4TokenProviderOptions): Promise<string>;
+}
+
+async function raceAuthOperation<T>(
+  operation: Promise<T>,
+  options?: Ga4TokenProviderOptions,
+): Promise<T> {
+  if (options?.signal?.aborted) {
+    throw new DOMException("Aborted", "AbortError");
+  }
+  const deadlineMs = options?.deadlineMs;
+  if (deadlineMs !== undefined && deadlineMs <= 0) {
+    throw new Error("Google Analytics request timed out.");
+  }
+
+  return new Promise<T>((resolve, reject) => {
+    const signal = options?.signal;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const cleanup = (): void => {
+      signal?.removeEventListener("abort", onAbort);
+      if (timer !== undefined) {
+        clearTimeout(timer);
+      }
+    };
+    const onAbort = (): void => {
+      cleanup();
+      reject(new DOMException("Aborted", "AbortError"));
+    };
+    if (deadlineMs !== undefined) {
+      timer = setTimeout(() => {
+        cleanup();
+        reject(new Error("Google Analytics request timed out."));
+      }, deadlineMs);
+    }
+    signal?.addEventListener("abort", onAbort, { once: true });
+    operation.then(
+      (value) => {
+        cleanup();
+        resolve(value);
+      },
+      (error: unknown) => {
+        cleanup();
+        reject(error);
+      },
+    );
+  });
 }
 
 export interface CreateGoogleAuthTokenProviderOptions {
@@ -21,12 +72,12 @@ export function createGoogleAuthTokenProvider(
   });
 
   return {
-    async getAuthorizationHeader(signal) {
-      if (signal?.aborted) {
-        throw new DOMException("Aborted", "AbortError");
-      }
+    async getAuthorizationHeader(options) {
       try {
-        const tokenResponse = await auth.getAccessToken();
+        const tokenResponse = await raceAuthOperation(
+          auth.getAccessToken(),
+          options,
+        );
         const token =
           typeof tokenResponse === "string"
             ? tokenResponse
@@ -60,9 +111,12 @@ export function createStaticBearerTokenProvider(
 ): Ga4TokenProvider {
   const trimmed = accessToken.trim();
   return {
-    async getAuthorizationHeader(signal) {
-      if (signal?.aborted) {
+    async getAuthorizationHeader(options) {
+      if (options?.signal?.aborted) {
         throw new DOMException("Aborted", "AbortError");
+      }
+      if (options?.deadlineMs !== undefined && options.deadlineMs <= 0) {
+        throw new Error("Google Analytics request timed out.");
       }
       if (trimmed.length === 0) {
         throw new ConnectorSdkError(

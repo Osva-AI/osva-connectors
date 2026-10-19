@@ -53,6 +53,20 @@ describe("GA4 REST client", () => {
     ).rejects.toMatchObject({ kind: "http", status: 401 });
   });
 
+  it("does not retry when Retry-After would exceed the total deadline", async () => {
+    server = await startMockGa4HttpServer({ mode: "rate_limit" });
+    const client = createGa4RestClient({
+      tokenProvider: createStaticBearerTokenProvider(FAKE_GA4_ACCESS_TOKEN),
+      requestTimeoutMs: 50,
+      dataApiHost: server.dataApiOrigin,
+      adminApiHost: server.adminApiOrigin,
+    });
+    await expect(
+      client.getMetadata({ propertyId: MOCK_PROPERTY_ID }),
+    ).rejects.toMatchObject({ kind: "http", status: 429 });
+    expect(server.getRequestCount()).toBe(1);
+  });
+
   it("retries once on 429 when within deadline", async () => {
     server = await startMockGa4HttpServer({ mode: "rate_limit_once" });
     const client = clientFor();

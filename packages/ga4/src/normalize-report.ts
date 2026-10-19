@@ -29,6 +29,7 @@ export interface NormalizedReport {
   readonly limit: number;
   readonly offset: number;
   readonly rowsReturned: number;
+  readonly hasMoreRows?: boolean;
   readonly rowsTruncatedLocally?: true;
   readonly quota?: {
     readonly tokensPerDay?: number;
@@ -205,7 +206,18 @@ export function mapRunReportResponse(params: {
     }
   }
 
-  const rowCount = parseRowCount(envelope.rowCount);
+  let rowCount = parseRowCount(envelope.rowCount);
+  if (
+    envelope.rowCount === undefined &&
+    rows.length > 0 &&
+    rowCount < rows.length
+  ) {
+    rowCount = rows.length;
+  }
+
+  const rowsReturned = rows.length;
+  const hasMoreRows =
+    rowCount > params.offset + rowsReturned && rowsReturned <= params.limit;
 
   let result: NormalizedReport = {
     propertyId: params.propertyId,
@@ -215,7 +227,8 @@ export function mapRunReportResponse(params: {
     rowCount,
     limit: params.limit,
     offset: params.offset,
-    rowsReturned: rows.length,
+    rowsReturned,
+    ...(hasMoreRows ? { hasMoreRows: true as const } : {}),
   };
 
   const quota = mapQuota(envelope.propertyQuota);
@@ -230,10 +243,19 @@ export function mapRunReportResponse(params: {
   const packed = packListWithinOutputBudget(result, "rows", result.rows);
   const rowsTruncatedLocally =
     "rowsTruncated" in packed && packed.rowsTruncated === true;
+  const packedRowsReturned = packed.rows.length;
+  const packedHasMore =
+    !rowsTruncatedLocally &&
+    rowCount > params.offset + packedRowsReturned &&
+    packedRowsReturned <= params.limit;
   result = {
     ...packed,
-    rowsReturned: packed.rows.length,
-    ...(rowsTruncatedLocally ? { rowsTruncatedLocally: true as const } : {}),
+    rowsReturned: packedRowsReturned,
+    ...(rowsTruncatedLocally
+      ? { rowsTruncatedLocally: true as const }
+      : packedHasMore
+        ? { hasMoreRows: true as const }
+        : {}),
   };
 
   assertStructuredOutputWithinBudget(result);

@@ -45,11 +45,11 @@ Creating a Google Cloud service account and enabling APIs does **not** grant Ana
 
 ### Environment variables
 
-| Variable                         | Required             | Description                                                                  |
-| -------------------------------- | -------------------- | ---------------------------------------------------------------------------- |
-| `GOOGLE_APPLICATION_CREDENTIALS` | For service accounts | Path to service account JSON (standard Google env var)                       |
-| `OSVA_CONNECTOR_GA4_PROPERTY_ID` | No                   | Default numeric GA4 property ID for tools that accept optional `propertyId`  |
-| `OSVA_CONNECTOR_GA4_TIMEOUT_MS`  | No                   | Total per-request deadline in ms (default `30000`, min `1000`, max `120000`) |
+| Variable                         | Required             | Description                                                                                                             |
+| -------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `GOOGLE_APPLICATION_CREDENTIALS` | For service accounts | Path to service account JSON (standard Google env var)                                                                  |
+| `OSVA_CONNECTOR_GA4_PROPERTY_ID` | No                   | Default numeric GA4 property ID for tools that accept optional `propertyId`                                             |
+| `OSVA_CONNECTOR_GA4_TIMEOUT_MS`  | No                   | Total operation deadline in ms for auth, HTTP, body read, and retry backoff (default `30000`, min `1000`, max `120000`) |
 
 Credentials are **never** accepted through MCP tool inputs. There is no interactive browser OAuth flow in G1.
 
@@ -102,13 +102,13 @@ Relative expressions follow [Google’s documented syntax](https://developers.go
 
 ## Pagination and output limits
 
-| Concern         | Behavior                                                                                                      |
-| --------------- | ------------------------------------------------------------------------------------------------------------- |
-| Core reports    | Google `offset` + `limit` (max **1000** rows per tool call)                                                   |
-| Property list   | Admin API `pageToken` pagination                                                                              |
-| Metadata        | Single provider fetch; **local** `search`, `limit`, and `offset` (not Google server-side metadata pagination) |
-| MCP JSON output | Max **256 KiB** serialized structured output per tool response                                                |
-| HTTP body read  | Max **2 MiB** raw response before parsing                                                                     |
+| Concern         | Behavior                                                                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core reports    | Google `offset` + `limit` (max **1000** rows per tool call); includes `rowCount`, `rowsReturned`, and `hasMoreRows` when more provider rows exist |
+| Property list   | Admin API `pageToken` pagination                                                                                                                  |
+| Metadata        | Single provider fetch; **local** `search`, `limit`, and `offset` (not Google server-side metadata pagination)                                     |
+| MCP JSON output | Max **256 KiB** serialized structured output per tool response                                                                                    |
+| HTTP body read  | Max **2 MiB** raw response before parsing                                                                                                         |
 
 The connector does not recursively fetch additional report pages within one tool call.
 
