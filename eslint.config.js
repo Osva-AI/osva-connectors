@@ -6,7 +6,11 @@ export default tseslint.config(
   },
   tseslint.configs.recommended,
   {
-    files: ["packages/github/src/**/*.ts", "packages/postgres/src/**/*.ts"],
+    files: [
+      "packages/github/src/**/*.ts",
+      "packages/postgres/src/**/*.ts",
+      "packages/shopify/src/**/*.ts",
+    ],
     rules: {
       "no-restricted-imports": [
         "error",

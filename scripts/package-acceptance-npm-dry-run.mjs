@@ -9,6 +9,9 @@ export const NPM_BIN_STRIP_PATTERN_GITHUB =
 export const NPM_BIN_STRIP_PATTERN_POSTGRES =
   /bin\[osva-connector-postgres\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_SHOPIFY =
+  /bin\[osva-connector-shopify\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
