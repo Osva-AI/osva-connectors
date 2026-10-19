@@ -26,9 +26,7 @@ function assertLoopbackApiBase(raw: string): string {
 }
 
 async function loadDistModule<T>(name: string): Promise<T> {
-  return (await import(
-    pathToFileURL(path.join(DIST_DIR, name)).href
-  )) as T;
+  return (await import(pathToFileURL(path.join(DIST_DIR, name)).href)) as T;
 }
 
 const rawBase = process.env[TEST_API_BASE_ENV]?.trim();
@@ -40,17 +38,16 @@ if (rawBase === undefined || rawBase.length === 0) {
 
 const apiBaseUrl = assertLoopbackApiBase(rawBase);
 
-const { loadGithubConfig } = await loadDistModule<{ loadGithubConfig: (env: NodeJS.ProcessEnv) => { token: string } }>(
-  "config.js",
-);
+const { loadGithubConfig } = await loadDistModule<{
+  loadGithubConfig: (env: NodeJS.ProcessEnv) => { token: string };
+}>("config.js");
 const { createGithubConnector } = await loadDistModule<{
   createGithubConnector: (options: { client: unknown }) => DefinedConnector;
 }>("connector.js");
 const { createOctokitGithubClient } = await loadDistModule<{
-  createOctokitGithubClient: (options: {
-    token: string;
-    octokit: Octokit;
-  }) => { getRepository: (input: unknown) => Promise<unknown> };
+  createOctokitGithubClient: (options: { token: string; octokit: Octokit }) => {
+    getRepository: (input: unknown) => Promise<unknown>;
+  };
 }>("octokit-client.js");
 
 const config = loadGithubConfig(process.env);
