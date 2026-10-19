@@ -1,6 +1,6 @@
 # @osva-ai/connector-github
 
-GitHub connector for [OSVA Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md): repository lookup, issue read, and **issue create** (mutating).
+GitHub connector for [OSVA Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md): repository lookup, issue read, **issue create**, and **issue comment create** (mutating).
 
 ## Configuration
 
@@ -14,11 +14,11 @@ Validated at stdio startup.
 
 Use a **dedicated token** scoped only to repositories that agents should access.
 
-| Capability                              | Repository access                         | Permissions                                         |
-| --------------------------------------- | ----------------------------------------- | --------------------------------------------------- |
-| `github.repository.get`                 | Public or private repos the token can see | **Metadata** (read)                                 |
-| `github.issue.list`, `github.issue.get` | Same                                      | **Metadata** (read) and **Issues** (read)           |
-| `github.issue.create`                   | Same                                      | **Metadata** (read) and **Issues** (read and write) |
+| Capability                                           | Repository access                         | Permissions                                         |
+| ---------------------------------------------------- | ----------------------------------------- | --------------------------------------------------- |
+| `github.repository.get`                              | Public or private repos the token can see | **Metadata** (read)                                 |
+| `github.issue.list`, `github.issue.get`              | Same                                      | **Metadata** (read) and **Issues** (read)           |
+| `github.issue.create`, `github.issue.comment.create` | Same                                      | **Metadata** (read) and **Issues** (read and write) |
 
 **Public vs private:** A token with access only to selected public repositories cannot read or create issues in private repositories unless those repositories are included in the token's resource owner / repository list. Metadata (read) alone is not sufficient for issue operations.
 
@@ -90,6 +90,29 @@ Invalid or oversized input is rejected **before** any GitHub request.
 
 **Ambiguous failures:** Timeouts, network errors, or HTTP 5xx responses after submission do **not** prove the issue was or was not created. Verify on GitHub before retrying.
 
+### `github.issue.comment.create` (mutating)
+
+Creates a comment on a GitHub **issue** via **`POST /repos/{owner}/{repo}/issues/{issue_number}/comments`** (Octokit `issues.createComment`). Pull requests are rejected using a preliminary **`GET /repos/{owner}/{repo}/issues/{issue_number}`**; the comment POST is **not** sent when the target is a pull request.
+
+**Race / limitation:** GitHub does not offer an atomic “comment only if issue” operation. Issue state could theoretically change between the GET and POST (for example, metadata updates). This connector never POSTs when the GET identifies a pull request, but it cannot guarantee issue state is unchanged at POST time.
+
+**Input**
+
+| Field         | Type    | Required | Limits                                                 |
+| ------------- | ------- | -------- | ------------------------------------------------------ |
+| `owner`       | string  | yes      | GitHub-compatible slug (same as other tools)           |
+| `repo`        | string  | yes      | GitHub-compatible slug                                 |
+| `issueNumber` | integer | yes      | Positive integer (issue, not pull request)             |
+| `body`        | string  | yes      | Trimmed, non-empty Markdown, max **32,000** characters |
+
+**Output (normalized only)**
+
+`id`, `issueNumber`, `body`, `htmlUrl`, `createdAt`, `authorLogin`
+
+Each invocation performs **one issue GET** (read-only retries allowed) and **exactly one comment POST** with **no connector-level retries** on the POST. Duplicate invocations can create duplicate comments; GitHub does not expose a guaranteed idempotency key here.
+
+**Ambiguous failures:** Timeouts, network errors, or HTTP 5xx / rate-limit responses on the **comment POST** do **not** prove the comment was or was not created. Verify on GitHub before retrying.
+
 ## Example MCP tool calls
 
 ```json
@@ -128,6 +151,18 @@ Invalid or oversized input is rejected **before** any GitHub request.
 }
 ```
 
+```json
+{
+  "name": "github.issue.comment.create",
+  "arguments": {
+    "owner": "Osva-AI",
+    "repo": "osva",
+    "issueNumber": 42,
+    "body": "Reproduced on latest main."
+  }
+}
+```
+
 ## Error behavior
 
 Tool failures map to structured MCP errors via `@osva-ai/connector-sdk` (`ConnectorSdkError` codes such as `INVALID_INPUT`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `NOT_ISSUE`, `RATE_LIMITED`, `TIMEOUT`, `CANCELLED`, `PROVIDER_ERROR`).
@@ -145,9 +180,10 @@ node ./dist/stdio.js
 
 ## Mutating vs read-only tools
 
-| Tool                    | Mutates GitHub state |
-| ----------------------- | -------------------- |
-| `github.repository.get` | No                   |
-| `github.issue.list`     | No                   |
-| `github.issue.get`      | No                   |
-| `github.issue.create`   | **Yes**              |
+| Tool                          | Mutates GitHub state |
+| ----------------------------- | -------------------- |
+| `github.repository.get`       | No                   |
+| `github.issue.list`           | No                   |
+| `github.issue.get`            | No                   |
+| `github.issue.create`         | **Yes**              |
+| `github.issue.comment.create` | **Yes**              |

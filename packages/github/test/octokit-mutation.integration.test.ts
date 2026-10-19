@@ -59,4 +59,29 @@ describe("Octokit issue create mutation safety (loopback mock HTTP)", () => {
 
     expect(mockGithub.getIssueCreateRequestCount()).toBe(1);
   });
+
+  const commentParams = {
+    owner: "Osva-AI",
+    repo: "osva",
+    issueNumber: 42,
+    body: "Mutation safety comment probe",
+  };
+
+  it("issues exactly one comment POST when GitHub returns 500 (retry plugin active)", async () => {
+    mockGithub = await startMockGithubHttpServer({ mode: "server_error" });
+    const client = createConfiguredClient();
+
+    await expect(client.createIssueComment(commentParams)).rejects.toThrow();
+
+    expect(mockGithub.getIssueCommentCreateRequestCount()).toBe(1);
+  });
+
+  it("issues exactly one comment POST when GitHub returns a rate-limit response (throttling plugin active)", async () => {
+    mockGithub = await startMockGithubHttpServer({ mode: "rate_limit" });
+    const client = createConfiguredClient();
+
+    await expect(client.createIssueComment(commentParams)).rejects.toThrow();
+
+    expect(mockGithub.getIssueCommentCreateRequestCount()).toBe(1);
+  });
 });

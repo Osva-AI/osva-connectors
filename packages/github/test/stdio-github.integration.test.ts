@@ -6,11 +6,13 @@ import { fileURLToPath } from "node:url";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import {
+  GITHUB_ISSUE_COMMENT_CREATE_TOOL,
   GITHUB_ISSUE_CREATE_TOOL,
   GITHUB_REPOSITORY_GET_TOOL,
 } from "../src/constants.js";
 import {
   FAKE_GITHUB_PAT,
+  MOCK_CREATED_ISSUE_COMMENT_JSON,
   MOCK_CREATED_ISSUE_JSON,
   MOCK_REPOSITORY_JSON,
   startMockGithubHttpServer,
@@ -151,5 +153,56 @@ describe("GitHub connector stdio integration (mock GitHub HTTP)", () => {
 
     const serialized = JSON.stringify(result);
     expect(serialized).not.toMatch(/ghp_osva_test_fixture|DO_NOT_LEAK/i);
+  });
+
+  it("calls github.issue.comment.create over stdio against the mock GitHub API", async () => {
+    mockGithub = await startMockGithubHttpServer();
+    const client = await connectClient(FAKE_GITHUB_PAT);
+
+    const result = await client.callTool({
+      name: GITHUB_ISSUE_COMMENT_CREATE_TOOL,
+      arguments: {
+        owner: "Osva-AI",
+        repo: "osva",
+        issueNumber: 42,
+        body: "Stdio integration comment",
+      },
+    });
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      id: MOCK_CREATED_ISSUE_COMMENT_JSON.id,
+      issueNumber: 42,
+      htmlUrl: MOCK_CREATED_ISSUE_COMMENT_JSON.html_url,
+      authorLogin: "fixture-bot",
+    });
+    expect(mockGithub.getIssueGetRequestCount()).toBe(1);
+    expect(mockGithub.getIssueCommentCreateRequestCount()).toBe(1);
+    expect(mockGithub.getLastIssueCommentCreateBody()).toMatchObject({
+      body: "Stdio integration comment",
+    });
+
+    const serialized = JSON.stringify(result);
+    expect(serialized).not.toMatch(/ghp_osva_test_fixture|DO_NOT_LEAK/i);
+  });
+
+  it("rejects pull request comment attempts over stdio before comment POST", async () => {
+    mockGithub = await startMockGithubHttpServer();
+    const client = await connectClient(FAKE_GITHUB_PAT);
+
+    const result = await client.callTool({
+      name: GITHUB_ISSUE_COMMENT_CREATE_TOOL,
+      arguments: {
+        owner: "Osva-AI",
+        repo: "osva",
+        issueNumber: 99,
+        body: "Should not post",
+      },
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.structuredContent).toMatchObject({ code: "NOT_ISSUE" });
+    expect(mockGithub.getIssueGetRequestCount()).toBe(1);
+    expect(mockGithub.getIssueCommentCreateRequestCount()).toBe(0);
   });
 });

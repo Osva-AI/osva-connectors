@@ -61,6 +61,22 @@ export interface GithubClient {
     body?: string;
     signal?: AbortSignal;
   }): Promise<GithubIssueRecord>;
+
+  createIssueComment(params: {
+    owner: string;
+    repo: string;
+    issueNumber: number;
+    body: string;
+    signal?: AbortSignal;
+  }): Promise<GithubIssueCommentRecord>;
+}
+
+export interface GithubIssueCommentRecord {
+  readonly id: number;
+  readonly body: string;
+  readonly html_url: string;
+  readonly created_at: string;
+  readonly user: { readonly login: string } | null;
 }
 
 /** @deprecated Use {@link GithubClient}. */

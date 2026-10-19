@@ -24,7 +24,7 @@ describe("createGithubConnector", () => {
 
     expect(connector.metadata.key).toBe(CONNECTOR_KEY);
     expect(connector.metadata.version).toBe(CONNECTOR_VERSION);
-    expect(connector.tools).toHaveLength(4);
+    expect(connector.tools).toHaveLength(5);
     expect(connector.tools[0]?.name).toBe(GITHUB_REPOSITORY_GET_TOOL);
   });
 

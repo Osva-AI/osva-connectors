@@ -2,6 +2,7 @@ import { vi } from "vitest";
 
 import type {
   GithubClient,
+  GithubIssueCommentRecord,
   GithubIssueRecord,
   GithubListIssuesResult,
   GithubRepositoryRecord,
@@ -40,6 +41,14 @@ export const samplePullRequest: GithubIssueRecord = {
   pull_request: { url: "https://api.github.com/repos/Osva-AI/osva/pulls/99" },
 };
 
+export const sampleIssueComment: GithubIssueCommentRecord = {
+  id: 1001,
+  body: "Example comment",
+  html_url: "https://github.com/Osva-AI/osva/issues/42#issuecomment-1001",
+  created_at: "2024-01-03T00:00:00Z",
+  user: { login: "octocat" },
+};
+
 export function createMockGithubClient(
   implementation?: Partial<GithubClient>,
 ): GithubClient & {
@@ -47,6 +56,7 @@ export function createMockGithubClient(
   listIssues: ReturnType<typeof vi.fn>;
   getIssue: ReturnType<typeof vi.fn>;
   createIssue: ReturnType<typeof vi.fn>;
+  createIssueComment: ReturnType<typeof vi.fn>;
 } {
   const defaultListResult: GithubListIssuesResult = {
     items: [sampleIssue],
@@ -65,11 +75,15 @@ export function createMockGithubClient(
   const createIssue = vi.fn(
     implementation?.createIssue ?? (async () => sampleIssue),
   );
+  const createIssueComment = vi.fn(
+    implementation?.createIssueComment ?? (async () => sampleIssueComment),
+  );
 
   return {
     getRepository,
     listIssues,
     getIssue,
     createIssue,
+    createIssueComment,
   };
 }

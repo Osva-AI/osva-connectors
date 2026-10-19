@@ -4,6 +4,7 @@ import { createMcpServerFromConnector } from "@osva-ai/connector-sdk";
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  GITHUB_ISSUE_COMMENT_CREATE_TOOL,
   GITHUB_ISSUE_CREATE_TOOL,
   GITHUB_ISSUE_GET_TOOL,
   GITHUB_ISSUE_LIST_TOOL,
@@ -52,6 +53,7 @@ describe("MCP compatibility", () => {
         GITHUB_ISSUE_LIST_TOOL,
         GITHUB_ISSUE_GET_TOOL,
         GITHUB_ISSUE_CREATE_TOOL,
+        GITHUB_ISSUE_COMMENT_CREATE_TOOL,
       ]),
     );
     expect(new Set(toolNames).size).toBe(toolNames.length);
@@ -140,6 +142,42 @@ describe("MCP compatibility", () => {
       /pull_request|Octokit|HttpError|ghp_/i,
     );
     expect(mockClient.createIssue).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls github.issue.comment.create via MCP with injected provider", async () => {
+    const mockClient = createMockGithubClient();
+    const connector = createGithubConnector({ client: mockClient });
+    const server = createMcpServerFromConnector(connector);
+    const [clientTransport, serverTransport] =
+      InMemoryTransport.createLinkedPair();
+
+    const client = new Client({ name: "test-client", version: "1.0.0" });
+    clients.push(client);
+
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+
+    const result = await client.callTool({
+      name: GITHUB_ISSUE_COMMENT_CREATE_TOOL,
+      arguments: {
+        owner: "Osva-AI",
+        repo: "osva",
+        issueNumber: 42,
+        body: "MCP comment",
+      },
+    });
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      id: expect.any(Number),
+      issueNumber: 42,
+      htmlUrl: expect.stringContaining("github.com"),
+    });
+    expect(JSON.stringify(result)).not.toMatch(
+      /pull_request|Octokit|HttpError|ghp_/i,
+    );
+    expect(mockClient.getIssue).toHaveBeenCalledTimes(1);
+    expect(mockClient.createIssueComment).toHaveBeenCalledTimes(1);
   });
 
   it("returns structured tool errors for invalid input", async () => {

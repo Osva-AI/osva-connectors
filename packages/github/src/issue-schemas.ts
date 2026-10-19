@@ -2,6 +2,7 @@ import type { DefineToolOptions } from "@osva-ai/connector-sdk";
 import { z } from "zod";
 
 import {
+  ISSUE_COMMENT_CREATE_MAX_BODY_LENGTH,
   ISSUE_CREATE_MAX_BODY_LENGTH,
   ISSUE_CREATE_MAX_TITLE_LENGTH,
   ISSUE_LIST_DEFAULT_PER_PAGE,
@@ -209,3 +210,67 @@ export const issueCreateOutputSchema = z.object({
 });
 
 export type IssueCreateOutput = z.infer<typeof issueCreateOutputSchema>;
+
+const issueCommentCreateBodySchema = z
+  .string()
+  .trim()
+  .min(1, "Body is required.")
+  .max(
+    ISSUE_COMMENT_CREATE_MAX_BODY_LENGTH,
+    `Body must be at most ${ISSUE_COMMENT_CREATE_MAX_BODY_LENGTH} characters.`,
+  );
+
+export const issueCommentCreateInputSchema = z.object({
+  owner: githubSlugSchema,
+  repo: githubSlugSchema,
+  issueNumber: z.coerce.number().pipe(issueNumberSchema),
+  body: issueCommentCreateBodySchema,
+});
+
+export type IssueCommentCreateInput = z.infer<
+  typeof issueCommentCreateInputSchema
+>;
+
+export const issueCommentCreateInputJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["owner", "repo", "issueNumber", "body"],
+  properties: {
+    owner: {
+      type: "string",
+      minLength: 1,
+      maxLength: 100,
+      description: "GitHub repository owner (user or organization login).",
+    },
+    repo: {
+      type: "string",
+      minLength: 1,
+      maxLength: 100,
+      description: "GitHub repository name.",
+    },
+    issueNumber: {
+      type: "integer",
+      minimum: 1,
+      description: "GitHub issue number (not a pull request).",
+    },
+    body: {
+      type: "string",
+      minLength: 1,
+      maxLength: ISSUE_COMMENT_CREATE_MAX_BODY_LENGTH,
+      description: "Comment body (Markdown).",
+    },
+  },
+} satisfies DefineToolOptions["inputSchema"];
+
+export const issueCommentCreateOutputSchema = z.object({
+  id: z.number().int().positive(),
+  issueNumber: z.number().int().positive(),
+  body: z.string(),
+  htmlUrl: z.string().url(),
+  createdAt: z.string(),
+  authorLogin: z.string().nullable(),
+});
+
+export type IssueCommentCreateOutput = z.infer<
+  typeof issueCommentCreateOutputSchema
+>;

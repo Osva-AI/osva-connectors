@@ -9,6 +9,7 @@ import {
   CONNECTOR_KEY,
   CONNECTOR_NAME,
   CONNECTOR_VERSION,
+  GITHUB_ISSUE_COMMENT_CREATE_TOOL,
   GITHUB_ISSUE_CREATE_TOOL,
   GITHUB_ISSUE_GET_TOOL,
   GITHUB_ISSUE_LIST_TOOL,
@@ -16,6 +17,8 @@ import {
 } from "./constants.js";
 import type { GithubClient } from "./github-client.js";
 import {
+  issueCommentCreateInputJsonSchema,
+  issueCommentCreateInputSchema,
   issueCreateInputJsonSchema,
   issueCreateInputSchema,
   issueGetInputJsonSchema,
@@ -24,7 +27,9 @@ import {
   issueListInputSchema,
   issueListOutputSchema,
 } from "./issue-schemas.js";
+import { mapGithubIssueCommentCreateRecord } from "./map-issue-comment.js";
 import {
+  ensureGithubIssueNotPullRequest,
   mapGithubIssueCreateRecord,
   mapGithubIssueListItems,
   mapGithubIssueRecord,
@@ -51,7 +56,7 @@ export function createGithubConnector(
     key: CONNECTOR_KEY,
     name: CONNECTOR_NAME,
     description:
-      "GitHub connector for OSVA Connector Profile V1 (repository and issue read, issue create). Tool authorization is enforced by OSVA ToolPolicy; GitHub credentials control provider-side access. Human approval for mutating tools must be enforced by the calling OSVA workflow when required.",
+      "GitHub connector for OSVA Connector Profile V1 (repository and issue read, issue create, issue comment create). Tool authorization is enforced by OSVA ToolPolicy; GitHub credentials control provider-side access. Human approval for mutating tools must be enforced by the calling OSVA workflow when required.",
     version: CONNECTOR_VERSION,
     tools: [
       defineTool({
@@ -159,6 +164,48 @@ export function createGithubConnector(
               signal: context.signal,
             });
             return mapGithubIssueCreateRecord(record);
+          } catch (error) {
+            throw mapGithubError(error, { ambiguousWrite: true });
+          }
+        },
+      }),
+      defineTool({
+        name: GITHUB_ISSUE_COMMENT_CREATE_TOOL,
+        description:
+          "Creates a comment on a GitHub issue (mutating). Pull requests are rejected after a preliminary issue lookup and before any comment POST. Each invocation performs at most one issue GET and exactly one comment POST, with no connector-level retries on the POST. GitHub does not provide a guaranteed idempotency key for issue comments—duplicate invocations can create duplicate comments. A successful GET followed by a failed POST does not prove whether a comment was created.",
+        inputSchema: issueCommentCreateInputJsonSchema,
+        handler: async (input, context) => {
+          const parsed = issueCommentCreateInputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw invalidInputError();
+          }
+
+          let issueRecord;
+          try {
+            issueRecord = await options.client.getIssue({
+              owner: parsed.data.owner,
+              repo: parsed.data.repo,
+              issueNumber: parsed.data.issueNumber,
+              signal: context.signal,
+            });
+          } catch (error) {
+            throw mapGithubError(error);
+          }
+
+          ensureGithubIssueNotPullRequest(issueRecord);
+
+          try {
+            const commentRecord = await options.client.createIssueComment({
+              owner: parsed.data.owner,
+              repo: parsed.data.repo,
+              issueNumber: parsed.data.issueNumber,
+              body: parsed.data.body,
+              signal: context.signal,
+            });
+            return mapGithubIssueCommentCreateRecord(
+              commentRecord,
+              parsed.data.issueNumber,
+            );
           } catch (error) {
             throw mapGithubError(error, { ambiguousWrite: true });
           }

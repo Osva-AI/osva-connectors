@@ -3,6 +3,7 @@ import { Octokit } from "octokit";
 import { DEFAULT_REQUEST_TIMEOUT_MS } from "./constants.js";
 import type {
   GithubClient,
+  GithubIssueCommentRecord,
   GithubIssueRecord,
   GithubRepositoryRecord,
 } from "./github-client.js";
@@ -171,6 +172,17 @@ export function createOctokitGithubClient(
         request: mutationRequestOptions(signal),
       });
       return response.data as GithubIssueRecord;
+    },
+
+    async createIssueComment({ owner, repo, issueNumber, body, signal }) {
+      const response = await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: issueNumber,
+        body,
+        request: mutationRequestOptions(signal),
+      });
+      return response.data as GithubIssueCommentRecord;
     },
   };
 }

@@ -5,10 +5,12 @@ export {
   CONNECTOR_KEY,
   CONNECTOR_NAME,
   CONNECTOR_VERSION,
+  GITHUB_ISSUE_COMMENT_CREATE_TOOL,
   GITHUB_ISSUE_CREATE_TOOL,
   GITHUB_ISSUE_GET_TOOL,
   GITHUB_ISSUE_LIST_TOOL,
   GITHUB_REPOSITORY_GET_TOOL,
+  ISSUE_COMMENT_CREATE_MAX_BODY_LENGTH,
   ISSUE_CREATE_MAX_BODY_LENGTH,
   ISSUE_CREATE_MAX_TITLE_LENGTH,
   GITHUB_TOKEN_ENV,
@@ -20,6 +22,7 @@ export {
 } from "./constants.js";
 export type {
   GithubClient,
+  GithubIssueCommentRecord,
   GithubIssueRecord,
   GithubListIssuesResult,
   GithubRepositoryClient,
@@ -37,6 +40,8 @@ export type {
   CreateOctokitRepositoryClientOptions,
 } from "./octokit-client.js";
 export {
+  issueCommentCreateInputSchema,
+  issueCommentCreateOutputSchema,
   issueCreateInputSchema,
   issueCreateOutputSchema,
   issueGetInputSchema,
@@ -45,6 +50,8 @@ export {
   normalizedIssueSchema,
 } from "./issue-schemas.js";
 export type {
+  IssueCommentCreateInput,
+  IssueCommentCreateOutput,
   IssueCreateInput,
   IssueCreateOutput,
   IssueGetInput,

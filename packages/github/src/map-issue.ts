@@ -13,6 +13,18 @@ function isPullRequest(record: GithubIssueRecord): boolean {
   return record.pull_request !== undefined && record.pull_request !== null;
 }
 
+/** Rejects pull requests before issue-only mutating operations (e.g. comment create). */
+export function ensureGithubIssueNotPullRequest(
+  record: GithubIssueRecord,
+): void {
+  if (isPullRequest(record)) {
+    throw new ConnectorSdkError(
+      "NOT_ISSUE",
+      "The requested resource is a pull request, not an issue.",
+    );
+  }
+}
+
 function normalizeLabels(labels: GithubIssueRecord["labels"]): {
   labels: string[];
   labelsTruncated: boolean;
