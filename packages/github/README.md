@@ -22,7 +22,21 @@ Use a **dedicated token** scoped only to repositories that agents should access.
 
 **Public vs private:** A token with access only to selected public repositories cannot read or create issues in private repositories unless those repositories are included in the token's resource owner / repository list. Metadata (read) alone is not sufficient for issue operations.
 
-OSVA **ToolPolicy** controls whether an agent may invoke a tool at the platform boundary. The GitHub token controls which repositories GitHub allows. This connector does **not** implement human approval or workspace authorization; workflows that require explicit human approval must enforce that in OSVA before calling mutating tools.
+OSVA **ToolPolicy** and explicit tool bindings control whether an agent may invoke a tool at the platform boundary. The GitHub token controls which repositories GitHub allows. MCP tool discovery does **not** imply approval. The Community ToolPolicy may be permissive; least-privilege deployments should bind only required tools and use read-only tokens when writes are not needed.
+
+This connector does **not** implement human approval, risk scoring, or workspace authorization. `@osva-ai/connector-sdk` tool definitions expose `name`, `description`, `inputSchema`, and a handler only—there is no supported approval or risk metadata field on tools in SDK `1.1.0-rc.2`. Agents granted a mutating tool may invoke it unless the calling OSVA application enforces additional restrictions.
+
+**Recommended deployment:** dedicated fine-grained PAT scoped to specific repositories; ToolPolicy/tool bindings listing only required tools; separate credentials for read-only vs write workflows; explicit human approval in OSVA Console or workflow **before** mutating tool calls when your policy requires it.
+
+## Untrusted provider content
+
+Issue titles, bodies, labels, and comments from GitHub are **untrusted data**. The connector passes them through normalization and JSON serialization only—it does not execute embedded instructions, change credentials, or invoke other tools. Input bounds (for example title max **256** characters, body max **32,000** on writes) are enforced **before** provider calls. Read-tool outputs preserve provider text subject to field allowlists and label-count limits; they are **not** a substitute for agent-level prompt-injection defenses in the OSVA runtime.
+
+## Production Octokit factory vs injected clients
+
+Stdio startup uses `createOctokitGithubClient({ token })`, which builds Octokit via **`createGithubOctokit()`**—mutation-safe throttling handlers plus per-request `retries: 0` and an internal no-auto-retry marker on issue create and comment create.
+
+For tests or embedding you may pass `octokit` to `createOctokitGithubClient`. **Arbitrary `new Octokit(...)` instances are outside that guarantee:** default Octokit plugins may auto-retry throttled mutating POSTs even when individual requests set `retries: 0`. Use `createGithubOctokit()` for production-equivalent behavior.
 
 ## MCP tools
 
@@ -169,7 +183,15 @@ Tool failures map to structured MCP errors via `@osva-ai/connector-sdk` (`Connec
 
 GitHub **403** responses with rate-limit headers (`X-RateLimit-Remaining: 0` or `Retry-After`) map to **`RATE_LIMITED`**. Other 403 responses map to **`FORBIDDEN`**. GitHub **422** validation failures map to **`INVALID_INPUT`**.
 
-Errors do not include tokens, authorization headers, raw GitHub bodies, or arbitrary provider exception text.
+Errors do not include tokens, authorization headers, raw GitHub bodies, stack traces, or arbitrary provider exception text. Ambiguous write failures use a generic verify-on-GitHub message with `retryable: false`.
+
+## Output bounds
+
+| Layer                 | What is bounded                                                                                                                                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Tool input**        | Slug length, pagination, issue title/body on writes (see tool tables).                                                                                                                                                          |
+| **Provider**          | GitHub API limits apply to upstream requests.                                                                                                                                                                                   |
+| **Normalized output** | Allowlisted fields only; labels capped at **30** names of max **100** chars each with optional `labelsTruncated`. Issue/comment text returned from GitHub on read paths is not re-truncated to write input limits unless noted. |
 
 ## Run (stdio)
 

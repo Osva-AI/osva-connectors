@@ -75,7 +75,12 @@ export interface CreateGithubOctokitOptions {
   readonly baseUrl?: string;
 }
 
-/** Octokit with throttling handlers that honor {@link OSVA_MUTATION_NO_AUTO_RETRY}. */
+/**
+ * Production Octokit factory for stdio and default {@link createOctokitGithubClient} use.
+ *
+ * Configures throttling handlers that honor {@link OSVA_MUTATION_NO_AUTO_RETRY} so mutating
+ * REST calls do not auto-retry after rate limits when combined with mutation request options.
+ */
 export function createGithubOctokit(
   options: CreateGithubOctokitOptions,
 ): Octokit {
@@ -89,6 +94,14 @@ export function createGithubOctokit(
 export interface CreateOctokitGithubClientOptions {
   readonly token: string;
   readonly requestTimeoutMs?: number;
+  /**
+   * Optional caller-managed Octokit instance (tests and advanced embedding only).
+   *
+   * **Not production-safe by default:** mutation no-retry guarantees (single POST, no
+   * throttling/retry plugin auto-retries) apply when this is omitted or when the instance
+   * is created via {@link createGithubOctokit}. Arbitrary `new Octokit(...)` instances may
+   * still auto-retry mutating requests despite `retries: 0` on individual calls.
+   */
   readonly octokit?: Octokit;
 }
 

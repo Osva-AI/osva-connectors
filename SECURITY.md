@@ -19,5 +19,6 @@ Include:
 
 - Never log tokens, authorization headers, or raw provider error bodies.
 - Treat upstream API responses and exception messages as untrusted.
-- Keep connectors read-only unless explicitly documented otherwise.
+- Document mutating tools explicitly (`@osva-ai/connector-github` issue create/comment create are mutating; see package README).
+- Treat issue titles, bodies, labels, and comments as untrusted data at the agent boundary.
 - Use OSVA ToolPolicy for agent-side authorization; GitHub credentials control provider-side access.

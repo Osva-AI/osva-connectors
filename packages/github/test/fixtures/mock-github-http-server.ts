@@ -21,6 +21,7 @@ export type MockGithubMode =
   | "unauthorized"
   | "server_error"
   | "slow"
+  | "hang"
   | "validation_error"
   | "rate_limit";
 
@@ -288,11 +289,25 @@ export function startMockGithubHttpServer(
       if (mode === "rate_limit") {
         finish(403, JSON.stringify({ message: "API rate limit exceeded" }), {
           "x-ratelimit-remaining": "0",
+          "retry-after": "0",
           "x-ratelimit-reset": String(Math.floor(Date.now() / 1000) + 120),
         });
         return true;
       }
       return false;
+    };
+
+    const finishMutationSuccess = (bodyJson: string) => {
+      if (mode === "hang") {
+        return;
+      }
+      if (mode === "slow") {
+        setTimeout(() => {
+          finish(200, bodyJson);
+        }, slowDelayMs);
+        return;
+      }
+      finish(200, bodyJson);
     };
 
     if (parsed.kind === "issues") {
@@ -301,10 +316,13 @@ export function startMockGithubHttpServer(
           lastIssueCreateBody = body;
         },
         () => {
+          if (mode === "hang") {
+            return;
+          }
           if (respondToMutationFailure()) {
             return;
           }
-          finish(200, JSON.stringify(MOCK_CREATED_ISSUE_JSON));
+          finishMutationSuccess(JSON.stringify(MOCK_CREATED_ISSUE_JSON));
         },
       );
       return;
@@ -329,10 +347,15 @@ export function startMockGithubHttpServer(
           lastIssueCommentCreateBody = body;
         },
         () => {
+          if (mode === "hang") {
+            return;
+          }
           if (respondToMutationFailure()) {
             return;
           }
-          finish(200, JSON.stringify(MOCK_CREATED_ISSUE_COMMENT_JSON));
+          finishMutationSuccess(
+            JSON.stringify(MOCK_CREATED_ISSUE_COMMENT_JSON),
+          );
         },
       );
       return;

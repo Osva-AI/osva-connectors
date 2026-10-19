@@ -186,6 +186,29 @@ describe("GitHub connector stdio integration (mock GitHub HTTP)", () => {
     expect(serialized).not.toMatch(/ghp_osva_test_fixture|DO_NOT_LEAK/i);
   });
 
+  it("returns sanitized ambiguous failure for issue create 500 over stdio", async () => {
+    mockGithub = await startMockGithubHttpServer({ mode: "server_error" });
+    const client = await connectClient(FAKE_GITHUB_PAT);
+
+    const result = await client.callTool({
+      name: GITHUB_ISSUE_CREATE_TOOL,
+      arguments: {
+        owner: "Osva-AI",
+        repo: "osva",
+        title: "Should fail safely",
+      },
+    });
+
+    expect(result.isError).toBe(true);
+    expect(mockGithub.getIssueCreateRequestCount()).toBe(1);
+    const serialized = JSON.stringify(result);
+    expect(serialized).toMatch(/verify on GitHub|may still have been applied/i);
+    expect(serialized).not.toMatch(
+      /DO_NOT_LEAK|Internal Server Error|secret_key/i,
+    );
+    expect(serialized).not.toContain(FAKE_GITHUB_PAT);
+  });
+
   it("rejects pull request comment attempts over stdio before comment POST", async () => {
     mockGithub = await startMockGithubHttpServer();
     const client = await connectClient(FAKE_GITHUB_PAT);
