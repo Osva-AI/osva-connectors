@@ -46,3 +46,6 @@ jobs:
 
       - name: Package boundaries
         run: pnpm verify:boundaries
+
+      - name: Package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance

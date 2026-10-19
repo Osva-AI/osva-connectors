@@ -23,7 +23,10 @@ pnpm typecheck
 pnpm test
 pnpm build
 pnpm verify:boundaries
+pnpm test:package-acceptance
 ```
+
+`test:package-acceptance` builds a real tarball, installs it in a temporary project outside this repo, and runs MCP smoke tests against the packaged stdio binary (C3.2).
 
 ## Security
 

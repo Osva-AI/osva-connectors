@@ -13,7 +13,8 @@
     "typecheck": "pnpm --filter @osva-ai/connector-github typecheck",
     "test": "pnpm --filter @osva-ai/connector-github test",
     "build": "pnpm --filter @osva-ai/connector-github build",
-    "verify:boundaries": "node scripts/check-package-boundaries.mjs"
+    "verify:boundaries": "node scripts/check-package-boundaries.mjs",
+    "test:package-acceptance": "node scripts/package-acceptance.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
