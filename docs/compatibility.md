@@ -45,6 +45,16 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `postgres.column.list` (read-only)
 - `postgres.query.read` (read-only)
 
+### `@osva-ai/connector-shopify`
+
+- `shopify.shop.get` (read-only)
+- `shopify.product.list` (read-only)
+- `shopify.product.get` (read-only)
+- `shopify.order.list` (read-only)
+- `shopify.order.get` (read-only)
+- `shopify.inventory.levels.list` (read-only)
+- `shopify.location.list` (read-only)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -61,5 +71,6 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 | ----------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `@osva-ai/connector-github`   | `0.3.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish`           |
 | `@osva-ai/connector-postgres` | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
+| `@osva-ai/connector-shopify`  | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), and [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), and [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md).

@@ -86,6 +86,13 @@ pnpm test:package-acceptance
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-postgres.md)
 - Manual npm workflow: [.github/workflows/npm-release-postgres.yml](./.github/workflows/npm-release-postgres.yml) (`workflow_dispatch` only)
 
+**Shopify connector**
+
+- [Install guide (Shopify)](./docs/INSTALL-SHOPIFY.md)
+- [Release checklist (Shopify)](./docs/RELEASE-CHECKLIST-SHOPIFY.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-shopify.md)
+- Manual npm workflow: [.github/workflows/npm-release-shopify.yml](./.github/workflows/npm-release-shopify.yml) (`workflow_dispatch` only)
+
 ## Security
 
 See [SECURITY.md](./SECURITY.md). Connectors treat upstream API responses and provider exceptions as untrusted input. MCP tool discovery does **not** replace OSVA ToolPolicy or human approval for mutating tools.
