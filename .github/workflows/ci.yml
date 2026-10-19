@@ -71,6 +71,11 @@ jobs:
       - name: Start PostgreSQL 16 fixture
         run: docker compose -f packages/postgres/docker/integration-compose.yml up -d --wait
 
+      - name: Packaged PostgreSQL acceptance (tarball install + MCP)
+        env:
+          OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL: postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration
+        run: pnpm test:package-acceptance:postgres
+
       - name: Run PostgreSQL integration tests
         env:
           OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL: postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration

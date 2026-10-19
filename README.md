@@ -23,12 +23,33 @@ Full quickstart (PowerShell and bash, token scopes, MCP host JSON, tool examples
 
 Tool reference, mutation retry semantics, output budgets, and security notes: **[packages/github/README.md](./packages/github/README.md)**.
 
+## `@osva-ai/connector-postgres`
+
+MCP **stdio** connector for PostgreSQL: connection test, schema/table/column **discovery**, and bounded **read-only SELECT** (`postgres.query.read`).
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-postgres` (see [install guide](./docs/INSTALL-POSTGRES.md)) |
+| Credential  | `OSVA_CONNECTOR_POSTGRES_URL`                                                   |
+| Binary      | `osva-connector-postgres` → MCP stdio server                                    |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-postgres@<version>
+```
+
+Full quickstart (TLS, least-privilege role, MCP host JSON, five tools, timeouts): **[docs/INSTALL-POSTGRES.md](./docs/INSTALL-POSTGRES.md)**.
+
+Tool reference, SQL admission, output budgets, and security notes: **[packages/postgres/README.md](./packages/postgres/README.md)**.
+
 ## Packages in this repository
 
-| Package                                              | Description                                |
-| ---------------------------------------------------- | ------------------------------------------ |
-| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)          |
-| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector foundation (P0.1) |
+| Package                                              | Description                                     |
+| ---------------------------------------------------- | ----------------------------------------------- |
+| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)               |
+| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector (five read-only tools) |
 
 ## Development
 
@@ -45,7 +66,9 @@ pnpm verify:boundaries
 pnpm test:package-acceptance
 ```
 
-`test:package-acceptance` builds a real tarball, installs it outside this repo, and smoke-tests the packaged stdio binary (C3.2).
+`test:package-acceptance` builds a real tarball, installs it outside this repo, and smoke-tests the packaged GitHub stdio binary (C3.2).
+
+`test:package-acceptance:postgres` packs `@osva-ai/connector-postgres`, verifies tarball boundaries, and (when `OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL` is set) runs MCP acceptance through the installed binary against the PostgreSQL 16 Docker fixture (P0.5).
 
 ## Release
 

@@ -4,6 +4,25 @@ PostgreSQL **read-only** connector for [OSVA Connector Profile V1](https://githu
 
 **Not supported:** writes, credential exposure, or unbounded result dumps. Arbitrary SQL is **not** a complete sandbox—database grants, RLS, and PostgreSQL execution semantics remain authoritative.
 
+## External quickstart (after npm publication)
+
+| Requirement | Value                                                                               |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                             |
+| npm package | `@osva-ai/connector-postgres` (see [install guide](../../docs/INSTALL-POSTGRES.md)) |
+| Credential  | `OSVA_CONNECTOR_POSTGRES_URL`                                                       |
+| Binary      | `osva-connector-postgres` → MCP stdio server                                        |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-postgres@<version>
+```
+
+Full quickstart (PowerShell and bash, TLS, least-privilege role, MCP host JSON, five tools): **[docs/INSTALL-POSTGRES.md](../../docs/INSTALL-POSTGRES.md)**.
+
+Packaged acceptance (`pnpm test:package-acceptance:postgres` with `OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL`) builds a real tarball, installs outside this repository, and exercises all five tools through the published binary shim against the Docker PostgreSQL 16 fixture.
+
 ## Configuration
 
 | Variable                                     | Required | Default                                       | Description                                                                                                                                        |

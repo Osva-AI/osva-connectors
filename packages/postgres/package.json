@@ -1,7 +1,7 @@
 {
   "name": "@osva-ai/connector-postgres",
   "version": "0.1.0",
-  "description": "OSVA Connector Profile V1 PostgreSQL MCP connector foundation (connection test)",
+  "description": "OSVA Connector Profile V1 PostgreSQL MCP connector (connection test, catalog discovery, bounded read-only SELECT)",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Osva-AI/osva-connectors/tree/main/packages/postgres",
   "bugs": {
@@ -52,6 +52,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
     "@osva-ai/connector-sdk": "1.1.0-rc.2",
     "pg": "^8.16.3",
     "pg-cursor": "^2.22.1",

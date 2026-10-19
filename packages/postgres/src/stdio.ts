@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { serveStdio } from "@osva-ai/connector-sdk";
+import { createMcpServerFromConnector } from "@osva-ai/connector-sdk";
+import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 
 import { loadPostgresConfig } from "./config.js";
 import { createPostgresConnector } from "./connector.js";
@@ -42,8 +43,23 @@ const connector = createPostgresConnector({
   totalTimeoutMs: config.totalTimeoutMs,
 });
 
-try {
-  await serveStdio(connector);
-} finally {
-  await shutdownPool(database);
-}
+const server = createMcpServerFromConnector(connector);
+const transport = new StdioServerTransport();
+
+await new Promise<void>((resolve, reject) => {
+  transport.onclose = () => {
+    void shutdownPool(database).finally(() => {
+      resolve();
+    });
+  };
+  transport.onerror = (error) => {
+    void shutdownPool(database).finally(() => {
+      reject(error);
+    });
+  };
+  server.connect(transport).catch((error: unknown) => {
+    void shutdownPool(database).finally(() => {
+      reject(error);
+    });
+  });
+});

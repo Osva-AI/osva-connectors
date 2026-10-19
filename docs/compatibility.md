@@ -29,13 +29,21 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 
 ## Tool naming
 
-Registered tools:
+### `@osva-ai/connector-github`
 
 - `github.repository.get` (read-only)
 - `github.issue.list` (read-only)
 - `github.issue.get` (read-only)
 - `github.issue.create` (mutating; C2.1)
 - `github.issue.comment.create` (mutating; C2.2)
+
+### `@osva-ai/connector-postgres`
+
+- `postgres.connection.test` (read-only)
+- `postgres.schema.list` (read-only)
+- `postgres.table.list` (read-only)
+- `postgres.column.list` (read-only)
+- `postgres.query.read` (read-only)
 
 Tool names use dot-separated segments and remain stable for a connector version.
 
@@ -49,8 +57,9 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 
 ## Release status
 
-| Package                     | npm version (target)           | Published                                                                            |
-| --------------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
-| `@osva-ai/connector-github` | `0.3.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish` |
+| Package                       | npm version (target)           | Published                                                                            |
+| ----------------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
+| `@osva-ai/connector-github`   | `0.3.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish` |
+| `@osva-ai/connector-postgres` | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish` |
 
-See [INSTALL.md](./INSTALL.md) and [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), and [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md).
