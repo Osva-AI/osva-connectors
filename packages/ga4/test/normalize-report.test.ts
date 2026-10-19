@@ -38,6 +38,67 @@ describe("mapRunReportResponse", () => {
     expect(mapped.rowsReturned).toBe(1);
   });
 
+  it("marks inferred rowCount as a lower bound when Google omits rowCount", () => {
+    const mapped = mapRunReportResponse({
+      propertyId: "123456789",
+      limit: 100,
+      offset: 0,
+      raw: {
+        dimensionHeaders: [{ name: "country" }],
+        metricHeaders: [{ name: "activeUsers" }],
+        rows: [
+          {
+            dimensionValues: [{ value: "US" }],
+            metricValues: [{ value: "1" }],
+          },
+        ],
+      },
+    });
+    expect(mapped.rowCount).toBe(1);
+    expect(mapped.rowCountIsLowerBound).toBe(true);
+    expect(mapped.hasMoreRows).toBeUndefined();
+  });
+
+  it("maps nested Google propertyQuota QuotaStatus objects", () => {
+    const mapped = mapRunReportResponse({
+      propertyId: "123456789",
+      limit: 10,
+      offset: 0,
+      raw: {
+        dimensionHeaders: [],
+        metricHeaders: [{ name: "sessions" }],
+        rows: [],
+        rowCount: 0,
+        propertyQuota: {
+          tokensPerDay: { consumed: 2, remaining: 1998 },
+          tokensPerHour: { consumed: 2, remaining: 398 },
+        },
+      },
+    });
+    expect(mapped.quota).toEqual({
+      tokensPerDay: { consumed: 2, remaining: 1998 },
+      tokensPerHour: { consumed: 2, remaining: 398 },
+    });
+  });
+
+  it("omits propertyQuota when shapes are not QuotaStatus objects", () => {
+    const mapped = mapRunReportResponse({
+      propertyId: "123456789",
+      limit: 10,
+      offset: 0,
+      raw: {
+        dimensionHeaders: [],
+        metricHeaders: [{ name: "sessions" }],
+        rows: [],
+        rowCount: 0,
+        propertyQuota: {
+          tokensPerDay: 1000,
+        },
+      },
+    });
+    expect(mapped.quota).toBeUndefined();
+  });
+
   it("rejects misaligned row values", () => {
     expect(() =>
       mapRunReportResponse({

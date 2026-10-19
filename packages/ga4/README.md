@@ -2,7 +2,7 @@
 
 OSVA Connector Profile V1 **read-only** MCP connector for Google Analytics 4 (GA4).
 
-This package is developed in the [osva-connectors](https://github.com/Osva-AI/osva-connectors) monorepo. It is **not published to npm** as part of G1.
+This package is developed in the [osva-connectors](https://github.com/Osva-AI/osva-connectors) monorepo. Target first public npm version **`0.1.0`** — **not published yet** as of G3 preparation; see [docs/INSTALL-GA4.md](../../docs/INSTALL-GA4.md).
 
 ## Capabilities
 
@@ -74,12 +74,12 @@ Local monorepo development:
 }
 ```
 
-After npm publication (future release):
+After npm publication:
 
 ```json
 {
   "command": "npx",
-  "args": ["-y", "@osva-ai/connector-ga4"],
+  "args": ["-y", "@osva-ai/connector-ga4@0.1.0"],
   "env": {
     "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/service-account.json"
   }
@@ -102,13 +102,13 @@ Relative expressions follow [Google’s documented syntax](https://developers.go
 
 ## Pagination and output limits
 
-| Concern         | Behavior                                                                                                                                          |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core reports    | Google `offset` + `limit` (max **1000** rows per tool call); includes `rowCount`, `rowsReturned`, and `hasMoreRows` when more provider rows exist |
-| Property list   | Admin API `pageToken` pagination                                                                                                                  |
-| Metadata        | Single provider fetch; **local** `search`, `limit`, and `offset` (not Google server-side metadata pagination)                                     |
-| MCP JSON output | Max **256 KiB** serialized structured output per tool response                                                                                    |
-| HTTP body read  | Max **2 MiB** raw response before parsing                                                                                                         |
+| Concern         | Behavior                                                                                                                                                                                                                                                   |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core reports    | Google `offset` + `limit` (max **1000** rows per tool call); includes `rowCount`, `rowsReturned`, and `hasMoreRows` when derivable. If Google omits `rowCount`, the connector sets `rowCountIsLowerBound: true` (page row count only, not the query total) |
+| Property list   | Admin API `pageToken` pagination                                                                                                                                                                                                                           |
+| Metadata        | Single provider fetch; **local** `search`, `limit`, and `offset` (not Google server-side metadata pagination)                                                                                                                                              |
+| MCP JSON output | Max **256 KiB** serialized structured output per tool response                                                                                                                                                                                             |
+| HTTP body read  | Max **2 MiB** raw response before parsing                                                                                                                                                                                                                  |
 
 The connector does not recursively fetch additional report pages within one tool call.
 
@@ -121,7 +121,7 @@ Google enforces separate quotas for Core, Realtime, and Admin operations. The co
 - Honors `Retry-After` when present and within the deadline
 - Does not retry authentication, permission, or validation failures
 
-Quota fields in responses are passed through when present; they are **not guaranteed** on every call.
+When Google includes `propertyQuota`, fields use nested **`consumed` / `remaining`** `QuotaStatus` objects (Analytics Data API shape). Flat numeric quota fields are **not** synthesized. Quota is **not guaranteed** on every call; the connector does not set `returnPropertyQuota` on requests.
 
 ## Security and privacy
 
@@ -132,7 +132,7 @@ Quota fields in responses are passed through when present; they are **not guaran
 
 ## Known limitations
 
-- G1 is read-only; no Admin write operations.
+- Read-only; no Admin write operations.
 - No interactive OAuth onboarding in the connector binary.
 - Realtime reports support only realtime-compatible dimensions/metrics.
 - Ecommerce overview and product breakdown use fixed metric/dimension sets; incompatible combinations surface as provider errors.

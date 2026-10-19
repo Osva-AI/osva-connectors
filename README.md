@@ -44,12 +44,35 @@ Full quickstart (TLS, least-privilege role, MCP host JSON, five tools, timeouts)
 
 Tool reference, SQL admission, output budgets, and security notes: **[packages/postgres/README.md](./packages/postgres/README.md)**.
 
+## `@osva-ai/connector-ga4`
+
+MCP **stdio** connector for Google Analytics 4: property **discovery**, reporting **metadata**, and bounded **read-only** core, realtime, acquisition, and ecommerce reports.
+
+| Requirement | Value                                                                 |
+| ----------- | --------------------------------------------------------------------- |
+| Node.js     | **24+**                                                               |
+| npm package | `@osva-ai/connector-ga4` (see [install guide](./docs/INSTALL-GA4.md)) |
+| Credential  | Google ADC or service account (`GOOGLE_APPLICATION_CREDENTIALS`)      |
+| Binary      | `osva-connector-ga4` → MCP stdio server                               |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-ga4@0.1.0
+```
+
+Full quickstart (Google Cloud APIs, property access, MCP host JSON, seven tools, pagination): **[docs/INSTALL-GA4.md](./docs/INSTALL-GA4.md)**.
+
+Tool reference, quotas, output budgets, and security notes: **[packages/ga4/README.md](./packages/ga4/README.md)**.
+
 ## Packages in this repository
 
-| Package                                              | Description                                     |
-| ---------------------------------------------------- | ----------------------------------------------- |
-| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)               |
-| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector (five read-only tools) |
+| Package                                              | Description                                              |
+| ---------------------------------------------------- | -------------------------------------------------------- |
+| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)                        |
+| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector (five read-only tools)          |
+| [`@osva-ai/connector-shopify`](./packages/shopify)   | Shopify MCP connector (seven read-only tools)            |
+| [`@osva-ai/connector-ga4`](./packages/ga4)           | Google Analytics 4 MCP connector (seven read-only tools) |
 
 ## Development
 
@@ -72,6 +95,8 @@ pnpm test:package-acceptance
 
 `test:package-acceptance:shopify` packs `@osva-ai/connector-shopify`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Shopify S2).
 
+`test:package-acceptance:ga4` packs `@osva-ai/connector-ga4`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (GA4 G3).
+
 ## Release
 
 **GitHub connector**
@@ -92,6 +117,13 @@ pnpm test:package-acceptance
 - [Release checklist (Shopify)](./docs/RELEASE-CHECKLIST-SHOPIFY.md)
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-shopify.md)
 - Manual npm workflow: [.github/workflows/npm-release-shopify.yml](./.github/workflows/npm-release-shopify.yml) (`workflow_dispatch` only)
+
+**GA4 connector**
+
+- [Install guide (GA4)](./docs/INSTALL-GA4.md)
+- [Release checklist (GA4)](./docs/RELEASE-CHECKLIST-GA4.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-ga4.md)
+- Manual npm workflow: [.github/workflows/npm-release-ga4.yml](./.github/workflows/npm-release-ga4.yml) (`workflow_dispatch` only)
 
 ## Security
 

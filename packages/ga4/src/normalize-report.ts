@@ -26,17 +26,20 @@ export interface NormalizedReport {
   readonly metricHeaders: ReportHeader[];
   readonly rows: ReportRow[];
   readonly rowCount: number;
+  /** Set when Google omits `rowCount` and the value is inferred from this page only (a lower bound, not the query total). */
+  readonly rowCountIsLowerBound?: true;
   readonly limit: number;
   readonly offset: number;
   readonly rowsReturned: number;
   readonly hasMoreRows?: boolean;
   readonly rowsTruncatedLocally?: true;
   readonly quota?: {
-    readonly tokensPerDay?: number;
-    readonly tokensPerHour?: number;
-    readonly concurrentRequests?: number;
-    readonly serverErrorsPerProjectPerHour?: number;
-    readonly potentiallyThresholded?: boolean;
+    readonly tokensPerDay?: QuotaStatus;
+    readonly tokensPerHour?: QuotaStatus;
+    readonly concurrentRequests?: QuotaStatus;
+    readonly serverErrorsPerProjectPerHour?: QuotaStatus;
+    readonly potentiallyThresholdedRequestsPerHour?: QuotaStatus;
+    readonly tokensPerProjectPerHour?: QuotaStatus;
   };
   readonly metadata?: {
     readonly currencyCode?: string;
@@ -98,6 +101,33 @@ function mapDimensionValue(value: unknown): string {
   ).value;
 }
 
+interface QuotaStatus {
+  readonly consumed?: number;
+  readonly remaining?: number;
+}
+
+function mapQuotaStatus(value: unknown): QuotaStatus | undefined {
+  if (value === null || typeof value !== "object") {
+    return undefined;
+  }
+  const record = value as Record<string, unknown>;
+  const consumed =
+    typeof record.consumed === "number" && Number.isFinite(record.consumed)
+      ? record.consumed
+      : undefined;
+  const remaining =
+    typeof record.remaining === "number" && Number.isFinite(record.remaining)
+      ? record.remaining
+      : undefined;
+  if (consumed === undefined && remaining === undefined) {
+    return undefined;
+  }
+  return {
+    ...(consumed !== undefined ? { consumed } : {}),
+    ...(remaining !== undefined ? { remaining } : {}),
+  };
+}
+
 function parseRowCount(value: unknown): number {
   if (typeof value === "number" && Number.isInteger(value) && value >= 0) {
     return value;
@@ -114,25 +144,55 @@ function mapQuota(raw: unknown): NormalizedReport["quota"] | undefined {
   }
   const q = raw as Record<string, unknown>;
   const quota = {
-    ...(typeof q.tokensPerDay === "number" && Number.isFinite(q.tokensPerDay)
-      ? { tokensPerDay: q.tokensPerDay }
+    ...(mapQuotaStatus(q.tokensPerDay)
+      ? { tokensPerDay: mapQuotaStatus(q.tokensPerDay)! }
       : {}),
-    ...(typeof q.tokensPerHour === "number" && Number.isFinite(q.tokensPerHour)
-      ? { tokensPerHour: q.tokensPerHour }
+    ...(mapQuotaStatus(q.tokensPerHour)
+      ? { tokensPerHour: mapQuotaStatus(q.tokensPerHour)! }
       : {}),
-    ...(typeof q.concurrentRequests === "number" &&
-    Number.isFinite(q.concurrentRequests)
-      ? { concurrentRequests: q.concurrentRequests }
+    ...(mapQuotaStatus(q.concurrentRequests)
+      ? { concurrentRequests: mapQuotaStatus(q.concurrentRequests)! }
       : {}),
-    ...(typeof q.serverErrorsPerProjectPerHour === "number" &&
-    Number.isFinite(q.serverErrorsPerProjectPerHour)
-      ? { serverErrorsPerProjectPerHour: q.serverErrorsPerProjectPerHour }
+    ...(mapQuotaStatus(q.serverErrorsPerProjectPerHour)
+      ? {
+          serverErrorsPerProjectPerHour: mapQuotaStatus(
+            q.serverErrorsPerProjectPerHour,
+          )!,
+        }
       : {}),
-    ...(typeof q.potentiallyThresholded === "boolean"
-      ? { potentiallyThresholded: q.potentiallyThresholded }
+    ...(mapQuotaStatus(q.potentiallyThresholdedRequestsPerHour)
+      ? {
+          potentiallyThresholdedRequestsPerHour: mapQuotaStatus(
+            q.potentiallyThresholdedRequestsPerHour,
+          )!,
+        }
+      : {}),
+    ...(mapQuotaStatus(q.tokensPerProjectPerHour)
+      ? { tokensPerProjectPerHour: mapQuotaStatus(q.tokensPerProjectPerHour)! }
       : {}),
   };
   return Object.keys(quota).length > 0 ? quota : undefined;
+}
+
+function inferHasMoreRows(params: {
+  providerRowCount: boolean;
+  rowCount: number;
+  rowCountIsLowerBound: boolean;
+  offset: number;
+  rowsReturned: number;
+  limit: number;
+}): boolean {
+  if (params.providerRowCount) {
+    return (
+      params.rowCount > params.offset + params.rowsReturned &&
+      params.rowsReturned <= params.limit
+    );
+  }
+  return (
+    params.rowCountIsLowerBound &&
+    params.rowsReturned >= params.limit &&
+    params.rowsReturned > 0
+  );
 }
 
 function mapMetadata(raw: unknown): NormalizedReport["metadata"] | undefined {
@@ -206,18 +266,23 @@ export function mapRunReportResponse(params: {
     }
   }
 
+  const providerRowCount = envelope.rowCount !== undefined;
+  let rowCountIsLowerBound = false;
   let rowCount = parseRowCount(envelope.rowCount);
-  if (
-    envelope.rowCount === undefined &&
-    rows.length > 0 &&
-    rowCount < rows.length
-  ) {
+  if (!providerRowCount && rows.length > 0 && rowCount < rows.length) {
     rowCount = rows.length;
+    rowCountIsLowerBound = true;
   }
 
   const rowsReturned = rows.length;
-  const hasMoreRows =
-    rowCount > params.offset + rowsReturned && rowsReturned <= params.limit;
+  const hasMoreRows = inferHasMoreRows({
+    providerRowCount,
+    rowCount,
+    rowCountIsLowerBound,
+    offset: params.offset,
+    rowsReturned,
+    limit: params.limit,
+  });
 
   let result: NormalizedReport = {
     propertyId: params.propertyId,
@@ -228,6 +293,7 @@ export function mapRunReportResponse(params: {
     limit: params.limit,
     offset: params.offset,
     rowsReturned,
+    ...(rowCountIsLowerBound ? { rowCountIsLowerBound: true as const } : {}),
     ...(hasMoreRows ? { hasMoreRows: true as const } : {}),
   };
 
@@ -246,8 +312,14 @@ export function mapRunReportResponse(params: {
   const packedRowsReturned = packed.rows.length;
   const packedHasMore =
     !rowsTruncatedLocally &&
-    rowCount > params.offset + packedRowsReturned &&
-    packedRowsReturned <= params.limit;
+    inferHasMoreRows({
+      providerRowCount,
+      rowCount,
+      rowCountIsLowerBound,
+      offset: params.offset,
+      rowsReturned: packedRowsReturned,
+      limit: params.limit,
+    });
   result = {
     ...packed,
     rowsReturned: packedRowsReturned,

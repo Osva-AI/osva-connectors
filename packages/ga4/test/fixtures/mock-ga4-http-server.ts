@@ -143,9 +143,8 @@ function reportBody(body: Record<string, unknown>) {
     rowCount: 1,
     metadata: { currencyCode: "USD", timeZone: "America/Los_Angeles" },
     propertyQuota: {
-      tokensPerDay: 1000,
-      tokensPerHour: 100,
-      potentiallyThresholded: false,
+      tokensPerDay: { consumed: 1, remaining: 999 },
+      tokensPerHour: { consumed: 1, remaining: 99 },
     },
   };
 }
