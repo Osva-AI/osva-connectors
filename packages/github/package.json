@@ -1,7 +1,7 @@
 {
   "name": "@osva-ai/connector-github",
   "version": "0.2.0",
-  "description": "OSVA Connector Profile V1 GitHub connector (read-only)",
+  "description": "OSVA Connector Profile V1 GitHub connector (read and issue create)",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

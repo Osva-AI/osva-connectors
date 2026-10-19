@@ -2,6 +2,8 @@ import type { DefineToolOptions } from "@osva-ai/connector-sdk";
 import { z } from "zod";
 
 import {
+  ISSUE_CREATE_MAX_BODY_LENGTH,
+  ISSUE_CREATE_MAX_TITLE_LENGTH,
   ISSUE_LIST_DEFAULT_PER_PAGE,
   ISSUE_LIST_MAX_PAGE,
   ISSUE_LIST_MAX_PER_PAGE,
@@ -51,6 +53,32 @@ export const issueGetInputSchema = z.object({
 });
 
 export type IssueGetInput = z.infer<typeof issueGetInputSchema>;
+
+const issueCreateTitleSchema = z
+  .string()
+  .trim()
+  .min(1, "Title is required.")
+  .max(
+    ISSUE_CREATE_MAX_TITLE_LENGTH,
+    `Title must be at most ${ISSUE_CREATE_MAX_TITLE_LENGTH} characters.`,
+  );
+
+const issueCreateBodySchema = z
+  .string()
+  .max(
+    ISSUE_CREATE_MAX_BODY_LENGTH,
+    `Body must be at most ${ISSUE_CREATE_MAX_BODY_LENGTH} characters.`,
+  )
+  .optional();
+
+export const issueCreateInputSchema = z.object({
+  owner: githubSlugSchema,
+  repo: githubSlugSchema,
+  title: issueCreateTitleSchema,
+  body: issueCreateBodySchema,
+});
+
+export type IssueCreateInput = z.infer<typeof issueCreateInputSchema>;
 
 export const issueListInputJsonSchema = {
   type: "object",
@@ -115,6 +143,37 @@ export const issueGetInputJsonSchema = {
   },
 } satisfies DefineToolOptions["inputSchema"];
 
+export const issueCreateInputJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["owner", "repo", "title"],
+  properties: {
+    owner: {
+      type: "string",
+      minLength: 1,
+      maxLength: 100,
+      description: "GitHub repository owner (user or organization login).",
+    },
+    repo: {
+      type: "string",
+      minLength: 1,
+      maxLength: 100,
+      description: "GitHub repository name.",
+    },
+    title: {
+      type: "string",
+      minLength: 1,
+      maxLength: ISSUE_CREATE_MAX_TITLE_LENGTH,
+      description: "Issue title (Markdown plain text).",
+    },
+    body: {
+      type: "string",
+      maxLength: ISSUE_CREATE_MAX_BODY_LENGTH,
+      description: "Optional issue body (Markdown).",
+    },
+  },
+} satisfies DefineToolOptions["inputSchema"];
+
 export const normalizedIssueSchema = z.object({
   number: z.number().int().positive(),
   title: z.string(),
@@ -139,3 +198,14 @@ export const issueListOutputSchema = z.object({
 });
 
 export type IssueListOutput = z.infer<typeof issueListOutputSchema>;
+
+export const issueCreateOutputSchema = z.object({
+  number: z.number().int().positive(),
+  title: z.string(),
+  state: z.enum(["open", "closed"]),
+  htmlUrl: z.string().url(),
+  createdAt: z.string(),
+  authorLogin: z.string().nullable(),
+});
+
+export type IssueCreateOutput = z.infer<typeof issueCreateOutputSchema>;

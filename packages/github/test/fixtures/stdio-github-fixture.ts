@@ -3,7 +3,6 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { serveStdio, type DefinedConnector } from "@osva-ai/connector-sdk";
-import { Octokit } from "octokit";
 
 const TEST_API_BASE_ENV = "OSVA_CONNECTOR_GITHUB_TEST_API_BASE_URL";
 const FIXTURE_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -44,15 +43,23 @@ const { loadGithubConfig } = await loadDistModule<{
 const { createGithubConnector } = await loadDistModule<{
   createGithubConnector: (options: { client: unknown }) => DefinedConnector;
 }>("connector.js");
-const { createOctokitGithubClient } = await loadDistModule<{
-  createOctokitGithubClient: (options: { token: string; octokit: Octokit }) => {
-    getRepository: (input: unknown) => Promise<unknown>;
-  };
-}>("octokit-client.js");
+const { createGithubOctokit, createOctokitGithubClient } =
+  await loadDistModule<{
+    createGithubOctokit: (options: {
+      token: string;
+      baseUrl: string;
+    }) => unknown;
+    createOctokitGithubClient: (options: {
+      token: string;
+      octokit: unknown;
+    }) => {
+      getRepository: (input: unknown) => Promise<unknown>;
+    };
+  }>("octokit-client.js");
 
 const config = loadGithubConfig(process.env);
-const octokit = new Octokit({
-  auth: config.token,
+const octokit = createGithubOctokit({
+  token: config.token,
   baseUrl: apiBaseUrl,
 });
 const client = createOctokitGithubClient({

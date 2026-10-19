@@ -9,19 +9,26 @@ import {
   CONNECTOR_KEY,
   CONNECTOR_NAME,
   CONNECTOR_VERSION,
+  GITHUB_ISSUE_CREATE_TOOL,
   GITHUB_ISSUE_GET_TOOL,
   GITHUB_ISSUE_LIST_TOOL,
   GITHUB_REPOSITORY_GET_TOOL,
 } from "./constants.js";
 import type { GithubClient } from "./github-client.js";
 import {
+  issueCreateInputJsonSchema,
+  issueCreateInputSchema,
   issueGetInputJsonSchema,
   issueGetInputSchema,
   issueListInputJsonSchema,
   issueListInputSchema,
   issueListOutputSchema,
 } from "./issue-schemas.js";
-import { mapGithubIssueListItems, mapGithubIssueRecord } from "./map-issue.js";
+import {
+  mapGithubIssueCreateRecord,
+  mapGithubIssueListItems,
+  mapGithubIssueRecord,
+} from "./map-issue.js";
 import { mapGithubError } from "./map-github-error.js";
 import { mapRepositoryRecord } from "./map-repository.js";
 import {
@@ -44,7 +51,7 @@ export function createGithubConnector(
     key: CONNECTOR_KEY,
     name: CONNECTOR_NAME,
     description:
-      "Read-only GitHub connector for OSVA Connector Profile V1. Tool authorization is enforced by OSVA ToolPolicy; GitHub credentials control provider-side repository access.",
+      "GitHub connector for OSVA Connector Profile V1 (repository and issue read, issue create). Tool authorization is enforced by OSVA ToolPolicy; GitHub credentials control provider-side access. Human approval for mutating tools must be enforced by the calling OSVA workflow when required.",
     version: CONNECTOR_VERSION,
     tools: [
       defineTool({
@@ -127,6 +134,33 @@ export function createGithubConnector(
             return mapGithubIssueRecord(record);
           } catch (error) {
             throw mapGithubError(error);
+          }
+        },
+      }),
+      defineTool({
+        name: GITHUB_ISSUE_CREATE_TOOL,
+        description:
+          "Creates a GitHub issue (mutating). Each invocation performs exactly one GitHub REST create request with no connector-level retries. GitHub does not provide a guaranteed idempotency key for issue creation in this implementation.",
+        inputSchema: issueCreateInputJsonSchema,
+        handler: async (input, context) => {
+          const parsed = issueCreateInputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw invalidInputError();
+          }
+
+          try {
+            const record = await options.client.createIssue({
+              owner: parsed.data.owner,
+              repo: parsed.data.repo,
+              title: parsed.data.title,
+              ...(parsed.data.body !== undefined
+                ? { body: parsed.data.body }
+                : {}),
+              signal: context.signal,
+            });
+            return mapGithubIssueCreateRecord(record);
+          } catch (error) {
+            throw mapGithubError(error, { ambiguousWrite: true });
           }
         },
       }),

@@ -5,9 +5,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
-import { GITHUB_REPOSITORY_GET_TOOL } from "../src/constants.js";
+import {
+  GITHUB_ISSUE_CREATE_TOOL,
+  GITHUB_REPOSITORY_GET_TOOL,
+} from "../src/constants.js";
 import {
   FAKE_GITHUB_PAT,
+  MOCK_CREATED_ISSUE_JSON,
   MOCK_REPOSITORY_JSON,
   startMockGithubHttpServer,
   type MockGithubHttpServer,
@@ -116,5 +120,36 @@ describe("GitHub connector stdio integration (mock GitHub HTTP)", () => {
     expect(serialized).toMatch(/UNAUTHORIZED|authentication failed/i);
     expect(serialized).not.toContain("ghp_wrong_token_for_test");
     expect(serialized).not.toContain("DO_NOT_LEAK");
+  });
+
+  it("calls github.issue.create over stdio against the mock GitHub API", async () => {
+    mockGithub = await startMockGithubHttpServer();
+    const client = await connectClient(FAKE_GITHUB_PAT);
+
+    const result = await client.callTool({
+      name: GITHUB_ISSUE_CREATE_TOOL,
+      arguments: {
+        owner: "Osva-AI",
+        repo: "osva",
+        title: "Stdio integration issue",
+        body: "Created in test",
+      },
+    });
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      number: MOCK_CREATED_ISSUE_JSON.number,
+      title: MOCK_CREATED_ISSUE_JSON.title,
+      htmlUrl: MOCK_CREATED_ISSUE_JSON.html_url,
+      authorLogin: "fixture-bot",
+    });
+    expect(mockGithub.getIssueCreateRequestCount()).toBe(1);
+    expect(mockGithub.getLastIssueCreateBody()).toMatchObject({
+      title: "Stdio integration issue",
+      body: "Created in test",
+    });
+
+    const serialized = JSON.stringify(result);
+    expect(serialized).not.toMatch(/ghp_osva_test_fixture|DO_NOT_LEAK/i);
   });
 });

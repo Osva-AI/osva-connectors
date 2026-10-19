@@ -6,6 +6,11 @@ export const CONNECTOR_VERSION = "0.2.0";
 export const GITHUB_REPOSITORY_GET_TOOL = "github.repository.get";
 export const GITHUB_ISSUE_LIST_TOOL = "github.issue.list";
 export const GITHUB_ISSUE_GET_TOOL = "github.issue.get";
+export const GITHUB_ISSUE_CREATE_TOOL = "github.issue.create";
+
+/** Issue creation input bounds (enforced before provider calls). */
+export const ISSUE_CREATE_MAX_TITLE_LENGTH = 256;
+export const ISSUE_CREATE_MAX_BODY_LENGTH = 32_000;
 
 /** Pagination bounds (enforced in Zod and provider calls). */
 export const ISSUE_LIST_DEFAULT_PER_PAGE = 20;

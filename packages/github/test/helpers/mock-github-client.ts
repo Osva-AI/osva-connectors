@@ -46,6 +46,7 @@ export function createMockGithubClient(
   getRepository: ReturnType<typeof vi.fn>;
   listIssues: ReturnType<typeof vi.fn>;
   getIssue: ReturnType<typeof vi.fn>;
+  createIssue: ReturnType<typeof vi.fn>;
 } {
   const defaultListResult: GithubListIssuesResult = {
     items: [sampleIssue],
@@ -61,10 +62,14 @@ export function createMockGithubClient(
     implementation?.listIssues ?? (async () => defaultListResult),
   );
   const getIssue = vi.fn(implementation?.getIssue ?? (async () => sampleIssue));
+  const createIssue = vi.fn(
+    implementation?.createIssue ?? (async () => sampleIssue),
+  );
 
   return {
     getRepository,
     listIssues,
     getIssue,
+    createIssue,
   };
 }

@@ -53,6 +53,14 @@ export interface GithubClient {
     issueNumber: number;
     signal?: AbortSignal;
   }): Promise<GithubIssueRecord>;
+
+  createIssue(params: {
+    owner: string;
+    repo: string;
+    title: string;
+    body?: string;
+    signal?: AbortSignal;
+  }): Promise<GithubIssueRecord>;
 }
 
 /** @deprecated Use {@link GithubClient}. */

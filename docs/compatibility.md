@@ -29,11 +29,12 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 
 ## Tool naming
 
-C1.1 registers these tools:
+Registered tools:
 
-- `github.repository.get`
-- `github.issue.list`
-- `github.issue.get`
+- `github.repository.get` (read-only)
+- `github.issue.list` (read-only)
+- `github.issue.get` (read-only)
+- `github.issue.create` (mutating; C2.1)
 
 Tool names use dot-separated segments and remain stable for a connector version.
 

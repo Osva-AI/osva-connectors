@@ -52,7 +52,19 @@ function isTimeoutError(error: unknown): boolean {
   );
 }
 
-export function mapGithubError(error: unknown): ConnectorSdkError {
+export interface MapGithubErrorOptions {
+  /** When true, avoid implying a failed response means a write did not occur. */
+  readonly ambiguousWrite?: boolean;
+}
+
+const AMBIGUOUS_WRITE_MESSAGE =
+  "GitHub did not return a confirmable response. The change may still have been applied; verify on GitHub before retrying.";
+
+export function mapGithubError(
+  error: unknown,
+  options?: MapGithubErrorOptions,
+): ConnectorSdkError {
+  const ambiguousWrite = options?.ambiguousWrite === true;
   if (error instanceof ConnectorSdkError) {
     return error;
   }
@@ -62,6 +74,11 @@ export function mapGithubError(error: unknown): ConnectorSdkError {
   }
 
   if (isTimeoutError(error)) {
+    if (ambiguousWrite) {
+      return new ConnectorSdkError("TIMEOUT", AMBIGUOUS_WRITE_MESSAGE, {
+        retryable: false,
+      });
+    }
     return new ConnectorSdkError("TIMEOUT", "GitHub request timed out.", {
       retryable: true,
     });
@@ -77,6 +94,15 @@ export function mapGithubError(error: unknown): ConnectorSdkError {
     }
     if (status === 403) {
       if (isGithubRateLimitResponse(error)) {
+        if (ambiguousWrite) {
+          return new ConnectorSdkError(
+            "RATE_LIMITED",
+            AMBIGUOUS_WRITE_MESSAGE,
+            {
+              retryable: false,
+            },
+          );
+        }
         return rateLimitError("GitHub rate limit exceeded.");
       }
       return new ConnectorSdkError(
@@ -87,9 +113,31 @@ export function mapGithubError(error: unknown): ConnectorSdkError {
     if (status === 404) {
       return new ConnectorSdkError("NOT_FOUND", "Repository not found.");
     }
+    if (status === 422) {
+      return new ConnectorSdkError(
+        "INVALID_INPUT",
+        "GitHub rejected the request payload.",
+      );
+    }
     if (status === 429) {
+      if (ambiguousWrite) {
+        return new ConnectorSdkError("RATE_LIMITED", AMBIGUOUS_WRITE_MESSAGE, {
+          retryable: false,
+        });
+      }
       return rateLimitError("GitHub rate limit exceeded.");
     }
+    if (ambiguousWrite && status >= 500) {
+      return new ConnectorSdkError("PROVIDER_ERROR", AMBIGUOUS_WRITE_MESSAGE, {
+        retryable: false,
+      });
+    }
+  }
+
+  if (ambiguousWrite) {
+    return new ConnectorSdkError("PROVIDER_ERROR", AMBIGUOUS_WRITE_MESSAGE, {
+      retryable: false,
+    });
   }
 
   return new ConnectorSdkError(

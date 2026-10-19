@@ -4,9 +4,9 @@ Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](
 
 ## Packages
 
-| Package                                          | Description                             |
-| ------------------------------------------------ | --------------------------------------- |
-| [`@osva-ai/connector-github`](./packages/github) | Read-only GitHub connector (slice C0.1) |
+| Package                                          | Description                                            |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| [`@osva-ai/connector-github`](./packages/github) | GitHub connector (repository/issue read, issue create) |
 
 ## Requirements
 

@@ -3,7 +3,9 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 import { MAX_LABEL_NAME_LENGTH, MAX_LABELS_PER_ISSUE } from "./constants.js";
 import type { GithubIssueRecord } from "./github-client.js";
 import {
+  issueCreateOutputSchema,
   normalizedIssueSchema,
+  type IssueCreateOutput,
   type NormalizedIssue,
 } from "./issue-schemas.js";
 
@@ -67,6 +69,36 @@ export function mapGithubIssueRecord(
   };
 
   const parsed = normalizedIssueSchema.safeParse(mapped);
+  if (!parsed.success) {
+    throw new ConnectorSdkError(
+      "PROVIDER_ERROR",
+      "GitHub returned an unexpected issue payload.",
+    );
+  }
+
+  return parsed.data;
+}
+
+export function mapGithubIssueCreateRecord(
+  record: GithubIssueRecord,
+): IssueCreateOutput {
+  if (isPullRequest(record)) {
+    throw new ConnectorSdkError(
+      "PROVIDER_ERROR",
+      "GitHub returned an unexpected issue payload.",
+    );
+  }
+
+  const mapped = {
+    number: record.number,
+    title: record.title,
+    state: record.state === "closed" ? "closed" : "open",
+    htmlUrl: record.html_url,
+    createdAt: record.created_at,
+    authorLogin: record.user?.login ?? null,
+  };
+
+  const parsed = issueCreateOutputSchema.safeParse(mapped);
   if (!parsed.success) {
     throw new ConnectorSdkError(
       "PROVIDER_ERROR",

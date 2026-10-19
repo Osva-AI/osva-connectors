@@ -44,6 +44,45 @@ describe("mapGithubError", () => {
     expect(error.code).toBe("NOT_FOUND");
   });
 
+  it("maps GitHub 422 responses", () => {
+    const error = mapGithubError(
+      createGithubRequestError(422, "Validation Failed"),
+    );
+    expect(error.code).toBe("INVALID_INPUT");
+    expect(error.message).not.toContain("Validation Failed");
+  });
+
+  it("uses ambiguous write messaging for mutation timeouts", () => {
+    const timeout = new Error("Timed out");
+    timeout.name = "TimeoutError";
+    const error = mapGithubError(timeout, { ambiguousWrite: true });
+    expect(error.code).toBe("TIMEOUT");
+    expect(error.retryable).toBe(false);
+    expect(error.message).toMatch(/may still have been applied/i);
+  });
+
+  it("uses ambiguous write messaging for mutation 5xx errors", () => {
+    const error = mapGithubError(
+      createGithubRequestError(500, "Internal Server Error"),
+      { ambiguousWrite: true },
+    );
+    expect(error.code).toBe("PROVIDER_ERROR");
+    expect(error.retryable).toBe(false);
+    expect(error.message).toMatch(/may still have been applied/i);
+  });
+
+  it("does not mark mutation rate limits as retryable", () => {
+    const error = mapGithubError(
+      createGithubRequestError(403, "Forbidden", {
+        "x-ratelimit-remaining": "0",
+      }),
+      { ambiguousWrite: true },
+    );
+    expect(error.code).toBe("RATE_LIMITED");
+    expect(error.retryable).toBe(false);
+    expect(error.message).toMatch(/may still have been applied/i);
+  });
+
   it("maps GitHub 429 responses as retryable rate limits", () => {
     const error = mapGithubError(createGithubRequestError(429, "Rate limit"));
     expect(error.code).toBe("RATE_LIMITED");
