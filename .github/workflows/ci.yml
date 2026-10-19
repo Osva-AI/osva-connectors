@@ -35,7 +35,7 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Build connector
+      - name: Build connectors
         run: pnpm build
 
       - name: Build test stdio fixture

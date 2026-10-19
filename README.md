@@ -25,9 +25,10 @@ Tool reference, mutation retry semantics, output budgets, and security notes: **
 
 ## Packages in this repository
 
-| Package                                          | Description                       |
-| ------------------------------------------------ | --------------------------------- |
-| [`@osva-ai/connector-github`](./packages/github) | GitHub MCP connector (five tools) |
+| Package                                              | Description                                |
+| ---------------------------------------------------- | ------------------------------------------ |
+| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)          |
+| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector foundation (P0.1) |
 
 ## Development
 

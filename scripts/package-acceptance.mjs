@@ -7,6 +7,11 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  NPM_BIN_STRIP_PATTERN_GITHUB,
+  runNpmPublishDryRunForAcceptance,
+} from "./package-acceptance-npm-dry-run.mjs";
+
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const PKG_DIR = path.join(ROOT, "packages", "github");
 const FAKE_TOKEN_PATTERN = /ghp_[a-zA-Z0-9]{20,}/;
@@ -19,8 +24,6 @@ const FORBIDDEN_TARBALL_PATHS = [
 ];
 
 const EXPECTED_BIN_PATH = "dist/stdio.js";
-const NPM_BIN_STRIP_PATTERN =
-  /bin\[osva-connector-github\].*invalid and removed/i;
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -137,30 +140,6 @@ function assertPackedBinMetadata(manifest, tarballPath) {
   }
 }
 
-function assertNpmPublishDryRun(cwd, extraArgs = []) {
-  const result = spawnSync(
-    "npm",
-    ["publish", "--dry-run", "--access", "public", ...extraArgs],
-    {
-      cwd,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      shell: process.platform === "win32",
-    },
-  );
-  const combined = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-  if (NPM_BIN_STRIP_PATTERN.test(combined)) {
-    throw new Error(
-      `npm publish --dry-run would strip bin (fix package.json bin map):\n${combined}`,
-    );
-  }
-  if (result.status !== 0) {
-    throw new Error(
-      `npm publish --dry-run failed (${result.status}):\n${combined}`,
-    );
-  }
-}
-
 async function main() {
   console.log("package-acceptance: building production package…");
   runPnpm(["build"], ROOT);
@@ -196,13 +175,27 @@ async function main() {
     console.log("package-acceptance: packed bin metadata and shebang verified");
 
     console.log(
-      "package-acceptance: npm publish --dry-run (bin normalization)…",
+      "package-acceptance: npm publish --dry-run (bin normalization; not release eligibility)…",
     );
-    assertNpmPublishDryRun(PKG_DIR);
-    console.log(
-      "package-acceptance: bootstrap publish simulation (--provenance=false)…",
+    const dryRun = runNpmPublishDryRunForAcceptance(
+      PKG_DIR,
+      NPM_BIN_STRIP_PATTERN_GITHUB,
     );
-    assertNpmPublishDryRun(PKG_DIR, ["--provenance=false"]);
+    if (dryRun === "version_already_published") {
+      console.log(
+        "package-acceptance: registry already has this version (acceptable for acceptance)",
+      );
+    }
+    const dryRunBootstrap = runNpmPublishDryRunForAcceptance(
+      PKG_DIR,
+      NPM_BIN_STRIP_PATTERN_GITHUB,
+      ["--provenance=false"],
+    );
+    if (dryRunBootstrap === "version_already_published") {
+      console.log(
+        "package-acceptance: bootstrap dry-run skipped duplicate-version gate",
+      );
+    }
     console.log(
       `package-acceptance: ${entries.length} tarball entries verified`,
     );
