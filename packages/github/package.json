@@ -37,7 +37,7 @@
     }
   },
   "bin": {
-    "osva-connector-github": "./dist/stdio.js"
+    "osva-connector-github": "dist/stdio.js"
   },
   "files": [
     "dist",

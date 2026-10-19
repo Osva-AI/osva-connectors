@@ -35,6 +35,22 @@ function stdioBinPath() {
   );
 }
 
+function npmBinShim() {
+  const binDir = path.join(INSTALL_DIR, "node_modules", ".bin");
+  if (process.platform === "win32") {
+    return {
+      command: path.join(binDir, "osva-connector-github.cmd"),
+      args: [],
+      shell: true,
+    };
+  }
+  return {
+    command: path.join(binDir, "osva-connector-github"),
+    args: [],
+    shell: false,
+  };
+}
+
 function childEnvWithoutToken() {
   const env = { ...process.env };
   delete env.OSVA_CONNECTOR_GITHUB_TOKEN;
@@ -136,11 +152,11 @@ async function testExportResolution() {
 }
 
 async function testMissingTokenStartup() {
-  const bin = stdioBinPath();
+  const shim = npmBinShim();
   const result = await spawnWithDeadline(
-    process.execPath,
-    [bin],
-    { env: childEnvWithoutToken() },
+    shim.command,
+    shim.args,
+    { env: childEnvWithoutToken(), shell: shim.shell },
     10_000,
   );
   if (result.code === 0) {
@@ -160,11 +176,11 @@ async function testMissingTokenStartup() {
 }
 
 async function connectMcpClient() {
-  const bin = stdioBinPath();
+  const shim = npmBinShim();
   let serverStderr = "";
   const transport = new StdioClientTransport({
-    command: process.execPath,
-    args: [bin],
+    command: shim.command,
+    args: shim.args,
     env: childEnvWithFakeToken(),
     stderr: "pipe",
   });

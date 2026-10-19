@@ -29,8 +29,20 @@ Use this checklist for the **first public npm release** and subsequent semver re
 
 npm **trusted publishing (OIDC) cannot create a brand-new package** — the package must exist on the registry before you can open its **Trusted Publisher** settings. Evidence: [npm trusted publishers](https://docs.npmjs.com/trusted-publishers/) (package settings) and [npm/documentation#1926](https://github.com/npm/documentation/issues/1926).
 
-1. **Bootstrap `0.3.0` manually (one time):** from a maintainer machine with npm login to an account that can publish to `@osva-ai`:
-   - `pnpm build` in this repo, then from `packages/github`: `npm publish --access public` (optionally `--provenance` if your local npm supports it).
+1. **Bootstrap `0.3.0` manually (one time):** from a maintainer machine with **npm login** (and org **2FA** / token policy as required by `@osva-ai`):
+   - Repo root: `pnpm install --frozen-lockfile && pnpm build`
+   - `cd packages/github`
+   - Confirm version not on registry: `npm view @osva-ai/connector-github@0.3.0 version` → 404
+   - **Disable provenance for this invocation only** — `publishConfig.provenance: true` makes npm generate provenance on publish; local Windows/macOS shells have no GitHub Actions OIDC provider and fail with `Automatic provenance generation not supported for provider: null`. CI releases keep `--provenance` in [npm-release.yml](../.github/workflows/npm-release.yml).
+   - Verified bootstrap command (npm 11.5.1+):
+
+     ```powershell
+     npm publish --access public --provenance=false
+     ```
+
+     (POSIX: same flags.)
+
+   - Pre-flight (no upload): `npm publish --dry-run --access public --provenance=false` — must **not** warn that `bin[osva-connector-github]` was “invalid and removed”. The bin map must be `"dist/stdio.js"` (no `./` prefix).
 2. On [npmjs.com](https://www.npmjs.com/) → **`@osva-ai/connector-github`** → **Settings** → **Trusted Publisher** → **GitHub Actions**, set:
    - **Organization or user:** `Osva-AI`
    - **Repository:** `osva-connectors`
@@ -38,7 +50,16 @@ npm **trusted publishing (OIDC) cannot create a brand-new package** — the pack
    - **Environment name:** `npm` (must match the workflow `environment:`)
 3. Complete a **successful OIDC publish within 2 days** of creating the trusted publisher config, or npm expires the config ([npm docs](https://docs.npmjs.com/trusted-publishers/)).
 
-Subsequent releases: use the GitHub **Release to npm** workflow (OIDC). **`NPM_TOKEN`** on environment `npm` remains an optional fallback for the publish step if OIDC is unavailable.
+Subsequent releases: use the GitHub **Release to npm** workflow with **trusted publishing + provenance** (`npm publish --provenance --access public` on Ubuntu after npm 11.5.1+). **`NPM_TOKEN`** on environment `npm` remains an optional fallback if OIDC is unavailable.
+
+### Post-bootstrap registry verification
+
+After the first successful upload:
+
+- [ ] `npm view @osva-ai/connector-github@0.3.0 version` → `0.3.0`
+- [ ] `npm view @osva-ai/connector-github bin` → `osva-connector-github` → `dist/stdio.js`
+- [ ] Empty directory: `npm install @osva-ai/connector-github@0.3.0` then `npx osva-connector-github` with a test token (or follow [INSTALL.md](./INSTALL.md))
+- [ ] MCP host or `pnpm test:package-acceptance`-equivalent: `tools/list` shows all **five** GitHub tools; stdout stays JSON-RPC-clean when the token is missing
 
 - [ ] GitHub Environment **`npm`** exists with required reviewers (workflow is `workflow_dispatch` only — not PR CI)
 

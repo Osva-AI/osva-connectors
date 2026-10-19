@@ -18,6 +18,10 @@ const FORBIDDEN_TARBALL_PATHS = [
   /^package\/test\/fixtures\//,
 ];
 
+const EXPECTED_BIN_PATH = "dist/stdio.js";
+const NPM_BIN_STRIP_PATTERN =
+  /bin\[osva-connector-github\].*invalid and removed/i;
+
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     encoding: "utf8",
@@ -86,27 +90,75 @@ function inspectTarballContents(entries, manifest) {
     throw new Error(`Unexpected package name: ${manifest.name}`);
   }
   if (!manifest.bin?.["osva-connector-github"]) {
-    throw new Error("Missing osva-connector-github bin entry.");
+    throw new Error(
+      "Missing osva-connector-github bin entry in packed manifest.",
+    );
   }
   if (manifest.engines?.node !== ">=24") {
     throw new Error(`Unexpected engines.node: ${manifest.engines?.node}`);
   }
 }
 
-async function readPackedManifest(tarballPath) {
-  const result = spawnSync(
-    "tar",
-    ["-xOf", tarballPath, "package/package.json"],
-    {
-      encoding: "utf8",
-    },
-  );
+function readTarballFile(tarballPath, entryPath) {
+  const result = spawnSync("tar", ["-xOf", tarballPath, entryPath], {
+    encoding: "utf8",
+  });
   if (result.status !== 0) {
     throw new Error(
-      `Failed to read package.json from tarball: ${result.stderr}`,
+      `Failed to read ${entryPath} from tarball: ${result.stderr}`,
     );
   }
-  return JSON.parse(result.stdout);
+  return result.stdout;
+}
+
+async function readPackedManifest(tarballPath) {
+  return JSON.parse(readTarballFile(tarballPath, "package/package.json"));
+}
+
+function assertPackedBinMetadata(manifest, tarballPath) {
+  const binPath = manifest.bin?.["osva-connector-github"];
+  if (binPath !== EXPECTED_BIN_PATH) {
+    throw new Error(
+      `Packed manifest bin must be "${EXPECTED_BIN_PATH}" (got ${JSON.stringify(binPath)}).`,
+    );
+  }
+  if (binPath.startsWith("./") || binPath.includes("\\")) {
+    throw new Error(`Invalid bin path in packed manifest: ${binPath}`);
+  }
+  const stdioSource = readTarballFile(tarballPath, "package/dist/stdio.js");
+  const firstLine = stdioSource.split(/\r?\n/, 1)[0] ?? "";
+  if (!firstLine.startsWith("#!")) {
+    throw new Error("Packed dist/stdio.js is missing a shebang line.");
+  }
+  if (!/node/i.test(firstLine)) {
+    throw new Error(
+      `Packed dist/stdio.js shebang must reference node: ${firstLine}`,
+    );
+  }
+}
+
+function assertNpmPublishDryRun(cwd, extraArgs = []) {
+  const result = spawnSync(
+    "npm",
+    ["publish", "--dry-run", "--access", "public", ...extraArgs],
+    {
+      cwd,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: process.platform === "win32",
+    },
+  );
+  const combined = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+  if (NPM_BIN_STRIP_PATTERN.test(combined)) {
+    throw new Error(
+      `npm publish --dry-run would strip bin (fix package.json bin map):\n${combined}`,
+    );
+  }
+  if (result.status !== 0) {
+    throw new Error(
+      `npm publish --dry-run failed (${result.status}):\n${combined}`,
+    );
+  }
 }
 
 async function main() {
@@ -140,6 +192,17 @@ async function main() {
     const manifest = await readPackedManifest(tarballPath);
     const entries = await listTarEntries(tarballPath);
     inspectTarballContents(entries, manifest);
+    assertPackedBinMetadata(manifest, tarballPath);
+    console.log("package-acceptance: packed bin metadata and shebang verified");
+
+    console.log(
+      "package-acceptance: npm publish --dry-run (bin normalization)…",
+    );
+    assertNpmPublishDryRun(PKG_DIR);
+    console.log(
+      "package-acceptance: bootstrap publish simulation (--provenance=false)…",
+    );
+    assertNpmPublishDryRun(PKG_DIR, ["--provenance=false"]);
     console.log(
       `package-acceptance: ${entries.length} tarball entries verified`,
     );
