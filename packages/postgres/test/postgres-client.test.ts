@@ -34,7 +34,7 @@ describe("createPgDatabase", () => {
       end: vi.fn(async () => undefined),
     };
     const database = createPgDatabase(pool as never);
-    const result = await database.query("SELECT 1");
+    const result = await database.query("SELECT 1", []);
     expect(result.rows[0]).toEqual({ server_version: "16" });
   });
 
@@ -57,7 +57,7 @@ describe("createPgDatabase", () => {
     const controller = new AbortController();
     controller.abort();
     await expect(
-      database.query("SELECT 1", { signal: controller.signal }),
+      database.query("SELECT 1", [], { signal: controller.signal }),
     ).rejects.toMatchObject({ name: "AbortError" });
     expect(pool.query).not.toHaveBeenCalled();
   });

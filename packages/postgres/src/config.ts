@@ -8,8 +8,10 @@ import {
   POSTGRES_POOL_MAX_ENV,
   POSTGRES_QUERY_TIMEOUT_MS_ENV,
   POSTGRES_SSL_MODE_ENV,
+  POSTGRES_ALLOWED_SCHEMAS_ENV,
   POSTGRES_URL_ENV,
 } from "./constants.js";
+import { parseAllowedSchemasEnv } from "./allowed-schemas.js";
 import { parsePostgresConnectionUrl } from "./parse-connection-url.js";
 import { postgresConfigSchema, type PostgresConfig } from "./schemas.js";
 import {
@@ -93,12 +95,17 @@ export function loadPostgresConfig(
     "Pool size",
   );
 
+  const allowedSchemas = parseAllowedSchemasEnv(
+    env[POSTGRES_ALLOWED_SCHEMAS_ENV],
+  );
+
   const parsed = postgresConfigSchema.safeParse({
     connectionUrl,
     sslMode,
     connectTimeoutMs,
     queryTimeoutMs,
     poolMax,
+    ...(allowedSchemas !== undefined ? { allowedSchemas } : {}),
   });
 
   if (!parsed.success) {

@@ -12,7 +12,9 @@ describe("postgres.connection.test", () => {
   it("executes only the fixed health query", async () => {
     const queries: string[] = [];
     const database = createMockPostgresDatabase({
-      onQuery: (sql) => queries.push(sql),
+      onQuery: (sql) => {
+        queries.push(sql);
+      },
     });
     const connector = createPostgresConnector({ database });
     const tool = connector.tools.find(

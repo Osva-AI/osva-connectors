@@ -11,6 +11,7 @@ export interface PostgresQueryResult {
 export interface PostgresDatabase {
   query(
     sql: string,
+    values?: readonly unknown[],
     options?: {
       readonly signal?: AbortSignal;
     },
@@ -48,13 +49,13 @@ function isAbortError(error: unknown): boolean {
 
 export function createPgDatabase(pool: Pool): PostgresDatabase {
   return {
-    async query(sql, options) {
+    async query(sql, values = [], options) {
       if (options?.signal?.aborted) {
         throw new DOMException("Aborted", "AbortError");
       }
 
       try {
-        const result = await pool.query(sql);
+        const result = await pool.query(sql, values as unknown[]);
         if (options?.signal?.aborted) {
           throw new DOMException("Aborted", "AbortError");
         }

@@ -10,8 +10,24 @@ import {
   CONNECTOR_KEY,
   CONNECTOR_NAME,
   CONNECTOR_VERSION,
+  POSTGRES_COLUMN_LIST_TOOL,
   POSTGRES_CONNECTION_TEST_TOOL,
+  POSTGRES_SCHEMA_LIST_TOOL,
+  POSTGRES_TABLE_LIST_TOOL,
 } from "./constants.js";
+import {
+  columnListInputJsonSchema,
+  columnListInputSchema,
+  schemaListInputJsonSchema,
+  schemaListInputSchema,
+  tableListInputJsonSchema,
+  tableListInputSchema,
+} from "./discovery-schemas.js";
+import {
+  runColumnList,
+  runSchemaList,
+  runTableList,
+} from "./discovery/run-discovery.js";
 import { mapPostgresError } from "./map-postgres-error.js";
 import type { PostgresDatabase } from "./postgres-client.js";
 import {
@@ -22,16 +38,19 @@ import {
 
 export interface CreatePostgresConnectorOptions {
   readonly database: PostgresDatabase;
+  readonly allowedSchemas?: readonly string[];
 }
 
 export function createPostgresConnector(
   options: CreatePostgresConnectorOptions,
 ): DefinedConnector {
+  const allowedSchemas = options.allowedSchemas;
+
   return defineConnector({
     key: CONNECTOR_KEY,
     name: CONNECTOR_NAME,
     description:
-      "PostgreSQL connector foundation for OSVA Connector Profile V1 (connection health check only in P0.1). Database privileges and OSVA ToolPolicy remain the primary authorization layers; arbitrary SQL execution is not supported in this milestone.",
+      "PostgreSQL read-only connector for OSVA Connector Profile V1 (connection test and catalog discovery). Database grants and RLS remain the primary authorization layers; fixed SQL only—no arbitrary query execution.",
     version: CONNECTOR_VERSION,
     tools: [
       defineTool({
@@ -46,9 +65,13 @@ export function createPostgresConnector(
           }
 
           try {
-            const result = await options.database.query(CONNECTION_TEST_SQL, {
-              signal: context.signal,
-            });
+            const result = await options.database.query(
+              CONNECTION_TEST_SQL,
+              [],
+              {
+                signal: context.signal,
+              },
+            );
             const row = result.rows[0];
             const rawVersion = row?.["server_version"];
             const serverVersion =
@@ -61,6 +84,69 @@ export function createPostgresConnector(
               serverVersion,
             });
             return output;
+          } catch (error) {
+            throw mapPostgresError(error);
+          }
+        },
+      }),
+      defineTool({
+        name: POSTGRES_SCHEMA_LIST_TOOL,
+        description:
+          "Lists accessible non-system schemas visible to the connected role (read-only, fixed catalog SQL). Results are paginated and bounded.",
+        inputSchema: schemaListInputJsonSchema,
+        handler: async (input, context) => {
+          const parsed = schemaListInputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw new ConnectorSdkError("INVALID_INPUT", "Invalid tool input.");
+          }
+          try {
+            return await runSchemaList(parsed.data, {
+              database: options.database,
+              allowedSchemas,
+              signal: context.signal,
+            });
+          } catch (error) {
+            throw mapPostgresError(error);
+          }
+        },
+      }),
+      defineTool({
+        name: POSTGRES_TABLE_LIST_TOOL,
+        description:
+          "Lists tables, views, and materialized views in a schema when the role has USAGE on the schema and SELECT on the relation (read-only, fixed catalog SQL).",
+        inputSchema: tableListInputJsonSchema,
+        handler: async (input, context) => {
+          const parsed = tableListInputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw new ConnectorSdkError("INVALID_INPUT", "Invalid tool input.");
+          }
+          try {
+            return await runTableList(parsed.data, {
+              database: options.database,
+              allowedSchemas,
+              signal: context.signal,
+            });
+          } catch (error) {
+            throw mapPostgresError(error);
+          }
+        },
+      }),
+      defineTool({
+        name: POSTGRES_COLUMN_LIST_TOOL,
+        description:
+          "Lists columns for a table or view when the role has SELECT privilege (read-only, fixed catalog SQL). Does not return defaults, comments, or expressions.",
+        inputSchema: columnListInputJsonSchema,
+        handler: async (input, context) => {
+          const parsed = columnListInputSchema.safeParse(input);
+          if (!parsed.success) {
+            throw new ConnectorSdkError("INVALID_INPUT", "Invalid tool input.");
+          }
+          try {
+            return await runColumnList(parsed.data, {
+              database: options.database,
+              allowedSchemas,
+              signal: context.signal,
+            });
           } catch (error) {
             throw mapPostgresError(error);
           }

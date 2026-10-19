@@ -49,3 +49,33 @@ jobs:
 
       - name: Package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance
+
+  postgres-integration:
+    name: PostgreSQL discovery integration
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.4.1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start PostgreSQL 16 fixture
+        run: docker compose -f packages/postgres/docker/integration-compose.yml up -d --wait
+
+      - name: Run PostgreSQL integration tests
+        env:
+          OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL: postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration
+        run: pnpm --filter @osva-ai/connector-postgres test -- test/postgres-discovery.integration.test.ts
+
+      - name: Stop PostgreSQL fixture
+        if: always()
+        run: docker compose -f packages/postgres/docker/integration-compose.yml down -v

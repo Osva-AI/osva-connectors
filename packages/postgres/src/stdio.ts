@@ -34,7 +34,10 @@ const pool = createPostgresPool(config);
 const database = createPgDatabase(pool);
 registerShutdownHandlers(database);
 
-const connector = createPostgresConnector({ database });
+const connector = createPostgresConnector({
+  database,
+  allowedSchemas: config.allowedSchemas,
+});
 
 try {
   await serveStdio(connector);

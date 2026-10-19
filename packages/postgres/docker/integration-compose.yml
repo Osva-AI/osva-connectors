@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "55432:5432"
+    environment:
+      POSTGRES_USER: osva_admin
+      POSTGRES_PASSWORD: admin_pass
+      POSTGRES_DB: osva_integration
+    volumes:
+      - ./integration-init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U osva_admin -d osva_integration"]
+      interval: 2s
+      timeout: 5s
+      retries: 15

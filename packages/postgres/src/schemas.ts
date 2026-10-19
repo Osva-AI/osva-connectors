@@ -44,6 +44,7 @@ export const postgresConfigSchema = z.object({
     .min(MIN_QUERY_TIMEOUT_MS)
     .max(MAX_QUERY_TIMEOUT_MS),
   poolMax: z.number().int().min(MIN_POOL_MAX).max(MAX_POOL_MAX),
+  allowedSchemas: z.array(z.string()).optional(),
 });
 
 export type PostgresConfig = z.infer<typeof postgresConfigSchema>;
