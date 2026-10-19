@@ -21,12 +21,7 @@ const EXPECTED_TOOLS = [
 ];
 
 const INSTALL_DIR = process.cwd();
-const REPO_ROOT_MARKER = path.join(
-  "osva-connectors",
-  "packages",
-  "ga4",
-  "src",
-);
+const REPO_ROOT_MARKER = path.join("osva-connectors", "packages", "ga4", "src");
 
 function npmBinShim() {
   const binDir = path.join(INSTALL_DIR, "node_modules", ".bin");

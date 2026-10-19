@@ -93,9 +93,7 @@ function inspectTarballContents(entries, manifest) {
     throw new Error(`Unexpected package name: ${manifest.name}`);
   }
   if (!manifest.bin?.["osva-connector-ga4"]) {
-    throw new Error(
-      "Missing osva-connector-ga4 bin entry in packed manifest.",
-    );
+    throw new Error("Missing osva-connector-ga4 bin entry in packed manifest.");
   }
   if (manifest.engines?.node !== ">=24") {
     throw new Error(`Unexpected engines.node: ${manifest.engines?.node}`);
@@ -207,9 +205,7 @@ async function main() {
       "utf8",
     );
 
-    console.log(
-      "package-acceptance-ga4: npm install tarball + MCP client…",
-    );
+    console.log("package-acceptance-ga4: npm install tarball + MCP client…");
     runNpm(
       [
         "install",
