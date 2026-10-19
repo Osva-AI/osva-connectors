@@ -2,6 +2,8 @@
 
 GitHub connector for [OSVA Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md): repository lookup, issue read, **issue create**, and **issue comment create** (mutating).
 
+**Install and MCP quickstart (npm, tokens, host config):** [../../docs/INSTALL.md](../../docs/INSTALL.md) — requires a **published** npm package for `npm install` examples.
+
 ## Configuration
 
 | Variable                      | Required | Description                                |

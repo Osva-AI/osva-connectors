@@ -140,10 +140,22 @@ jobs:
           grep -q 'package/dist/stdio.js' "${{ runner.temp }}/tar-list.txt"
           grep -q 'package/LICENSE' "${{ runner.temp }}/tar-list.txt"
 
+      # npm trusted publishing (OIDC) requires CLI 11.5.1+ (Node 24 satisfies npm's Node requirement).
+      - name: Ensure npm CLI 11.5.1+ for OIDC trusted publishing
+        run: |
+          echo "node $(node -v)"
+          npm install -g npm@11.5.1
+          NPM_VER="$(npm -v)"
+          echo "npm ${NPM_VER}"
+          export NPM_VER
+          node -e "const p=process.env.NPM_VER.split('.').map(Number);const ok=p[0]>11||(p[0]===11&&p[1]>5)||(p[0]===11&&p[1]===5&&p[2]>=1);if(!ok){console.error('npm 11.5.1+ required for OIDC trusted publishing');process.exit(1)}"
+
       - name: npm publish (dry run)
         if: inputs.dry_run == true
         run: npm publish --dry-run --access public
 
+      # OIDC: with trusted publisher configured, npm uses GitHub OIDC when id-token: write is set.
+      # Fallback: NPM_TOKEN on environment `npm` (bootstrap or legacy automation).
       - name: npm publish
         if: inputs.dry_run == false && inputs.confirm_publish == true
         run: npm publish --provenance --access public

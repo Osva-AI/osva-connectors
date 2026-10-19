@@ -22,10 +22,25 @@ Use this checklist for the **first public npm release** and subsequent semver re
 
 ## npm registry (operator)
 
-- [ ] `@osva-ai/connector-github` org/package exists and maintainers are correct
-- [ ] **npm trusted publishing** (GitHub OIDC) configured for `Osva-AI/osva-connectors`, or a short-lived automation token stored in GitHub Environment **`npm`** (prefer OIDC)
-- [ ] GitHub Environment **`npm`** exists with required reviewers (no publish from pull requests)
+- [ ] **`@osva-ai` npm organization** exists and you have permission to publish **public** scoped packages (`publishConfig.access: public` is set in `package.json`)
 - [ ] Target version **not** already on npm: `npm view @osva-ai/connector-github@<version> version` → 404
+
+### First publication bootstrap (required once)
+
+npm **trusted publishing (OIDC) cannot create a brand-new package** — the package must exist on the registry before you can open its **Trusted Publisher** settings. Evidence: [npm trusted publishers](https://docs.npmjs.com/trusted-publishers/) (package settings) and [npm/documentation#1926](https://github.com/npm/documentation/issues/1926).
+
+1. **Bootstrap `0.3.0` manually (one time):** from a maintainer machine with npm login to an account that can publish to `@osva-ai`:
+   - `pnpm build` in this repo, then from `packages/github`: `npm publish --access public` (optionally `--provenance` if your local npm supports it).
+2. On [npmjs.com](https://www.npmjs.com/) → **`@osva-ai/connector-github`** → **Settings** → **Trusted Publisher** → **GitHub Actions**, set:
+   - **Organization or user:** `Osva-AI`
+   - **Repository:** `osva-connectors`
+   - **Workflow filename:** `npm-release.yml` (filename only, must match [`.github/workflows/npm-release.yml`](../.github/workflows/npm-release.yml))
+   - **Environment name:** `npm` (must match the workflow `environment:`)
+3. Complete a **successful OIDC publish within 2 days** of creating the trusted publisher config, or npm expires the config ([npm docs](https://docs.npmjs.com/trusted-publishers/)).
+
+Subsequent releases: use the GitHub **Release to npm** workflow (OIDC). **`NPM_TOKEN`** on environment `npm` remains an optional fallback for the publish step if OIDC is unavailable.
+
+- [ ] GitHub Environment **`npm`** exists with required reviewers (workflow is `workflow_dispatch` only — not PR CI)
 
 ## Publish (manual — after checklist)
 
