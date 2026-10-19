@@ -72,9 +72,17 @@ pnpm test:package-acceptance
 
 ## Release
 
+**GitHub connector**
+
 - [Release checklist](./docs/RELEASE-CHECKLIST.md)
 - [Draft 0.3.0 release notes](./docs/releases/0.3.0-RELEASE-NOTES.md)
 - Manual npm workflow: [.github/workflows/npm-release.yml](./.github/workflows/npm-release.yml) (`workflow_dispatch` only)
+
+**PostgreSQL connector**
+
+- [Release checklist (PostgreSQL)](./docs/RELEASE-CHECKLIST-POSTGRES.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-postgres.md)
+- Manual npm workflow: [.github/workflows/npm-release-postgres.yml](./.github/workflows/npm-release-postgres.yml) (`workflow_dispatch` only)
 
 ## Security
 

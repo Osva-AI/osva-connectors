@@ -57,9 +57,9 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 
 ## Release status
 
-| Package                       | npm version (target)           | Published                                                                            |
-| ----------------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
-| `@osva-ai/connector-github`   | `0.3.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish` |
-| `@osva-ai/connector-postgres` | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish` |
+| Package                       | npm version (target)           | Published                                                                                      |
+| ----------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `@osva-ai/connector-github`   | `0.3.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until `npm publish`           |
+| `@osva-ai/connector-postgres` | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), and [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), and [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md).

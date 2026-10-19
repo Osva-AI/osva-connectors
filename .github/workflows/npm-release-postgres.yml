@@ -1,0 +1,207 @@
+# Manual npm release for @osva-ai/connector-postgres.
+# Does NOT run on push or pull_request. Requires operator workflow_dispatch.
+#
+# Prerequisites (configure outside this repository):
+# - npm package @osva-ai/connector-postgres with public access (bootstrap once — see docs/RELEASE-CHECKLIST-POSTGRES.md)
+# - npm trusted publisher for GitHub Actions OIDC (recommended), OR
+#   NPM_TOKEN in GitHub Environment "npm" (fallback)
+# - GitHub Environment "npm" with required reviewers
+#
+# Independent from .github/workflows/npm-release.yml (@osva-ai/connector-github).
+
+name: Release PostgreSQL to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_version:
+        description: Must match packages/postgres/package.json version
+        required: true
+        default: "0.1.0"
+      dry_run:
+        description: When true, run npm publish --dry-run only (no registry upload)
+        type: boolean
+        default: true
+      confirm_publish:
+        description: When true and dry_run is false, upload to npm (requires npm environment approval)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release:
+    name: Verify and publish @osva-ai/connector-postgres
+    runs-on: ubuntu-24.04
+    environment: npm
+    defaults:
+      run:
+        working-directory: packages/postgres
+
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Verify branch
+        working-directory: .
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "Release workflow must run from main (got ${{ github.ref }})."
+            exit 1
+          fi
+
+      - name: Verify clean working tree
+        working-directory: .
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Working tree is not clean; refusing to release."
+            git status --porcelain
+            exit 1
+          fi
+
+      - name: Verify package name, version, and CONNECTOR_VERSION
+        run: |
+          node <<'EOF'
+          import fs from "node:fs";
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const constants = fs.readFileSync("src/constants.ts", "utf8");
+          const expected = process.env.EXPECTED_VERSION;
+          if (pkg.name !== "@osva-ai/connector-postgres") {
+            console.error(`Unexpected package name: ${pkg.name}`);
+            process.exit(1);
+          }
+          if (pkg.version !== expected) {
+            console.error(`Version mismatch: package.json=${pkg.version} expected=${expected}`);
+            process.exit(1);
+          }
+          const match = constants.match(/export const CONNECTOR_VERSION = "([^"]+)"/);
+          if (!match || match[1] !== expected) {
+            console.error(`CONNECTOR_VERSION mismatch: constants=${match?.[1] ?? "missing"} expected=${expected}`);
+            process.exit(1);
+          }
+          console.log(`Release target: ${pkg.name}@${pkg.version}`);
+          EOF
+        env:
+          EXPECTED_VERSION: ${{ inputs.expected_version }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.4.1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install workspace dependencies
+        working-directory: .
+        run: pnpm install --frozen-lockfile
+
+      - name: Format check
+        working-directory: .
+        run: pnpm format:check
+
+      - name: Lint and typecheck (PostgreSQL package)
+        working-directory: .
+        run: pnpm --filter @osva-ai/connector-postgres lint && pnpm --filter @osva-ai/connector-postgres typecheck
+
+      - name: Build and test (PostgreSQL package)
+        working-directory: .
+        run: |
+          pnpm --filter @osva-ai/connector-postgres build
+          pnpm --filter @osva-ai/connector-postgres test
+
+      - name: Package boundaries
+        working-directory: .
+        run: pnpm verify:boundaries
+
+      - name: Start PostgreSQL 16 fixture
+        working-directory: .
+        run: docker compose -f packages/postgres/docker/integration-compose.yml up -d --wait
+
+      - name: Packaged PostgreSQL acceptance
+        working-directory: .
+        env:
+          OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL: postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration
+        run: pnpm test:package-acceptance:postgres
+
+      - name: PostgreSQL integration tests
+        working-directory: .
+        env:
+          OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL: postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration
+          OSVA_CONNECTOR_POSTGRES_WRITER_INTEGRATION_URL: postgresql://osva_writer:writer_pass@127.0.0.1:55432/osva_integration
+        run: pnpm --filter @osva-ai/connector-postgres test -- test/postgres-discovery.integration.test.ts test/postgres-query-read.integration.test.ts test/postgres-read-only-transaction.integration.test.ts test/postgres-reliability.integration.test.ts
+
+      - name: Stop PostgreSQL fixture
+        if: always()
+        working-directory: .
+        run: docker compose -f packages/postgres/docker/integration-compose.yml down -v
+
+      - name: Check npm for existing version (publish only)
+        if: inputs.dry_run == false && inputs.confirm_publish == true
+        run: |
+          if npm view "@osva-ai/connector-postgres@${{ inputs.expected_version }}" version 2>/dev/null; then
+            echo "Version ${{ inputs.expected_version }} is already published; aborting upload."
+            exit 1
+          fi
+          echo "Version ${{ inputs.expected_version }} is not published (ok to upload)."
+
+      - name: Validate tarball contents
+        run: |
+          pnpm pack --pack-destination "${{ runner.temp }}/pack"
+          TARBALL=$(ls "${{ runner.temp }}/pack"/*.tgz | head -1)
+          echo "Inspecting ${TARBALL}"
+          tar -tzf "${TARBALL}" | tee "${{ runner.temp }}/tar-list.txt"
+          if grep -E 'package/(test/|docker/|\.env)' "${{ runner.temp }}/tar-list.txt"; then
+            echo "Forbidden paths in tarball."
+            exit 1
+          fi
+          grep -q 'package/dist/stdio.js' "${{ runner.temp }}/tar-list.txt"
+          grep -q 'package/LICENSE' "${{ runner.temp }}/tar-list.txt"
+          TARBALL="${TARBALL}" node <<'EOF'
+          import { spawnSync } from "node:child_process";
+          const tarball = process.env.TARBALL;
+          const manifestRaw = spawnSync("tar", ["-xOf", tarball, "package/package.json"], {
+            encoding: "utf8",
+          });
+          if (manifestRaw.status !== 0) {
+            console.error(manifestRaw.stderr);
+            process.exit(1);
+          }
+          const manifest = JSON.parse(manifestRaw.stdout);
+          if (manifest.bin?.["osva-connector-postgres"] !== "dist/stdio.js") {
+            console.error(`Unexpected bin map: ${JSON.stringify(manifest.bin)}`);
+            process.exit(1);
+          }
+          console.log("Packed manifest bin verified.");
+          EOF
+
+      - name: Ensure npm CLI 11.5.1+ for OIDC trusted publishing
+        run: |
+          echo "node $(node -v)"
+          npm install -g npm@11.5.1
+          NPM_VER="$(npm -v)"
+          echo "npm ${NPM_VER}"
+          export NPM_VER
+          node -e "const p=process.env.NPM_VER.split('.').map(Number);const ok=p[0]>11||(p[0]===11&&p[1]>5)||(p[0]===11&&p[1]===5&&p[2]>=1);if(!ok){console.error('npm 11.5.1+ required for OIDC trusted publishing');process.exit(1)}"
+
+      - name: npm publish (dry run)
+        if: inputs.dry_run == true
+        run: npm publish --dry-run --access public --provenance=false
+
+      - name: npm publish
+        if: inputs.dry_run == false && inputs.confirm_publish == true
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Refuse publish without confirmation
+        if: inputs.dry_run == false && inputs.confirm_publish != true
+        run: |
+          echo "Refusing upload: set dry_run=true for validation-only, or confirm_publish=true after review."
+          exit 1

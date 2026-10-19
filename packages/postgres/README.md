@@ -23,6 +23,8 @@ Full quickstart (PowerShell and bash, TLS, least-privilege role, MCP host JSON, 
 
 Packaged acceptance (`pnpm test:package-acceptance:postgres` with `OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL`) builds a real tarball, installs outside this repository, and exercises all five tools through the published binary shim against the Docker PostgreSQL 16 fixture.
 
+Release preparation (not published from CI): [RELEASE-CHECKLIST-POSTGRES.md](../../docs/RELEASE-CHECKLIST-POSTGRES.md), [0.1.0 release notes (draft)](../../docs/releases/0.1.0-RELEASE-NOTES-postgres.md), workflow [npm-release-postgres.yml](../../.github/workflows/npm-release-postgres.yml).
+
 ## Configuration
 
 | Variable                                     | Required | Default                                       | Description                                                                                                                                        |
