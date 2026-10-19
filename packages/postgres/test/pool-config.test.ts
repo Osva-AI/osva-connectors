@@ -11,6 +11,7 @@ describe("createPostgresPoolConfig", () => {
       sslMode: "verify",
       connectTimeoutMs: 8_000,
       queryTimeoutMs: 12_000,
+      totalTimeoutMs: 45_000,
       poolMax: 3,
     };
     const poolConfig = createPostgresPoolConfig(config);

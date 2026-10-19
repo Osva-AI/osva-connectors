@@ -10,6 +10,8 @@ export interface RunQueryReadOptions {
   readonly signal?: AbortSignal;
   readonly statementTimeoutMs: number;
   readonly lockTimeoutMs: number;
+  readonly totalTimeoutMs: number;
+  readonly metrics?: { connectMs?: number };
 }
 
 export async function runQueryRead(
@@ -24,7 +26,9 @@ export async function runQueryRead(
     maxRows: options.input.maxRows,
     statementTimeoutMs: options.statementTimeoutMs,
     lockTimeoutMs: options.lockTimeoutMs,
+    totalTimeoutMs: options.totalTimeoutMs,
     signal: options.signal,
+    metrics: options.metrics,
   });
 
   const output = queryReadOutputSchema.parse({

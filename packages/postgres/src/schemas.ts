@@ -5,9 +5,11 @@ import {
   MAX_CONNECT_TIMEOUT_MS,
   MAX_POOL_MAX,
   MAX_QUERY_TIMEOUT_MS,
+  MAX_TOTAL_TIMEOUT_MS,
   MIN_CONNECT_TIMEOUT_MS,
   MIN_POOL_MAX,
   MIN_QUERY_TIMEOUT_MS,
+  MIN_TOTAL_TIMEOUT_MS,
   OUTPUT_MAX_SERVER_VERSION_LENGTH,
 } from "./constants.js";
 import { postgresSslModeSchema } from "./ssl.js";
@@ -44,6 +46,11 @@ export const postgresConfigSchema = z.object({
     .min(MIN_QUERY_TIMEOUT_MS)
     .max(MAX_QUERY_TIMEOUT_MS),
   poolMax: z.number().int().min(MIN_POOL_MAX).max(MAX_POOL_MAX),
+  totalTimeoutMs: z
+    .number()
+    .int()
+    .min(MIN_TOTAL_TIMEOUT_MS)
+    .max(MAX_TOTAL_TIMEOUT_MS),
   allowedSchemas: z.array(z.string()).optional(),
 });
 

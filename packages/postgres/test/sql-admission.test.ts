@@ -10,6 +10,12 @@ describe("assertReadOnlySelectSql", () => {
     ).not.toThrow();
   });
 
+  it("accepts semicolons inside block comments", () => {
+    expect(() =>
+      assertReadOnlySelectSql("SELECT 1 /* ; */ AS x", 0),
+    ).not.toThrow();
+  });
+
   it("accepts semicolons inside string literals", () => {
     expect(() =>
       assertReadOnlySelectSql("SELECT ';' AS marker", 0),

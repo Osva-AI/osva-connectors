@@ -48,6 +48,7 @@ function buildConnector(allowedSchemas?: readonly string[]): {
       database: createPgDatabase(pool, config),
       allowedSchemas: config.allowedSchemas,
       queryTimeoutMs: config.queryTimeoutMs,
+      totalTimeoutMs: config.totalTimeoutMs,
     }),
     close: async () => {
       await pool.end();

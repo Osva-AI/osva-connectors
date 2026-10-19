@@ -15,7 +15,9 @@ export interface PostgresReadOnlySelectOptions {
   readonly maxRows: number;
   readonly statementTimeoutMs: number;
   readonly lockTimeoutMs: number;
+  readonly totalTimeoutMs: number;
   readonly signal?: AbortSignal;
+  readonly metrics?: { connectMs?: number };
 }
 
 export interface PostgresReadOnlySelectResult {

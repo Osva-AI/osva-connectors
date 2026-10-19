@@ -4,7 +4,9 @@ import {
   DEFAULT_CONNECT_TIMEOUT_MS,
   DEFAULT_POOL_MAX,
   DEFAULT_QUERY_TIMEOUT_MS,
+  DEFAULT_TOTAL_TIMEOUT_MS,
   POSTGRES_CONNECT_TIMEOUT_MS_ENV,
+  POSTGRES_TOTAL_TIMEOUT_MS_ENV,
   POSTGRES_POOL_MAX_ENV,
   POSTGRES_QUERY_TIMEOUT_MS_ENV,
   POSTGRES_SSL_MODE_ENV,
@@ -95,6 +97,12 @@ export function loadPostgresConfig(
     "Pool size",
   );
 
+  const totalTimeoutMs = readBoundedInt(
+    env[POSTGRES_TOTAL_TIMEOUT_MS_ENV],
+    DEFAULT_TOTAL_TIMEOUT_MS,
+    "Total operation timeout",
+  );
+
   const allowedSchemas = parseAllowedSchemasEnv(
     env[POSTGRES_ALLOWED_SCHEMAS_ENV],
   );
@@ -105,6 +113,7 @@ export function loadPostgresConfig(
     connectTimeoutMs,
     queryTimeoutMs,
     poolMax,
+    totalTimeoutMs,
     ...(allowedSchemas !== undefined ? { allowedSchemas } : {}),
   });
 

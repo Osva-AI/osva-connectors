@@ -18,6 +18,8 @@ export const POSTGRES_CONNECT_TIMEOUT_MS_ENV =
 export const POSTGRES_QUERY_TIMEOUT_MS_ENV =
   "OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS";
 export const POSTGRES_POOL_MAX_ENV = "OSVA_CONNECTOR_POSTGRES_POOL_MAX";
+export const POSTGRES_TOTAL_TIMEOUT_MS_ENV =
+  "OSVA_CONNECTOR_POSTGRES_TOTAL_TIMEOUT_MS";
 
 export const DEFAULT_CONNECT_TIMEOUT_MS = 10_000;
 export const MIN_CONNECT_TIMEOUT_MS = 1_000;
@@ -30,6 +32,10 @@ export const MAX_QUERY_TIMEOUT_MS = 120_000;
 export const DEFAULT_POOL_MAX = 2;
 export const MIN_POOL_MAX = 1;
 export const MAX_POOL_MAX = 10;
+
+export const DEFAULT_TOTAL_TIMEOUT_MS = 45_000;
+export const MIN_TOTAL_TIMEOUT_MS = 5_000;
+export const MAX_TOTAL_TIMEOUT_MS = 300_000;
 
 /** Fixed health query — never accept arbitrary SQL from MCP clients. */
 export const CONNECTION_TEST_SQL = "SELECT version() AS server_version";

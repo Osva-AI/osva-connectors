@@ -6,14 +6,15 @@ PostgreSQL **read-only** connector for [OSVA Connector Profile V1](https://githu
 
 ## Configuration
 
-| Variable                                     | Required | Default                                       | Description                                                                            |
-| -------------------------------------------- | -------- | --------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `OSVA_CONNECTOR_POSTGRES_URL`                | Yes      | —                                             | PostgreSQL connection URL. Never logged by the connector.                              |
-| `OSVA_CONNECTOR_POSTGRES_SSL_MODE`           | No       | `disable` for local hosts; otherwise `verify` | `disable`, `require`, or `verify`.                                                     |
-| `OSVA_CONNECTOR_POSTGRES_CONNECT_TIMEOUT_MS` | No       | `10000`                                       | Pool connection acquisition timeout (1000–60000).                                      |
-| `OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS`   | No       | `30000`                                       | PostgreSQL `statement_timeout` at pool connect (1000–120000).                          |
-| `OSVA_CONNECTOR_POSTGRES_POOL_MAX`           | No       | `2`                                           | Maximum pool size (1–10).                                                              |
-| `OSVA_CONNECTOR_POSTGRES_ALLOWED_SCHEMAS`    | No       | — (no allowlist)                              | Comma-separated schema allowlist (defense in depth; does **not** widen DB privileges). |
+| Variable                                     | Required | Default                                       | Description                                                                                                                                        |
+| -------------------------------------------- | -------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OSVA_CONNECTOR_POSTGRES_URL`                | Yes      | —                                             | PostgreSQL connection URL. Never logged by the connector.                                                                                          |
+| `OSVA_CONNECTOR_POSTGRES_SSL_MODE`           | No       | `disable` for local hosts; otherwise `verify` | `disable`, `require`, or `verify`.                                                                                                                 |
+| `OSVA_CONNECTOR_POSTGRES_CONNECT_TIMEOUT_MS` | No       | `10000`                                       | Pool connection acquisition timeout (1000–60000).                                                                                                  |
+| `OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS`   | No       | `30000`                                       | PostgreSQL `statement_timeout` at pool connect (1000–120000).                                                                                      |
+| `OSVA_CONNECTOR_POSTGRES_TOTAL_TIMEOUT_MS`   | No       | `45000`                                       | Wall-clock deadline for an entire `postgres.query.read` operation (5000–300000), including connect, transaction, cursor fetch/close, and rollback. |
+| `OSVA_CONNECTOR_POSTGRES_POOL_MAX`           | No       | `2`                                           | Maximum pool size (1–10).                                                                                                                          |
+| `OSVA_CONNECTOR_POSTGRES_ALLOWED_SCHEMAS`    | No       | — (no allowlist)                              | Comma-separated schema allowlist (defense in depth; does **not** widen DB privileges).                                                             |
 
 Invalid configuration fails at stdio startup with `CONFIGURATION_ERROR` without echoing secrets. An empty or malformed allowlist env value fails closed (no silent fallback to unrestricted discovery).
 
@@ -29,9 +30,10 @@ When unset, discovery returns only schemas/tables/columns visible to the connect
 
 ### Timeouts
 
-- **Connection acquisition:** `connectionTimeoutMillis` on the pool.
-- **Query execution:** PostgreSQL **`statement_timeout`** from `OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS` (SQLSTATE `57014` → connector `TIMEOUT`).
-- MCP **cancellation** is checked before/after queries; in-flight work is bounded by `statement_timeout`.
+- **Connection acquisition:** `connectionTimeoutMillis` on the pool (`OSVA_CONNECTOR_POSTGRES_CONNECT_TIMEOUT_MS`).
+- **Per-statement execution:** PostgreSQL **`statement_timeout`** from `OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS` (SQLSTATE `57014` → connector `TIMEOUT`). Read queries also set transaction-local `statement_timeout` and **`lock_timeout`** (default **5s**).
+- **Total operation deadline (`postgres.query.read`):** `OSVA_CONNECTOR_POSTGRES_TOTAL_TIMEOUT_MS` bounds connect, transaction startup, every cursor fetch batch, cursor close, and rollback. Expiry → connector `TIMEOUT` with message _“PostgreSQL request exceeded the total operation deadline.”_ The connection is **destroyed** when the deadline or MCP cancellation leaves protocol state uncertain (not returned to the pool while work may still be running).
+- **MCP cancellation:** `AbortSignal` is honored before pool acquisition, while waiting for a connection, and between cursor batches. Cancellation is **not** guaranteed to stop an in-flight PostgreSQL protocol operation instantly; uncertain clients are destroyed rather than reused.
 
 ### TLS / SSL behavior
 
@@ -143,7 +145,7 @@ Comment, dollar-quote, or trailing-semicolon tricks that yield multiple statemen
 4. `BEGIN READ ONLY` → `SET LOCAL statement_timeout` / `lock_timeout` → **`pg-cursor`** portal with bounded batch fetches (`rowMode: array`) → close cursor → `ROLLBACK` → `release()`
 5. If cursor close, rollback, or connection state is uncertain, the client is **destroyed** (`release(true)`) instead of returned to the pool
 
-No automatic retries. Pool-level `statement_timeout` still applies to discovery/health queries; read queries also set transaction-local limits from `OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS` (default lock timeout **5s** unless overridden at connector construction).
+No automatic retries. Optional **`executionEventSink`** on `createPostgresConnector` receives privacy-safe structured events (tool name, durations, row counts, truncation, timeout/cancellation category, pool counts)—never SQL, parameters, rows, URLs, or raw provider errors.
 
 **Permissions, allowlist, and RLS**
 

@@ -1,7 +1,9 @@
 import type { CreatePostgresConnectorOptions } from "../../src/connector.js";
+import { DEFAULT_TOTAL_TIMEOUT_MS } from "../../src/constants.js";
 import type { PostgresConfig } from "../../src/schemas.js";
 
 export const TEST_QUERY_TIMEOUT_MS = 30_000;
+export const TEST_TOTAL_TIMEOUT_MS = DEFAULT_TOTAL_TIMEOUT_MS;
 
 export function samplePostgresConfig(
   overrides: Partial<PostgresConfig> = {},
@@ -11,6 +13,7 @@ export function samplePostgresConfig(
     sslMode: "disable",
     connectTimeoutMs: 5_000,
     queryTimeoutMs: TEST_QUERY_TIMEOUT_MS,
+    totalTimeoutMs: TEST_TOTAL_TIMEOUT_MS,
     poolMax: 2,
     ...overrides,
   };
@@ -23,6 +26,7 @@ export function defaultConnectorOptions(
   return {
     database,
     queryTimeoutMs: TEST_QUERY_TIMEOUT_MS,
+    totalTimeoutMs: TEST_TOTAL_TIMEOUT_MS,
     ...overrides,
   };
 }

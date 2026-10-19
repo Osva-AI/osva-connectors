@@ -6,6 +6,8 @@ import {
   POSTGRES_CONNECT_TIMEOUT_MS_ENV,
   POSTGRES_POOL_MAX_ENV,
   POSTGRES_QUERY_TIMEOUT_MS_ENV,
+  POSTGRES_TOTAL_TIMEOUT_MS_ENV,
+  DEFAULT_TOTAL_TIMEOUT_MS,
   POSTGRES_SSL_MODE_ENV,
   POSTGRES_URL_ENV,
 } from "../src/constants.js";
@@ -63,6 +65,19 @@ describe("loadPostgresConfig", () => {
       [POSTGRES_URL_ENV]: "postgresql://reader@127.0.0.1:5432/app",
     });
     expect(config.sslMode).toBe("disable");
+  });
+
+  it("defaults total operation deadline when unset", () => {
+    const config = withTestPostgresEnv((env) => loadPostgresConfig(env));
+    expect(config.totalTimeoutMs).toBe(DEFAULT_TOTAL_TIMEOUT_MS);
+  });
+
+  it("rejects total operation deadlines outside bounds", () => {
+    expect(() =>
+      withTestPostgresEnv((env) => loadPostgresConfig(env), {
+        [POSTGRES_TOTAL_TIMEOUT_MS_ENV]: "1000",
+      }),
+    ).toThrow(ConnectorSdkError);
   });
 
   it("applies explicit timeout and pool overrides within bounds", () => {

@@ -75,7 +75,7 @@ jobs:
         env:
           OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL: postgresql://osva_reader:reader_pass@127.0.0.1:55432/osva_integration
           OSVA_CONNECTOR_POSTGRES_WRITER_INTEGRATION_URL: postgresql://osva_writer:writer_pass@127.0.0.1:55432/osva_integration
-        run: pnpm --filter @osva-ai/connector-postgres test -- test/postgres-discovery.integration.test.ts test/postgres-query-read.integration.test.ts test/postgres-read-only-transaction.integration.test.ts
+        run: pnpm --filter @osva-ai/connector-postgres test -- test/postgres-discovery.integration.test.ts test/postgres-query-read.integration.test.ts test/postgres-read-only-transaction.integration.test.ts test/postgres-reliability.integration.test.ts
 
       - name: Stop PostgreSQL fixture
         if: always()

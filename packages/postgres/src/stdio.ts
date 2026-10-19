@@ -36,8 +36,10 @@ registerShutdownHandlers(database);
 
 const connector = createPostgresConnector({
   database,
+  pool,
   allowedSchemas: config.allowedSchemas,
   queryTimeoutMs: config.queryTimeoutMs,
+  totalTimeoutMs: config.totalTimeoutMs,
 });
 
 try {

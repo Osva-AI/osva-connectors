@@ -56,6 +56,7 @@ describeIntegration("READ ONLY transaction enforcement", () => {
           {
             statementTimeoutMs: config.queryTimeoutMs,
             lockTimeoutMs: 5_000,
+            totalTimeoutMs: config.totalTimeoutMs,
           },
           async (client) => {
             await client.query(sql);
@@ -85,6 +86,7 @@ describeIntegration("READ ONLY transaction enforcement", () => {
         {
           statementTimeoutMs: config.queryTimeoutMs,
           lockTimeoutMs: 5_000,
+          totalTimeoutMs: config.totalTimeoutMs,
         },
         async (client) => {
           await client.query(
@@ -112,6 +114,7 @@ describeIntegration("READ ONLY transaction enforcement", () => {
         {
           statementTimeoutMs: config.queryTimeoutMs,
           lockTimeoutMs: 5_000,
+          totalTimeoutMs: config.totalTimeoutMs,
         },
         async (client) => {
           await client.query("DELETE FROM app.read_only_probe");

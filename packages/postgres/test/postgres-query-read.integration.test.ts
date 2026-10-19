@@ -18,17 +18,41 @@ import {
 
 const INTEGRATION_URL = process.env.OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL;
 
-function buildQueryConnector(queryTimeoutMs = 30_000) {
+function buildQueryConnector(
+  options: {
+    queryTimeoutMs?: number;
+    totalTimeoutMs?: number;
+    poolMax?: number;
+  } = {},
+) {
   const config = loadPostgresConfig({
     OSVA_CONNECTOR_POSTGRES_URL: INTEGRATION_URL!,
     OSVA_CONNECTOR_POSTGRES_SSL_MODE: "disable",
-    OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS: String(queryTimeoutMs),
+    ...(options.queryTimeoutMs !== undefined
+      ? {
+          OSVA_CONNECTOR_POSTGRES_QUERY_TIMEOUT_MS: String(
+            options.queryTimeoutMs,
+          ),
+        }
+      : {}),
+    ...(options.totalTimeoutMs !== undefined
+      ? {
+          OSVA_CONNECTOR_POSTGRES_TOTAL_TIMEOUT_MS: String(
+            options.totalTimeoutMs,
+          ),
+        }
+      : {}),
+    ...(options.poolMax !== undefined
+      ? { OSVA_CONNECTOR_POSTGRES_POOL_MAX: String(options.poolMax) }
+      : {}),
   });
   const pool = createPostgresPool(config);
   return {
     connector: createPostgresConnector({
       database: createPgDatabase(pool, config),
+      pool,
       queryTimeoutMs: config.queryTimeoutMs,
+      totalTimeoutMs: config.totalTimeoutMs,
     }),
     close: async () => {
       await pool.end();
@@ -138,7 +162,7 @@ describeIntegration("postgres.query.read integration", () => {
   });
 
   it("times out slow queries and leaves the pool usable", async () => {
-    const built = buildQueryConnector(1_000);
+    const built = buildQueryConnector({ queryTimeoutMs: 1_000 });
     close = built.close;
     await expect(
       runQuery(built.connector, { sql: "SELECT app.sleep_seconds(2)" }),

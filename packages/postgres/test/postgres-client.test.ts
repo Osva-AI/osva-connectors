@@ -13,6 +13,7 @@ function sampleConfig(overrides: Partial<PostgresConfig> = {}): PostgresConfig {
     sslMode: "disable",
     connectTimeoutMs: 5_000,
     queryTimeoutMs: 12_000,
+    totalTimeoutMs: 60_000,
     poolMax: 2,
     ...overrides,
   };
@@ -93,6 +94,7 @@ describe("createPgDatabase", () => {
       maxRows: 10,
       statementTimeoutMs: 1_000,
       lockTimeoutMs: 1_000,
+      totalTimeoutMs: 60_000,
     });
     expect(queries[0]).toBe("BEGIN READ ONLY");
     expect(queries.some((q) => q.includes("statement_timeout"))).toBe(true);
@@ -131,6 +133,7 @@ describe("createPgDatabase", () => {
         maxRows: 1,
         statementTimeoutMs: 1_000,
         lockTimeoutMs: 1_000,
+        totalTimeoutMs: 60_000,
       }),
     ).rejects.toThrow();
     expect(client.release).toHaveBeenCalledWith(true);

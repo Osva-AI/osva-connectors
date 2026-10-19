@@ -35,8 +35,13 @@ import {
   runSchemaList,
   runTableList,
 } from "./discovery/run-discovery.js";
+import {
+  recordToolExecution,
+  type PostgresExecutionEventSink,
+} from "./execution-telemetry.js";
 import { mapPostgresError } from "./map-postgres-error.js";
 import type { PostgresDatabase } from "./postgres-client.js";
+import type { Pool } from "pg";
 import {
   connectionTestInputJsonSchema,
   connectionTestInputSchema,
@@ -45,9 +50,12 @@ import {
 
 export interface CreatePostgresConnectorOptions {
   readonly database: PostgresDatabase;
+  readonly pool?: Pool;
   readonly allowedSchemas?: readonly string[];
   readonly queryTimeoutMs: number;
+  readonly totalTimeoutMs: number;
   readonly lockTimeoutMs?: number;
+  readonly executionEventSink?: PostgresExecutionEventSink;
 }
 
 export function createPostgresConnector(
@@ -171,14 +179,28 @@ export function createPostgresConnector(
           if (!parsed.success) {
             throw new ConnectorSdkError("INVALID_INPUT", "Invalid tool input.");
           }
+          const connectMetrics: { connectMs?: number } = {};
           try {
-            return await runQueryRead({
-              database: options.database,
-              input: parsed.data,
-              signal: context.signal,
-              statementTimeoutMs: options.queryTimeoutMs,
-              lockTimeoutMs:
-                options.lockTimeoutMs ?? QUERY_READ_DEFAULT_LOCK_TIMEOUT_MS,
+            return await recordToolExecution({
+              tool: POSTGRES_QUERY_READ_TOOL,
+              pool: options.pool,
+              sink: options.executionEventSink,
+              connectMsRef: connectMetrics,
+              extractMetrics: (result) => ({
+                rowCount: result.rowCount,
+                truncated: result.truncated,
+              }),
+              execute: () =>
+                runQueryRead({
+                  database: options.database,
+                  input: parsed.data,
+                  signal: context.signal,
+                  statementTimeoutMs: options.queryTimeoutMs,
+                  lockTimeoutMs:
+                    options.lockTimeoutMs ?? QUERY_READ_DEFAULT_LOCK_TIMEOUT_MS,
+                  totalTimeoutMs: options.totalTimeoutMs,
+                  metrics: connectMetrics,
+                }),
             });
           } catch (error) {
             throw mapPostgresError(error);

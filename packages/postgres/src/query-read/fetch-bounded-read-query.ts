@@ -2,6 +2,7 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 import type { FieldDef } from "pg";
 
 import { OUTPUT_MAX_STRUCTURED_JSON_BYTES } from "../output-budget.js";
+import type { PostgresOperationContext } from "../operation-context.js";
 import { QUERY_READ_FETCH_BATCH_SIZE } from "./constants.js";
 import {
   buildColumnsFromFields,
@@ -54,15 +55,19 @@ function tryAppendRow(options: {
 export async function fetchBoundedReadQueryResult(options: {
   cursor: BoundedFetchCursor & { _result?: { fields?: FieldDef[] } };
   maxRows: number;
+  operation: PostgresOperationContext;
 }): Promise<NormalizeReadQueryResult> {
   let columns: NormalizedColumn[] | undefined;
   const rows: unknown[][] = [];
   let truncated = false;
 
   while (rows.length < options.maxRows) {
+    options.operation.assertActive();
     const room = options.maxRows - rows.length;
     const request = Math.min(QUERY_READ_FETCH_BATCH_SIZE, room);
-    const batch = (await options.cursor.read(request)) as unknown[][];
+    const batch = (await options.operation.race(
+      options.cursor.read(request),
+    )) as unknown[][];
     if (batch.length === 0) {
       break;
     }
@@ -101,7 +106,10 @@ export async function fetchBoundedReadQueryResult(options: {
   }
 
   if (rows.length === options.maxRows && !truncated) {
-    const peek = (await options.cursor.read(1)) as unknown[][];
+    options.operation.assertActive();
+    const peek = (await options.operation.race(
+      options.cursor.read(1),
+    )) as unknown[][];
     if (peek.length > 0) {
       truncated = true;
     }

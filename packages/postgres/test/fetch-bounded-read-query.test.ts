@@ -2,8 +2,13 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 import type { FieldDef } from "pg";
 import { describe, expect, it, vi } from "vitest";
 
+import { PostgresOperationContext } from "../src/operation-context.js";
 import { QUERY_READ_FETCH_BATCH_SIZE } from "../src/query-read/constants.js";
 import { fetchBoundedReadQueryResult } from "../src/query-read/fetch-bounded-read-query.js";
+
+function longRunningOperation() {
+  return new PostgresOperationContext(86_400_000);
+}
 
 const SAMPLE_FIELD: FieldDef = {
   name: "id",
@@ -41,6 +46,7 @@ describe("fetchBoundedReadQueryResult", () => {
     const result = await fetchBoundedReadQueryResult({
       cursor,
       maxRows: 10,
+      operation: longRunningOperation(),
     });
     expect(result.rowCount).toBe(10);
     expect(result.truncated).toBe(true);
@@ -58,6 +64,7 @@ describe("fetchBoundedReadQueryResult", () => {
     const result = await fetchBoundedReadQueryResult({
       cursor,
       maxRows: 10,
+      operation: longRunningOperation(),
     });
     expect(result).toMatchObject({ rowCount: 3, truncated: false });
     expect(cursor.readCalls.at(-1)).not.toBe(1);
@@ -67,14 +74,22 @@ describe("fetchBoundedReadQueryResult", () => {
     const huge = "x".repeat(300_000);
     const cursor = createMockCursor([[huge]]);
     await expect(
-      fetchBoundedReadQueryResult({ cursor, maxRows: 5 }),
+      fetchBoundedReadQueryResult({
+        cursor,
+        maxRows: 5,
+        operation: longRunningOperation(),
+      }),
     ).rejects.toBeInstanceOf(ConnectorSdkError);
   });
 
   it("closes are not invoked here (caller owns cursor lifecycle)", async () => {
     const cursor = createMockCursor([[1]]);
     const close = vi.spyOn(cursor, "close");
-    await fetchBoundedReadQueryResult({ cursor, maxRows: 5 });
+    await fetchBoundedReadQueryResult({
+      cursor,
+      maxRows: 5,
+      operation: longRunningOperation(),
+    });
     expect(close).not.toHaveBeenCalled();
   });
 });
