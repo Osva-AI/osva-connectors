@@ -8,6 +8,11 @@ import {
   ISSUE_LIST_DEFAULT_PER_PAGE,
   ISSUE_LIST_MAX_PAGE,
   ISSUE_LIST_MAX_PER_PAGE,
+  OUTPUT_MAX_COMMENT_BODY,
+  OUTPUT_MAX_GITHUB_LOGIN,
+  OUTPUT_MAX_ISSUE_TITLE,
+  OUTPUT_MAX_ISO_TIMESTAMP,
+  OUTPUT_MAX_URL,
 } from "./constants.js";
 import { githubSlugSchema } from "./schemas.js";
 
@@ -177,14 +182,16 @@ export const issueCreateInputJsonSchema = {
 
 export const normalizedIssueSchema = z.object({
   number: z.number().int().positive(),
-  title: z.string(),
+  title: z.string().max(OUTPUT_MAX_ISSUE_TITLE),
+  titleTruncated: z.boolean().optional(),
   state: z.enum(["open", "closed"]),
-  htmlUrl: z.string().url(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  closedAt: z.string().nullable(),
-  authorLogin: z.string().nullable(),
-  labels: z.array(z.string()),
+  htmlUrl: z.string().url().max(OUTPUT_MAX_URL),
+  createdAt: z.string().max(OUTPUT_MAX_ISO_TIMESTAMP),
+  updatedAt: z.string().max(OUTPUT_MAX_ISO_TIMESTAMP),
+  closedAt: z.string().max(OUTPUT_MAX_ISO_TIMESTAMP).nullable(),
+  authorLogin: z.string().max(OUTPUT_MAX_GITHUB_LOGIN).nullable(),
+  authorLoginTruncated: z.boolean().optional(),
+  labels: z.array(z.string().max(100)),
   commentsCount: z.number().int().nonnegative(),
   labelsTruncated: z.boolean().optional(),
 });
@@ -196,17 +203,21 @@ export const issueListOutputSchema = z.object({
   page: z.number().int().positive(),
   perPage: z.number().int().positive(),
   hasNextPage: z.boolean().optional(),
+  /** Present when fewer issues are returned than GitHub supplied because of connector output budget. */
+  issuesTruncated: z.boolean().optional(),
 });
 
 export type IssueListOutput = z.infer<typeof issueListOutputSchema>;
 
 export const issueCreateOutputSchema = z.object({
   number: z.number().int().positive(),
-  title: z.string(),
+  title: z.string().max(OUTPUT_MAX_ISSUE_TITLE),
+  titleTruncated: z.boolean().optional(),
   state: z.enum(["open", "closed"]),
-  htmlUrl: z.string().url(),
-  createdAt: z.string(),
-  authorLogin: z.string().nullable(),
+  htmlUrl: z.string().url().max(OUTPUT_MAX_URL),
+  createdAt: z.string().max(OUTPUT_MAX_ISO_TIMESTAMP),
+  authorLogin: z.string().max(OUTPUT_MAX_GITHUB_LOGIN).nullable(),
+  authorLoginTruncated: z.boolean().optional(),
 });
 
 export type IssueCreateOutput = z.infer<typeof issueCreateOutputSchema>;
@@ -265,10 +276,12 @@ export const issueCommentCreateInputJsonSchema = {
 export const issueCommentCreateOutputSchema = z.object({
   id: z.number().int().positive(),
   issueNumber: z.number().int().positive(),
-  body: z.string(),
-  htmlUrl: z.string().url(),
-  createdAt: z.string(),
-  authorLogin: z.string().nullable(),
+  body: z.string().max(OUTPUT_MAX_COMMENT_BODY),
+  bodyTruncated: z.boolean().optional(),
+  htmlUrl: z.string().url().max(OUTPUT_MAX_URL),
+  createdAt: z.string().max(OUTPUT_MAX_ISO_TIMESTAMP),
+  authorLogin: z.string().max(OUTPUT_MAX_GITHUB_LOGIN).nullable(),
+  authorLoginTruncated: z.boolean().optional(),
 });
 
 export type IssueCommentCreateOutput = z.infer<

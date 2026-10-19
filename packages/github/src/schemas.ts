@@ -1,6 +1,14 @@
 import type { DefineToolOptions } from "@osva-ai/connector-sdk";
 import { z } from "zod";
 
+import {
+  OUTPUT_MAX_BRANCH_NAME,
+  OUTPUT_MAX_REPO_DESCRIPTION,
+  OUTPUT_MAX_REPO_FULL_NAME,
+  OUTPUT_MAX_REPO_NAME,
+  OUTPUT_MAX_URL,
+} from "./constants.js";
+
 export const githubSlugSchema = z
   .string()
   .trim()
@@ -45,12 +53,13 @@ export const githubConfigSchema = z.object({
 export type GithubConfig = z.infer<typeof githubConfigSchema>;
 
 export const repositoryGetOutputSchema = z.object({
-  name: z.string(),
-  fullName: z.string(),
-  description: z.string().nullable(),
-  htmlUrl: z.string().url(),
+  name: z.string().max(OUTPUT_MAX_REPO_NAME),
+  fullName: z.string().max(OUTPUT_MAX_REPO_FULL_NAME),
+  description: z.string().max(OUTPUT_MAX_REPO_DESCRIPTION).nullable(),
+  descriptionTruncated: z.boolean().optional(),
+  htmlUrl: z.string().url().max(OUTPUT_MAX_URL),
   visibility: z.enum(["public", "private", "internal", "unknown"]),
-  defaultBranch: z.string(),
+  defaultBranch: z.string().max(OUTPUT_MAX_BRANCH_NAME),
   archived: z.boolean(),
   fork: z.boolean(),
 });

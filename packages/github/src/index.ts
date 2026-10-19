@@ -19,7 +19,14 @@ export {
   ISSUE_LIST_MAX_PER_PAGE,
   MAX_LABEL_NAME_LENGTH,
   MAX_LABELS_PER_ISSUE,
+  OUTPUT_MAX_COMMENT_BODY,
+  OUTPUT_MAX_ISSUE_TITLE,
+  OUTPUT_MAX_STRUCTURED_JSON_BYTES,
 } from "./constants.js";
+export {
+  structuredOutputByteLength,
+  truncateUnicodeByCodePoints,
+} from "./output-budget.js";
 export type {
   GithubClient,
   GithubIssueCommentRecord,

@@ -37,6 +37,10 @@ import {
 import { mapGithubError } from "./map-github-error.js";
 import { mapRepositoryRecord } from "./map-repository.js";
 import {
+  assertStructuredOutputWithinBudget,
+  packIssuesWithinOutputBudget,
+} from "./output-budget.js";
+import {
   repositoryGetInputJsonSchema,
   repositoryGetInputSchema,
 } from "./schemas.js";
@@ -79,7 +83,9 @@ export function createGithubConnector(
               repo: parsed.data.repo,
               signal: context.signal,
             });
-            return mapRepositoryRecord(record);
+            const output = mapRepositoryRecord(record);
+            assertStructuredOutputWithinBudget(output);
+            return output;
           } catch (error) {
             throw mapGithubError(error);
           }
@@ -106,12 +112,16 @@ export function createGithubConnector(
               signal: context.signal,
             });
 
-            const output = issueListOutputSchema.parse({
-              issues: mapGithubIssueListItems(result.items),
+            const envelope = {
               page: result.page,
               perPage: result.perPage,
-              ...(result.hasNextPage ? { hasNextPage: true } : {}),
-            });
+              ...(result.hasNextPage ? { hasNextPage: true as const } : {}),
+            };
+            const packed = packIssuesWithinOutputBudget(
+              envelope,
+              mapGithubIssueListItems(result.items),
+            );
+            const output = issueListOutputSchema.parse(packed);
             return output;
           } catch (error) {
             throw mapGithubError(error);
@@ -136,7 +146,9 @@ export function createGithubConnector(
               issueNumber: parsed.data.issueNumber,
               signal: context.signal,
             });
-            return mapGithubIssueRecord(record);
+            const output = mapGithubIssueRecord(record);
+            assertStructuredOutputWithinBudget(output);
+            return output;
           } catch (error) {
             throw mapGithubError(error);
           }
@@ -163,7 +175,9 @@ export function createGithubConnector(
                 : {}),
               signal: context.signal,
             });
-            return mapGithubIssueCreateRecord(record);
+            const output = mapGithubIssueCreateRecord(record);
+            assertStructuredOutputWithinBudget(output);
+            return output;
           } catch (error) {
             throw mapGithubError(error, { ambiguousWrite: true });
           }
@@ -202,10 +216,12 @@ export function createGithubConnector(
               body: parsed.data.body,
               signal: context.signal,
             });
-            return mapGithubIssueCommentCreateRecord(
+            const output = mapGithubIssueCommentCreateRecord(
               commentRecord,
               parsed.data.issueNumber,
             );
+            assertStructuredOutputWithinBudget(output);
+            return output;
           } catch (error) {
             throw mapGithubError(error, { ambiguousWrite: true });
           }

@@ -8,6 +8,14 @@ import {
   type IssueCreateOutput,
   type NormalizedIssue,
 } from "./issue-schemas.js";
+import {
+  normalizeOptionalLogin,
+  normalizeProviderTimestamp,
+  normalizeProviderUrl,
+  normalizeTruncatableProviderString,
+  OUTPUT_MAX_ISSUE_TITLE,
+  truncateUnicodeByCodePoints,
+} from "./output-budget.js";
 
 function isPullRequest(record: GithubIssueRecord): boolean {
   return record.pull_request !== undefined && record.pull_request !== null;
@@ -39,19 +47,62 @@ function normalizeLabels(labels: GithubIssueRecord["labels"]): {
     if (typeof label.name !== "string" || label.name.length === 0) {
       continue;
     }
-    const name =
-      label.name.length > MAX_LABEL_NAME_LENGTH
-        ? label.name.slice(0, MAX_LABEL_NAME_LENGTH)
-        : label.name;
-    if (name.length < label.name.length) {
+    const bounded = truncateUnicodeByCodePoints(
+      label.name,
+      MAX_LABEL_NAME_LENGTH,
+    );
+    if (bounded.truncated) {
       truncated = true;
     }
-    names.push(name);
+    names.push(bounded.value);
   }
   if (labels.length > names.length) {
     truncated = true;
   }
   return { labels: names, labelsTruncated: truncated };
+}
+
+function normalizeIssueTitle(title: unknown): {
+  title: string;
+  titleTruncated?: true;
+} {
+  const bounded = normalizeTruncatableProviderString(
+    title,
+    OUTPUT_MAX_ISSUE_TITLE,
+  );
+  return {
+    title: bounded.value,
+    ...(bounded.truncated ? { titleTruncated: true as const } : {}),
+  };
+}
+
+function normalizeAuthorLogin(record: GithubIssueRecord): {
+  authorLogin: string | null;
+  authorLoginTruncated?: true;
+} {
+  const login = normalizeOptionalLogin(record.user?.login ?? null);
+  return {
+    authorLogin: login.login,
+    ...(login.truncated ? { authorLoginTruncated: true as const } : {}),
+  };
+}
+
+function baseIssueFields(record: GithubIssueRecord) {
+  const title = normalizeIssueTitle(record.title);
+  const author = normalizeAuthorLogin(record);
+  return {
+    number: record.number,
+    ...title,
+    state: record.state === "closed" ? ("closed" as const) : ("open" as const),
+    htmlUrl: normalizeProviderUrl(record.html_url),
+    createdAt: normalizeProviderTimestamp(record.created_at),
+    updatedAt: normalizeProviderTimestamp(record.updated_at),
+    closedAt:
+      record.closed_at === null || record.closed_at === undefined
+        ? null
+        : normalizeProviderTimestamp(record.closed_at),
+    ...author,
+  };
 }
 
 export function mapGithubIssueRecord(
@@ -67,14 +118,7 @@ export function mapGithubIssueRecord(
   const { labels, labelsTruncated } = normalizeLabels(record.labels);
 
   const mapped = {
-    number: record.number,
-    title: record.title,
-    state: record.state === "closed" ? "closed" : "open",
-    htmlUrl: record.html_url,
-    createdAt: record.created_at,
-    updatedAt: record.updated_at,
-    closedAt: record.closed_at,
-    authorLogin: record.user?.login ?? null,
+    ...baseIssueFields(record),
     labels,
     commentsCount: record.comments,
     ...(labelsTruncated ? { labelsTruncated: true } : {}),
@@ -101,13 +145,18 @@ export function mapGithubIssueCreateRecord(
     );
   }
 
+  const title = normalizeIssueTitle(record.title);
+  const author = normalizeAuthorLogin(record);
+
   const mapped = {
     number: record.number,
-    title: record.title,
-    state: record.state === "closed" ? "closed" : "open",
-    htmlUrl: record.html_url,
-    createdAt: record.created_at,
-    authorLogin: record.user?.login ?? null,
+    title: title.title,
+    ...(title.titleTruncated ? { titleTruncated: true } : {}),
+    state: record.state === "closed" ? ("closed" as const) : ("open" as const),
+    htmlUrl: normalizeProviderUrl(record.html_url),
+    createdAt: normalizeProviderTimestamp(record.created_at),
+    authorLogin: author.authorLogin,
+    ...(author.authorLoginTruncated ? { authorLoginTruncated: true } : {}),
   };
 
   const parsed = issueCreateOutputSchema.safeParse(mapped);

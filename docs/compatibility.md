@@ -35,8 +35,13 @@ Registered tools:
 - `github.issue.list` (read-only)
 - `github.issue.get` (read-only)
 - `github.issue.create` (mutating; C2.1)
+- `github.issue.comment.create` (mutating; C2.2)
 
 Tool names use dot-separated segments and remain stable for a connector version.
+
+## Output budgets (C3.1)
+
+`@osva-ai/connector-github` enforces runtime output budgets on all five tools (**256 KiB UTF-8 on `JSON.stringify(structuredContent)`** per call—not the full duplicated MCP `CallToolResult`), per-field string caps, and `issuesTruncated` / `*Truncated` metadata. Additive optional fields may appear on tool results; input JSON schemas are unchanged. See [packages/github/README.md](../packages/github/README.md#output-bounds-c31).
 
 ## Node.js
 
