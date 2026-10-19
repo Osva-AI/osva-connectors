@@ -35,11 +35,14 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Build connector
+        run: pnpm build
+
+      - name: Build test stdio fixture
+        run: pnpm --filter @osva-ai/connector-github build:test-stdio-fixture
+
       - name: Test
         run: pnpm test
-
-      - name: Build
-        run: pnpm build
 
       - name: Package boundaries
         run: pnpm verify:boundaries
