@@ -16,6 +16,7 @@
     "verify:boundaries": "node scripts/check-package-boundaries.mjs",
     "test:package-acceptance": "node scripts/package-acceptance.mjs",
     "test:package-acceptance:postgres": "node scripts/package-acceptance-postgres.mjs",
+    "test:package-acceptance:shopify": "node scripts/package-acceptance-shopify.mjs",
     "test:package-acceptance:npm-dry-run": "node --test scripts/package-acceptance-npm-dry-run.test.mjs"
   },
   "devDependencies": {

@@ -1,6 +1,10 @@
 import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 
-import { MAX_HTTP_RESPONSE_BYTES } from "./constants.js";
+import {
+  MAX_HTTP_RESPONSE_BYTES,
+  READ_ONLY_GRAPHQL_MAX_RETRIES,
+  READ_ONLY_GRAPHQL_RETRY_DELAY_MS,
+} from "./constants.js";
 import {
   INVENTORY_LEVELS_BY_ITEM_QUERY,
   INVENTORY_LEVELS_BY_LOCATION_QUERY,
@@ -111,6 +115,14 @@ function extractGraphqlMessages(
 function envelopeIndicatesThrottle(
   envelope: GraphqlEnvelope<unknown>,
 ): boolean {
+  if (envelope.errors !== undefined) {
+    for (const entry of envelope.errors) {
+      const code = entry.extensions?.code;
+      if (typeof code === "string" && code.toUpperCase() === "THROTTLED") {
+        return true;
+      }
+    }
+  }
   const messages = extractGraphqlMessages(envelope).join(" ").toLowerCase();
   if (messages.includes("throttled")) {
     return true;
@@ -120,18 +132,62 @@ function envelopeIndicatesThrottle(
   return available !== undefined && available <= 0;
 }
 
+function isRetryableTransportError(error: unknown): boolean {
+  if (
+    error !== null &&
+    typeof error === "object" &&
+    "kind" in error &&
+    (error as ShopifyGraphqlHttpError).kind === "http"
+  ) {
+    const status = (error as ShopifyGraphqlHttpError).status;
+    return status === 429 || status >= 500;
+  }
+  if (
+    error !== null &&
+    typeof error === "object" &&
+    "kind" in error &&
+    (error as ShopifyGraphqlError).kind === "graphql"
+  ) {
+    return (error as ShopifyGraphqlError).throttled === true;
+  }
+  return false;
+}
+
+function sleepMs(ms: number, signal?: AbortSignal): Promise<void> {
+  if (ms <= 0) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new DOMException("Aborted", "AbortError"));
+      return;
+    }
+    const timer = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort);
+      resolve();
+    }, ms);
+    const onAbort = (): void => {
+      clearTimeout(timer);
+      signal?.removeEventListener("abort", onAbort);
+      reject(new DOMException("Aborted", "AbortError"));
+    };
+    signal?.addEventListener("abort", onAbort, { once: true });
+  });
+}
+
 export function createShopifyGraphqlClient(
   options: CreateShopifyGraphqlClientOptions,
 ): ShopifyClient {
   const fetchImpl = options.fetchImpl ?? fetch;
 
-  async function executeGraphql<TData>(
+  async function executeGraphqlAttempt<TData>(
     request: ShopifyGraphqlRequest,
+    attemptTimeoutMs: number,
   ): Promise<TData> {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort(new Error("Shopify request timed out."));
-    }, options.requestTimeoutMs);
+    }, attemptTimeoutMs);
 
     const onAbort = (): void => {
       controller.abort(request.signal?.reason);
@@ -226,6 +282,44 @@ export function createShopifyGraphqlClient(
       clearTimeout(timeout);
       if (request.signal !== undefined) {
         request.signal.removeEventListener("abort", onAbort);
+      }
+    }
+  }
+
+  async function executeGraphql<TData>(
+    request: ShopifyGraphqlRequest,
+  ): Promise<TData> {
+    const deadlineMs = Date.now() + options.requestTimeoutMs;
+    let attempt = 0;
+
+    for (;;) {
+      if (request.signal?.aborted) {
+        throw new DOMException("Aborted", "AbortError");
+      }
+
+      const remainingMs = deadlineMs - Date.now();
+      if (remainingMs <= 0) {
+        throw new Error("Shopify request timed out.");
+      }
+
+      try {
+        return await executeGraphqlAttempt<TData>(request, remainingMs);
+      } catch (error) {
+        const canRetry =
+          isRetryableTransportError(error) &&
+          attempt < READ_ONLY_GRAPHQL_MAX_RETRIES;
+        if (!canRetry) {
+          throw error;
+        }
+        attempt += 1;
+        const delayMs = Math.min(
+          READ_ONLY_GRAPHQL_RETRY_DELAY_MS,
+          deadlineMs - Date.now(),
+        );
+        if (delayMs <= 0) {
+          throw error;
+        }
+        await sleepMs(delayMs, request.signal);
       }
     }
   }

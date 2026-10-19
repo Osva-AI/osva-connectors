@@ -50,6 +50,9 @@ jobs:
       - name: Package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance
 
+      - name: Shopify package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:shopify
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

@@ -65,6 +65,25 @@ describe("createShopifyGraphqlClient", () => {
     await expect(client.getShop({})).rejects.toBeInstanceOf(ConnectorSdkError);
   });
 
+  it("maps HTTP 429 without leaking tokens", async () => {
+    server = await startMockShopifyHttpServer({ mode: "rate_limit" });
+    const client = createShopifyGraphqlClient({
+      graphqlEndpoint: server.graphqlUrl,
+      accessToken: FAKE_SHOPIFY_ACCESS_TOKEN,
+      requestTimeoutMs: 5_000,
+    });
+
+    try {
+      await client.getShop({});
+    } catch (error) {
+      const mapped = mapShopifyError(error, {
+        accessToken: FAKE_SHOPIFY_ACCESS_TOKEN,
+      });
+      expect(mapped.code).toBe("RATE_LIMITED");
+      expect(JSON.stringify(mapped)).not.toContain(FAKE_SHOPIFY_ACCESS_TOKEN);
+    }
+  });
+
   it("maps GraphQL throttling metadata", async () => {
     server = await startMockShopifyHttpServer({ mode: "graphql_throttled" });
     const client = createShopifyGraphqlClient({

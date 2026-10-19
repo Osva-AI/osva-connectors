@@ -22,7 +22,9 @@ export type MockShopifyMode =
   | "invalid_json"
   | "oversized"
   | "slow"
-  | "graphql_throttled";
+  | "graphql_throttled"
+  | "graphql_throttle_once"
+  | "graphql_access_denied";
 
 export interface MockShopifyHttpServer {
   readonly graphqlUrl: string;
@@ -226,6 +228,7 @@ export async function startMockShopifyHttpServer(
   let mode: MockShopifyMode = options.mode ?? "success";
   let lastAuthorization: string | undefined;
   let requestCount = 0;
+  let throttleOnceConsumed = false;
   const expectedToken = options.expectedToken ?? FAKE_SHOPIFY_ACCESS_TOKEN;
   const slowDelayMs = options.slowDelayMs ?? 200;
 
@@ -320,6 +323,29 @@ export async function startMockShopifyHttpServer(
           return;
         }
 
+        if (mode === "graphql_throttle_once" && !throttleOnceConsumed) {
+          throttleOnceConsumed = true;
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              errors: [
+                { message: "Throttled", extensions: { code: "THROTTLED" } },
+              ],
+            }),
+          );
+          return;
+        }
+
+        if (mode === "graphql_access_denied") {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              errors: [{ message: "Access denied for orders field." }],
+            }),
+          );
+          return;
+        }
+
         const payload = graphqlSuccessBody(body.query ?? "");
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(payload));
@@ -340,6 +366,7 @@ export async function startMockShopifyHttpServer(
     getRequestCount: () => requestCount,
     setMode: (next) => {
       mode = next;
+      throttleOnceConsumed = false;
     },
     close: () =>
       new Promise<void>((resolve, reject) => {

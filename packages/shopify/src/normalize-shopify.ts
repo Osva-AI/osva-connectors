@@ -340,11 +340,24 @@ function mapLineItemPreview(lineItemRaw: unknown): Record<string, unknown> {
       OUTPUT_MAX_SKU_LENGTH,
     ).value;
   }
+  const quantity = Number(item["quantity"]);
+  const currentQuantity = Number(item["currentQuantity"]);
+  if (
+    !Number.isFinite(quantity) ||
+    !Number.isInteger(quantity) ||
+    !Number.isFinite(currentQuantity) ||
+    !Number.isInteger(currentQuantity)
+  ) {
+    throw new ConnectorSdkError(
+      "PROVIDER_ERROR",
+      "Shopify returned an invalid line item quantity.",
+    );
+  }
   return {
     id: normalizeGid(item["id"]),
     name: nameResult.value,
-    quantity: Number(item["quantity"]),
-    currentQuantity: Number(item["currentQuantity"]),
+    quantity,
+    currentQuantity,
     sku,
     ...(nameResult.truncated ? { nameTruncated: true as const } : {}),
   };
@@ -530,7 +543,7 @@ export function mapInventoryLevelsResponse(
     return {
       inventoryItemId: normalizeGid(item["id"]),
       locationId: normalizeGid(loc["id"]),
-      available: availableEntry?.quantity ?? 0,
+      available: availableEntry !== undefined ? availableEntry.quantity : null,
       quantities,
     };
   });

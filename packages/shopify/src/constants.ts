@@ -32,6 +32,10 @@ export const LINE_ITEMS_PREVIEW_MAX = 25;
 /** Maximum raw HTTP response bytes read before JSON parsing. */
 export const MAX_HTTP_RESPONSE_BYTES = 2_097_152;
 
+/** Read-only GraphQL: at most one retry after throttle/transient 5xx (Shopify recommends ~1s backoff). */
+export const READ_ONLY_GRAPHQL_MAX_RETRIES = 1;
+export const READ_ONLY_GRAPHQL_RETRY_DELAY_MS = 1_000;
+
 export {
   OUTPUT_MAX_GID_LENGTH,
   OUTPUT_MAX_HANDLE_LENGTH,
