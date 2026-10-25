@@ -15,6 +15,9 @@ export const NPM_BIN_STRIP_PATTERN_SHOPIFY =
 export const NPM_BIN_STRIP_PATTERN_GA4 =
   /bin\[osva-connector-ga4\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_GSC =
+  /bin\[osva-connector-gsc\].*invalid and removed/i;
+
 export const NPM_BIN_STRIP_PATTERN_SLACK =
   /bin\[osva-connector-slack\].*invalid and removed/i;
 

@@ -65,15 +65,35 @@ Full quickstart (Google Cloud APIs, property access, MCP host JSON, seven tools,
 
 Tool reference, quotas, output budgets, and security notes: **[packages/ga4/README.md](./packages/ga4/README.md)**.
 
+## `@osva-ai/connector-gsc`
+
+MCP **stdio** connector for Google Search Console: property **discovery**, **Search Analytics**, **sitemaps**, and **URL Inspection** (read-only).
+
+| Requirement | Value                                                                 |
+| ----------- | --------------------------------------------------------------------- |
+| Node.js     | **24+**                                                               |
+| npm package | `@osva-ai/connector-gsc` (see [install guide](./docs/INSTALL-GSC.md)) |
+| Credential  | Google ADC or service account (`GOOGLE_APPLICATION_CREDENTIALS`)      |
+| Binary      | `osva-connector-gsc` → MCP stdio server                               |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-gsc@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-GSC.md](./docs/INSTALL-GSC.md)**. Tool reference: **[packages/gsc/README.md](./packages/gsc/README.md)**.
+
 ## Packages in this repository
 
-| Package                                              | Description                                              |
-| ---------------------------------------------------- | -------------------------------------------------------- |
-| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)                        |
-| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector (five read-only tools)          |
-| [`@osva-ai/connector-shopify`](./packages/shopify)   | Shopify MCP connector (seven read-only tools)            |
-| [`@osva-ai/connector-ga4`](./packages/ga4)           | Google Analytics 4 MCP connector (seven read-only tools) |
-| [`@osva-ai/connector-slack`](./packages/slack)       | Slack MCP connector (five read tools, two write tools)   |
+| Package                                              | Description                                                 |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| [`@osva-ai/connector-github`](./packages/github)     | GitHub MCP connector (five tools)                           |
+| [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector (five read-only tools)             |
+| [`@osva-ai/connector-shopify`](./packages/shopify)   | Shopify MCP connector (seven read-only tools)               |
+| [`@osva-ai/connector-ga4`](./packages/ga4)           | Google Analytics 4 MCP connector (seven read-only tools)    |
+| [`@osva-ai/connector-gsc`](./packages/gsc)           | Google Search Console MCP connector (eight read-only tools) |
+| [`@osva-ai/connector-slack`](./packages/slack)       | Slack MCP connector (five read tools, two write tools)      |
 
 ## `@osva-ai/connector-slack`
 
@@ -119,6 +139,8 @@ pnpm test:package-acceptance
 
 `test:package-acceptance:ga4` packs `@osva-ai/connector-ga4`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (GA4 G3).
 
+`test:package-acceptance:gsc` packs `@osva-ai/connector-gsc`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (GSC).
+
 `test:package-acceptance:slack` packs `@osva-ai/connector-slack`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Slack v0.1.0).
 
 ## Release
@@ -148,6 +170,13 @@ pnpm test:package-acceptance
 - [Release checklist (GA4)](./docs/RELEASE-CHECKLIST-GA4.md)
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-ga4.md)
 - Manual npm workflow: [.github/workflows/npm-release-ga4.yml](./.github/workflows/npm-release-ga4.yml) (`workflow_dispatch` only)
+
+**GSC connector**
+
+- [Install guide (GSC)](./docs/INSTALL-GSC.md)
+- [Release checklist (GSC)](./docs/RELEASE-CHECKLIST-GSC.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-gsc.md)
+- Manual npm workflow: [.github/workflows/npm-release-gsc.yml](./.github/workflows/npm-release-gsc.yml) (`workflow_dispatch` only)
 
 **Slack connector**
 

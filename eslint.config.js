@@ -11,6 +11,7 @@ export default tseslint.config(
       "packages/postgres/src/**/*.ts",
       "packages/shopify/src/**/*.ts",
       "packages/ga4/src/**/*.ts",
+      "packages/gsc/src/**/*.ts",
     ],
     rules: {
       "no-restricted-imports": [
