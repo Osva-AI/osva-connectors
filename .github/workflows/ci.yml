@@ -56,6 +56,9 @@ jobs:
       - name: GA4 package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:ga4
 
+      - name: GSC package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:gsc
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04
