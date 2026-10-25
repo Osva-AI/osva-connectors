@@ -18,6 +18,9 @@ export const NPM_BIN_STRIP_PATTERN_GA4 =
 export const NPM_BIN_STRIP_PATTERN_GSC =
   /bin\[osva-connector-gsc\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_SLACK =
+  /bin\[osva-connector-slack\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
