@@ -65,6 +65,16 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `ga4.report.acquisition` (read-only)
 - `ga4.report.ecommerce` (read-only)
 
+### `@osva-ai/connector-slack`
+
+- `slack.auth.test` (read-only)
+- `slack.channel.list` (read-only)
+- `slack.channel.info` (read-only)
+- `slack.message.history` (read-only)
+- `slack.message.thread` (read-only)
+- `slack.message.post` (mutating; write env guard)
+- `slack.message.reply` (mutating; write env guard)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -83,5 +93,6 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 | `@osva-ai/connector-postgres` | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 | `@osva-ai/connector-shopify`  | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 | `@osva-ai/connector-ga4`      | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
+| `@osva-ai/connector-slack`    | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), and [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), and [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md).

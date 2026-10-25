@@ -73,6 +73,28 @@ Tool reference, quotas, output budgets, and security notes: **[packages/ga4/READ
 | [`@osva-ai/connector-postgres`](./packages/postgres) | PostgreSQL MCP connector (five read-only tools)          |
 | [`@osva-ai/connector-shopify`](./packages/shopify)   | Shopify MCP connector (seven read-only tools)            |
 | [`@osva-ai/connector-ga4`](./packages/ga4)           | Google Analytics 4 MCP connector (seven read-only tools) |
+| [`@osva-ai/connector-slack`](./packages/slack)       | Slack MCP connector (five read tools, two write tools)   |
+
+## `@osva-ai/connector-slack`
+
+MCP **stdio** connector for Slack: workspace **auth test**, channel and message **read**, and controlled **message post** / **thread reply** when writes are explicitly enabled.
+
+| Requirement | Value                                                                     |
+| ----------- | ------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                   |
+| npm package | `@osva-ai/connector-slack` (see [install guide](./docs/INSTALL-SLACK.md)) |
+| Credential  | `OSVA_CONNECTOR_SLACK_BOT_TOKEN` (Slack bot token)                        |
+| Binary      | `osva-connector-slack` → MCP stdio server                                 |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-slack@0.1.0
+```
+
+Full quickstart (Slack app scopes, channel allowlist, write guard, MCP host JSON): **[docs/INSTALL-SLACK.md](./docs/INSTALL-SLACK.md)**.
+
+Tool reference, rate limits, output budgets, and security notes: **[packages/slack/README.md](./packages/slack/README.md)**.
 
 ## Development
 
@@ -96,6 +118,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:shopify` packs `@osva-ai/connector-shopify`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Shopify S2).
 
 `test:package-acceptance:ga4` packs `@osva-ai/connector-ga4`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (GA4 G3).
+
+`test:package-acceptance:slack` packs `@osva-ai/connector-slack`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Slack v0.1.0).
 
 ## Release
 
@@ -124,6 +148,13 @@ pnpm test:package-acceptance
 - [Release checklist (GA4)](./docs/RELEASE-CHECKLIST-GA4.md)
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-ga4.md)
 - Manual npm workflow: [.github/workflows/npm-release-ga4.yml](./.github/workflows/npm-release-ga4.yml) (`workflow_dispatch` only)
+
+**Slack connector**
+
+- [Install guide (Slack)](./docs/INSTALL-SLACK.md)
+- [Release checklist (Slack)](./docs/RELEASE-CHECKLIST-SLACK.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-slack.md)
+- Manual npm workflow: [.github/workflows/npm-release-slack.yml](./.github/workflows/npm-release-slack.yml) (`workflow_dispatch` only)
 
 ## Security
 
