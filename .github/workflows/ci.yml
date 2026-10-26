@@ -65,6 +65,9 @@ jobs:
       - name: Google Drive package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:google-drive
 
+      - name: Google Sheets package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:google-sheets
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

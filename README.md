@@ -103,17 +103,37 @@ npm install @osva-ai/connector-google-drive@0.1.0
 
 Quickstart: **[docs/INSTALL-GOOGLE-DRIVE.md](./docs/INSTALL-GOOGLE-DRIVE.md)**. Tool reference: **[packages/google-drive/README.md](./packages/google-drive/README.md)**.
 
+## `@osva-ai/connector-google-sheets`
+
+MCP **stdio** connector for Google Sheets: spreadsheet **metadata**, bounded **value reads**, and controlled **RAW writes** when explicitly enabled.
+
+| Requirement | Value                                                                                     |
+| ----------- | ----------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                                   |
+| npm package | `@osva-ai/connector-google-sheets` (see [install guide](./docs/INSTALL-GOOGLE-SHEETS.md)) |
+| Credential  | Google ADC or service account (`GOOGLE_APPLICATION_CREDENTIALS`)                          |
+| Binary      | `osva-connector-google-sheets` → MCP stdio server                                         |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-google-sheets@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-GOOGLE-SHEETS.md](./docs/INSTALL-GOOGLE-SHEETS.md)**. Tool reference: **[packages/google-sheets/README.md](./packages/google-sheets/README.md)**.
+
 ## Packages in this repository
 
-| Package                                                      | Description                                                 |
-| ------------------------------------------------------------ | ----------------------------------------------------------- |
-| [`@osva-ai/connector-github`](./packages/github)             | GitHub MCP connector (five tools)                           |
-| [`@osva-ai/connector-postgres`](./packages/postgres)         | PostgreSQL MCP connector (five read-only tools)             |
-| [`@osva-ai/connector-shopify`](./packages/shopify)           | Shopify MCP connector (seven read-only tools)               |
-| [`@osva-ai/connector-ga4`](./packages/ga4)                   | Google Analytics 4 MCP connector (seven read-only tools)    |
-| [`@osva-ai/connector-gsc`](./packages/gsc)                   | Google Search Console MCP connector (eight read-only tools) |
-| [`@osva-ai/connector-slack`](./packages/slack)               | Slack MCP connector (five read tools, two write tools)      |
-| [`@osva-ai/connector-google-drive`](./packages/google-drive) | Google Drive MCP connector (eight read-only tools)          |
+| Package                                                        | Description                                                 |
+| -------------------------------------------------------------- | ----------------------------------------------------------- |
+| [`@osva-ai/connector-github`](./packages/github)               | GitHub MCP connector (five tools)                           |
+| [`@osva-ai/connector-postgres`](./packages/postgres)           | PostgreSQL MCP connector (five read-only tools)             |
+| [`@osva-ai/connector-shopify`](./packages/shopify)             | Shopify MCP connector (seven read-only tools)               |
+| [`@osva-ai/connector-ga4`](./packages/ga4)                     | Google Analytics 4 MCP connector (seven read-only tools)    |
+| [`@osva-ai/connector-gsc`](./packages/gsc)                     | Google Search Console MCP connector (eight read-only tools) |
+| [`@osva-ai/connector-slack`](./packages/slack)                 | Slack MCP connector (five read tools, two write tools)      |
+| [`@osva-ai/connector-google-drive`](./packages/google-drive)   | Google Drive MCP connector (eight read-only tools)          |
+| [`@osva-ai/connector-google-sheets`](./packages/google-sheets) | Google Sheets MCP connector (eight tools; writes gated)     |
 
 ## `@osva-ai/connector-slack`
 
@@ -165,6 +185,8 @@ pnpm test:package-acceptance
 
 `test:package-acceptance:google-drive` packs `@osva-ai/connector-google-drive`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Drive GD1).
 
+`test:package-acceptance:google-sheets` packs `@osva-ai/connector-google-sheets`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Sheets GS1).
+
 ## Release
 
 **GitHub connector**
@@ -213,6 +235,13 @@ pnpm test:package-acceptance
 - [Release checklist (Google Drive)](./docs/RELEASE-CHECKLIST-GOOGLE-DRIVE.md)
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-google-drive.md)
 - Manual npm workflow: [.github/workflows/npm-release-google-drive.yml](./.github/workflows/npm-release-google-drive.yml) (`workflow_dispatch` only)
+
+**Google Sheets connector**
+
+- [Install guide (Google Sheets)](./docs/INSTALL-GOOGLE-SHEETS.md)
+- [Release checklist (Google Sheets)](./docs/RELEASE-CHECKLIST-GOOGLE-SHEETS.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-google-sheets.md)
+- Manual npm workflow: [.github/workflows/npm-release-google-sheets.yml](./.github/workflows/npm-release-google-sheets.yml) (`workflow_dispatch` only)
 
 ## Security
 
