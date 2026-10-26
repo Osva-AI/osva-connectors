@@ -9,10 +9,10 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack lint",
-    "typecheck": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack typecheck",
-    "test": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack test",
-    "build": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack build",
+    "lint": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive lint",
+    "typecheck": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive typecheck",
+    "test": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive test",
+    "build": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive build",
     "test:package-acceptance:slack": "node scripts/package-acceptance-slack.mjs",
     "verify:boundaries": "node scripts/check-package-boundaries.mjs",
     "test:package-acceptance": "node scripts/package-acceptance.mjs",
@@ -20,6 +20,7 @@
     "test:package-acceptance:shopify": "node scripts/package-acceptance-shopify.mjs",
     "test:package-acceptance:ga4": "node scripts/package-acceptance-ga4.mjs",
     "test:package-acceptance:gsc": "node scripts/package-acceptance-gsc.mjs",
+    "test:package-acceptance:google-drive": "node scripts/package-acceptance-google-drive.mjs",
     "test:package-acceptance:npm-dry-run": "node --test scripts/package-acceptance-npm-dry-run.test.mjs"
   },
   "devDependencies": {
