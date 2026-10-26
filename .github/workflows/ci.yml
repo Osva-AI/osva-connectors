@@ -68,6 +68,9 @@ jobs:
       - name: Google Sheets package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:google-sheets
 
+      - name: Packaged Google Ads acceptance
+        run: pnpm test:package-acceptance:google-ads
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

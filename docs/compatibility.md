@@ -87,6 +87,18 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `sheets.values.batchUpdate` (mutating; write env guard)
 - `sheets.sheet.add` (mutating; write env guard)
 
+### `@osva-ai/connector-google-ads`
+
+- `ads.customer.list` (read-only)
+- `ads.customer.get` (read-only)
+- `ads.campaign.list` (read-only)
+- `ads.campaign.performance` (read-only)
+- `ads.adGroup.performance` (read-only)
+- `ads.keyword.performance` (read-only)
+- `ads.searchTerm.performance` (read-only)
+- `ads.asset.performance` (read-only)
+- `ads.report.query` (read-only; constrained GAQL)
+
 ### `@osva-ai/connector-google-drive`
 
 - `drive.file.list` (read-only)
@@ -130,5 +142,6 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 | `@osva-ai/connector-slack`         | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 | `@osva-ai/connector-google-drive`  | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 | `@osva-ai/connector-google-sheets` | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
+| `@osva-ai/connector-google-ads`    | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), and [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), and [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), and [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), and [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md).
