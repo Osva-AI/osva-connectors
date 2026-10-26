@@ -62,6 +62,9 @@ jobs:
       - name: Slack package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:slack
 
+      - name: Google Drive package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:google-drive
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04
