@@ -141,6 +141,25 @@ npm install @osva-ai/connector-google-ads@0.1.0
 
 Quickstart: **[docs/INSTALL-GOOGLE-ADS.md](./docs/INSTALL-GOOGLE-ADS.md)**. Tool reference: **[packages/google-ads/README.md](./packages/google-ads/README.md)**.
 
+## `@osva-ai/connector-meta-ads`
+
+MCP **stdio** connector for Meta Marketing API: **ad account discovery**, **campaign structure**, and bounded **Insights** (read-only; no mutations).
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-meta-ads` (see [install guide](./docs/INSTALL-META-ADS.md)) |
+| Credential  | `OSVA_CONNECTOR_META_ADS_ACCESS_TOKEN` (`ads_read`)                             |
+| Binary      | `osva-connector-meta-ads` → MCP stdio server                                    |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-meta-ads@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-META-ADS.md](./docs/INSTALL-META-ADS.md)**. Tool reference: **[packages/meta-ads/README.md](./packages/meta-ads/README.md)**.
+
 ## Packages in this repository
 
 | Package                                                        | Description                                                 |
@@ -154,6 +173,7 @@ Quickstart: **[docs/INSTALL-GOOGLE-ADS.md](./docs/INSTALL-GOOGLE-ADS.md)**. Tool
 | [`@osva-ai/connector-google-drive`](./packages/google-drive)   | Google Drive MCP connector (eight read-only tools)          |
 | [`@osva-ai/connector-google-sheets`](./packages/google-sheets) | Google Sheets MCP connector (eight tools; writes gated)     |
 | [`@osva-ai/connector-google-ads`](./packages/google-ads)       | Google Ads MCP connector (nine read-only tools)             |
+| [`@osva-ai/connector-meta-ads`](./packages/meta-ads)           | Meta Ads MCP connector (ten read-only tools)                |
 
 ## `@osva-ai/connector-slack`
 
@@ -208,6 +228,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:google-sheets` packs `@osva-ai/connector-google-sheets`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Sheets GS1).
 
 `test:package-acceptance:google-ads` packs `@osva-ai/connector-google-ads`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Ads v0.1.0).
+
+`test:package-acceptance:meta-ads` packs `@osva-ai/connector-meta-ads`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Meta Ads v0.1.0).
 
 ## Release
 
@@ -271,6 +293,13 @@ pnpm test:package-acceptance
 - [Release checklist (Google Ads)](./docs/RELEASE-CHECKLIST-GOOGLE-ADS.md)
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-google-ads.md)
 - Manual npm workflow: [.github/workflows/npm-release-google-ads.yml](./.github/workflows/npm-release-google-ads.yml) (`workflow_dispatch` only)
+
+**Meta Ads connector**
+
+- [Install guide (Meta Ads)](./docs/INSTALL-META-ADS.md)
+- [Release checklist (Meta Ads)](./docs/RELEASE-CHECKLIST-META-ADS.md)
+- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-meta-ads.md)
+- Manual npm workflow: [.github/workflows/npm-release-meta-ads.yml](./.github/workflows/npm-release-meta-ads.yml) (`workflow_dispatch` only)
 
 ## Security
 

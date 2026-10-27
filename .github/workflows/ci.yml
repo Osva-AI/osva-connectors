@@ -71,6 +71,9 @@ jobs:
       - name: Packaged Google Ads acceptance
         run: pnpm test:package-acceptance:google-ads
 
+      - name: Packaged Meta Ads acceptance
+        run: pnpm test:package-acceptance:meta-ads
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04
