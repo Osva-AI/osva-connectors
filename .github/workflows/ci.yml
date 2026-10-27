@@ -74,6 +74,9 @@ jobs:
       - name: Packaged Meta Ads acceptance
         run: pnpm test:package-acceptance:meta-ads
 
+      - name: Packaged Klaviyo acceptance
+        run: pnpm test:package-acceptance:klaviyo
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04
