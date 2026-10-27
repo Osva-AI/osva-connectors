@@ -9,10 +9,10 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo lint",
-    "typecheck": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo typecheck",
-    "test": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo test",
-    "build": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo build",
+    "lint": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo --filter @osva-ai/connector-whatsapp lint",
+    "typecheck": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo --filter @osva-ai/connector-whatsapp typecheck",
+    "test": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo --filter @osva-ai/connector-whatsapp test",
+    "build": "pnpm --filter @osva-ai/connector-github --filter @osva-ai/connector-postgres --filter @osva-ai/connector-shopify --filter @osva-ai/connector-ga4 --filter @osva-ai/connector-gsc --filter @osva-ai/connector-slack --filter @osva-ai/connector-google-drive --filter @osva-ai/connector-google-sheets --filter @osva-ai/connector-google-ads --filter @osva-ai/connector-meta-ads --filter @osva-ai/connector-klaviyo --filter @osva-ai/connector-whatsapp build",
     "test:package-acceptance:slack": "node scripts/package-acceptance-slack.mjs",
     "verify:boundaries": "node scripts/check-package-boundaries.mjs",
     "test:package-acceptance": "node scripts/package-acceptance.mjs",
@@ -25,6 +25,7 @@
     "test:package-acceptance:google-ads": "node scripts/package-acceptance-google-ads.mjs",
     "test:package-acceptance:meta-ads": "node scripts/package-acceptance-meta-ads.mjs",
     "test:package-acceptance:klaviyo": "node scripts/package-acceptance-klaviyo.mjs",
+    "test:package-acceptance:whatsapp": "node scripts/package-acceptance-whatsapp.mjs",
     "test:package-acceptance:npm-dry-run": "node --test scripts/package-acceptance-npm-dry-run.test.mjs"
   },
   "devDependencies": {
