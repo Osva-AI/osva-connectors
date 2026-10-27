@@ -179,6 +179,25 @@ npm install @osva-ai/connector-klaviyo@0.1.0
 
 Quickstart: **[docs/INSTALL-KLAVIYO.md](./docs/INSTALL-KLAVIYO.md)**. Tool reference: **[packages/klaviyo/README.md](./packages/klaviyo/README.md)**.
 
+## `@osva-ai/connector-whatsapp`
+
+MCP **stdio** connector for WhatsApp Business Cloud API: WABA and phone **discovery**, **templates**, **template analytics**, and **guarded template send** (disabled by default; host opt-in allowlist).
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-whatsapp` (see [install guide](./docs/INSTALL-WHATSAPP.md)) |
+| Credential  | `OSVA_CONNECTOR_WHATSAPP_ACCESS_TOKEN` (+ WABA and phone number IDs)            |
+| Binary      | `osva-connector-whatsapp` → MCP stdio server                                    |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-whatsapp@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-WHATSAPP.md](./docs/INSTALL-WHATSAPP.md)**. Tool reference: **[packages/whatsapp/README.md](./packages/whatsapp/README.md)**.
+
 ## Packages in this repository
 
 | Package                                                        | Description                                                 |
@@ -194,6 +213,7 @@ Quickstart: **[docs/INSTALL-KLAVIYO.md](./docs/INSTALL-KLAVIYO.md)**. Tool refer
 | [`@osva-ai/connector-google-ads`](./packages/google-ads)       | Google Ads MCP connector (nine read-only tools)             |
 | [`@osva-ai/connector-meta-ads`](./packages/meta-ads)           | Meta Ads MCP connector (ten read-only tools)                |
 | [`@osva-ai/connector-klaviyo`](./packages/klaviyo)             | Klaviyo MCP connector (ten read-only tools)                 |
+| [`@osva-ai/connector-whatsapp`](./packages/whatsapp)           | WhatsApp Cloud API MCP connector (eight tools; send gated)  |
 
 ## `@osva-ai/connector-slack`
 
@@ -252,6 +272,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:meta-ads` packs `@osva-ai/connector-meta-ads`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Meta Ads v0.1.0).
 
 `test:package-acceptance:klaviyo` packs `@osva-ai/connector-klaviyo`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Klaviyo v0.1.0).
+
+`test:package-acceptance:whatsapp` packs `@osva-ai/connector-whatsapp`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (WhatsApp v0.1.0).
 
 ## Release
 
