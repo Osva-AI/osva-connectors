@@ -160,6 +160,25 @@ npm install @osva-ai/connector-meta-ads@0.1.0
 
 Quickstart: **[docs/INSTALL-META-ADS.md](./docs/INSTALL-META-ADS.md)**. Tool reference: **[packages/meta-ads/README.md](./packages/meta-ads/README.md)**.
 
+## `@osva-ai/connector-klaviyo`
+
+MCP **stdio** connector for Klaviyo: **account**, **campaigns**, **flows**, **metrics**, bounded **events**, and **Reporting API** values reports (read-only; reporting uses query POST only).
+
+| Requirement | Value                                                                         |
+| ----------- | ----------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                       |
+| npm package | `@osva-ai/connector-klaviyo` (see [install guide](./docs/INSTALL-KLAVIYO.md)) |
+| Credential  | `OSVA_CONNECTOR_KLAVIYO_PRIVATE_API_KEY`                                      |
+| Binary      | `osva-connector-klaviyo` → MCP stdio server                                   |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-klaviyo@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-KLAVIYO.md](./docs/INSTALL-KLAVIYO.md)**. Tool reference: **[packages/klaviyo/README.md](./packages/klaviyo/README.md)**.
+
 ## Packages in this repository
 
 | Package                                                        | Description                                                 |
@@ -174,6 +193,7 @@ Quickstart: **[docs/INSTALL-META-ADS.md](./docs/INSTALL-META-ADS.md)**. Tool ref
 | [`@osva-ai/connector-google-sheets`](./packages/google-sheets) | Google Sheets MCP connector (eight tools; writes gated)     |
 | [`@osva-ai/connector-google-ads`](./packages/google-ads)       | Google Ads MCP connector (nine read-only tools)             |
 | [`@osva-ai/connector-meta-ads`](./packages/meta-ads)           | Meta Ads MCP connector (ten read-only tools)                |
+| [`@osva-ai/connector-klaviyo`](./packages/klaviyo)             | Klaviyo MCP connector (ten read-only tools)                 |
 
 ## `@osva-ai/connector-slack`
 
@@ -230,6 +250,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:google-ads` packs `@osva-ai/connector-google-ads`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Ads v0.1.0).
 
 `test:package-acceptance:meta-ads` packs `@osva-ai/connector-meta-ads`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Meta Ads v0.1.0).
+
+`test:package-acceptance:klaviyo` packs `@osva-ai/connector-klaviyo`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Klaviyo v0.1.0).
 
 ## Release
 

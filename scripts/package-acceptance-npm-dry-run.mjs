@@ -33,6 +33,9 @@ export const NPM_BIN_STRIP_PATTERN_GOOGLE_ADS =
 export const NPM_BIN_STRIP_PATTERN_META_ADS =
   /bin\[osva-connector-meta-ads\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_KLAVIYO =
+  /bin\[osva-connector-klaviyo\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
