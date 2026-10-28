@@ -1,0 +1,72 @@
+{
+  "name": "@osva-ai/connector-stripe",
+  "version": "0.1.0",
+  "description": "OSVA Connector Profile V1 Stripe MCP connector (read-only account, balance, payments, subscriptions, and invoices)",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Osva-AI/osva-connectors/tree/main/packages/stripe",
+  "bugs": {
+    "url": "https://github.com/Osva-AI/osva-connectors/issues"
+  },
+  "keywords": [
+    "osva",
+    "mcp",
+    "model-context-protocol",
+    "stripe",
+    "payments",
+    "billing",
+    "connector",
+    "stdio"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Osva-AI/osva-connectors.git",
+    "directory": "packages/stripe"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./stdio": {
+      "types": "./dist/stdio.d.ts",
+      "import": "./dist/stdio.js"
+    }
+  },
+  "bin": {
+    "osva-connector-stripe": "dist/stdio.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run --config vitest.config.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@osva-ai/connector-sdk": "1.1.0-rc.2",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

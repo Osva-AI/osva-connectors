@@ -149,6 +149,19 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `hubspot.owner.list` (read-only)
 - `hubspot.association.list` (read-only)
 
+### `@osva-ai/connector-stripe`
+
+- `stripe.account.get` (read-only)
+- `stripe.balance.get` (read-only)
+- `stripe.balanceTransaction.list` (read-only)
+- `stripe.paymentIntent.list` (read-only)
+- `stripe.paymentIntent.get` (read-only)
+- `stripe.charge.list` (read-only)
+- `stripe.refund.list` (read-only)
+- `stripe.subscription.list` (read-only)
+- `stripe.invoice.list` (read-only)
+- `stripe.customer.get` (read-only)
+
 ### `@osva-ai/connector-whatsapp`
 
 - `whatsapp.businessAccount.get` (read-only)
@@ -197,5 +210,6 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 | `@osva-ai/connector-klaviyo`       | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 | `@osva-ai/connector-whatsapp`      | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 | `@osva-ai/connector-hubspot`       | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
+| `@osva-ai/connector-stripe`        | `0.1.0` (first public release) | Not yet — install via tarball/`pnpm pack` for acceptance testing until bootstrap `npm publish` |
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), and [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), and [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), and [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), and [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), and [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), and [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), and [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md), and [INSTALL-STRIPE.md](./INSTALL-STRIPE.md) / [RELEASE-CHECKLIST-STRIPE.md](./RELEASE-CHECKLIST-STRIPE.md).
