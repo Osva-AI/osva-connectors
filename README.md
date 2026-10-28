@@ -217,6 +217,25 @@ npm install @osva-ai/connector-hubspot@0.1.0
 
 Quickstart: **[docs/INSTALL-HUBSPOT.md](./docs/INSTALL-HUBSPOT.md)**. Tool reference: **[packages/hubspot/README.md](./packages/hubspot/README.md)**.
 
+## `@osva-ai/connector-stripe`
+
+MCP **stdio** connector for Stripe: **account**, **balance**, **balance transactions**, **PaymentIntents**, **charges**, **refunds**, **subscriptions**, **invoices**, and minimal **customer** metadata (read-only).
+
+| Requirement | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                     |
+| npm package | `@osva-ai/connector-stripe` (see [install guide](./docs/INSTALL-STRIPE.md)) |
+| Credential  | `OSVA_CONNECTOR_STRIPE_API_KEY` (restricted read key)                       |
+| Binary      | `osva-connector-stripe` → MCP stdio server                                  |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-stripe@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-STRIPE.md](./docs/INSTALL-STRIPE.md)**. Tool reference: **[packages/stripe/README.md](./packages/stripe/README.md)**.
+
 ## Packages in this repository
 
 | Package                                                        | Description                                                 |
@@ -234,6 +253,7 @@ Quickstart: **[docs/INSTALL-HUBSPOT.md](./docs/INSTALL-HUBSPOT.md)**. Tool refer
 | [`@osva-ai/connector-klaviyo`](./packages/klaviyo)             | Klaviyo MCP connector (ten read-only tools)                 |
 | [`@osva-ai/connector-whatsapp`](./packages/whatsapp)           | WhatsApp Cloud API MCP connector (eight tools; send gated)  |
 | [`@osva-ai/connector-hubspot`](./packages/hubspot)             | HubSpot MCP connector (ten read-only tools)                 |
+| [`@osva-ai/connector-stripe`](./packages/stripe)               | Stripe MCP connector (ten read-only tools)                  |
 
 ## `@osva-ai/connector-slack`
 
@@ -296,6 +316,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:whatsapp` packs `@osva-ai/connector-whatsapp`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (WhatsApp v0.1.0).
 
 `test:package-acceptance:hubspot` packs `@osva-ai/connector-hubspot`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (HubSpot v0.1.0).
+
+`test:package-acceptance:stripe` packs `@osva-ai/connector-stripe`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Stripe v0.1.0).
 
 ## Release
 

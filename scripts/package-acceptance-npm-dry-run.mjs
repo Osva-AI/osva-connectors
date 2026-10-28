@@ -42,6 +42,9 @@ export const NPM_BIN_STRIP_PATTERN_WHATSAPP =
 export const NPM_BIN_STRIP_PATTERN_HUBSPOT =
   /bin\[osva-connector-hubspot\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_STRIPE =
+  /bin\[osva-connector-stripe\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 

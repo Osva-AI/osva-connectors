@@ -83,6 +83,9 @@ jobs:
       - name: Packaged HubSpot acceptance
         run: pnpm test:package-acceptance:hubspot
 
+      - name: Packaged Stripe acceptance
+        run: pnpm test:package-acceptance:stripe
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04
