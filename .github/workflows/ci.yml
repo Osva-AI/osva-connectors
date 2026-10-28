@@ -80,6 +80,9 @@ jobs:
       - name: Packaged WhatsApp acceptance
         run: pnpm test:package-acceptance:whatsapp
 
+      - name: Packaged HubSpot acceptance
+        run: pnpm test:package-acceptance:hubspot
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

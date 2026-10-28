@@ -39,6 +39,9 @@ export const NPM_BIN_STRIP_PATTERN_KLAVIYO =
 export const NPM_BIN_STRIP_PATTERN_WHATSAPP =
   /bin\[osva-connector-whatsapp\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_HUBSPOT =
+  /bin\[osva-connector-hubspot\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
