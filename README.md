@@ -198,6 +198,25 @@ npm install @osva-ai/connector-whatsapp@0.1.0
 
 Quickstart: **[docs/INSTALL-WHATSAPP.md](./docs/INSTALL-WHATSAPP.md)**. Tool reference: **[packages/whatsapp/README.md](./packages/whatsapp/README.md)**.
 
+## `@osva-ai/connector-hubspot`
+
+MCP **stdio** connector for HubSpot CRM: **contacts**, **companies**, **deals**, structured **search**, **pipelines**, **owners**, and **associations** (read-only; search uses query POST only).
+
+| Requirement | Value                                                                         |
+| ----------- | ----------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                       |
+| npm package | `@osva-ai/connector-hubspot` (see [install guide](./docs/INSTALL-HUBSPOT.md)) |
+| Credential  | `OSVA_CONNECTOR_HUBSPOT_ACCESS_TOKEN`                                         |
+| Binary      | `osva-connector-hubspot` → MCP stdio server                                   |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-hubspot@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-HUBSPOT.md](./docs/INSTALL-HUBSPOT.md)**. Tool reference: **[packages/hubspot/README.md](./packages/hubspot/README.md)**.
+
 ## Packages in this repository
 
 | Package                                                        | Description                                                 |
@@ -214,6 +233,7 @@ Quickstart: **[docs/INSTALL-WHATSAPP.md](./docs/INSTALL-WHATSAPP.md)**. Tool ref
 | [`@osva-ai/connector-meta-ads`](./packages/meta-ads)           | Meta Ads MCP connector (ten read-only tools)                |
 | [`@osva-ai/connector-klaviyo`](./packages/klaviyo)             | Klaviyo MCP connector (ten read-only tools)                 |
 | [`@osva-ai/connector-whatsapp`](./packages/whatsapp)           | WhatsApp Cloud API MCP connector (eight tools; send gated)  |
+| [`@osva-ai/connector-hubspot`](./packages/hubspot)             | HubSpot MCP connector (ten read-only tools)                 |
 
 ## `@osva-ai/connector-slack`
 
@@ -274,6 +294,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:klaviyo` packs `@osva-ai/connector-klaviyo`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Klaviyo v0.1.0).
 
 `test:package-acceptance:whatsapp` packs `@osva-ai/connector-whatsapp`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (WhatsApp v0.1.0).
+
+`test:package-acceptance:hubspot` packs `@osva-ai/connector-hubspot`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (HubSpot v0.1.0).
 
 ## Release
 
