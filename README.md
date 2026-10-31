@@ -411,6 +411,12 @@ pnpm test:package-acceptance
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-meta-ads.md)
 - Manual npm workflow: [.github/workflows/npm-release-meta-ads.yml](./.github/workflows/npm-release-meta-ads.yml) (`workflow_dispatch` only)
 
+**npm registry connector**
+
+- [Install guide (npm)](./docs/INSTALL-NPM.md)
+- [Release checklist (npm)](./docs/RELEASE-CHECKLIST-NPM.md)
+- Manual npm workflow: [.github/workflows/npm-release-npm.yml](./.github/workflows/npm-release-npm.yml) (`workflow_dispatch` only)
+
 ## Security
 
 See [SECURITY.md](./SECURITY.md). Connectors treat upstream API responses and provider exceptions as untrusted input. MCP tool discovery does **not** replace OSVA ToolPolicy or human approval for mutating tools.
