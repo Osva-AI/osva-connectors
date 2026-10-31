@@ -236,6 +236,25 @@ npm install @osva-ai/connector-stripe@0.1.0
 
 Quickstart: **[docs/INSTALL-STRIPE.md](./docs/INSTALL-STRIPE.md)**. Tool reference: **[packages/stripe/README.md](./packages/stripe/README.md)**.
 
+## `@osva-ai/connector-npm`
+
+MCP **stdio** connector for the public npm registry: **package metadata** and **last-month download** statistics (read-only, no credentials).
+
+| Requirement | Value                                                                   |
+| ----------- | ----------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                 |
+| npm package | `@osva-ai/connector-npm` (see [install guide](./docs/INSTALL-NPM.md)) |
+| Credential  | None                                                                    |
+| Binary      | `osva-connector-npm` → MCP stdio server                                 |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-npm@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-NPM.md](./docs/INSTALL-NPM.md)**. Tool reference: **[packages/npm/README.md](./packages/npm/README.md)**.
+
 ## Packages in this repository
 
 | Package                                                        | Description                                                 |
@@ -254,6 +273,7 @@ Quickstart: **[docs/INSTALL-STRIPE.md](./docs/INSTALL-STRIPE.md)**. Tool referen
 | [`@osva-ai/connector-whatsapp`](./packages/whatsapp)           | WhatsApp Cloud API MCP connector (eight tools; send gated)  |
 | [`@osva-ai/connector-hubspot`](./packages/hubspot)             | HubSpot MCP connector (ten read-only tools)                 |
 | [`@osva-ai/connector-stripe`](./packages/stripe)               | Stripe MCP connector (ten read-only tools)                  |
+| [`@osva-ai/connector-npm`](./packages/npm)                     | npm registry MCP connector (two read-only tools)            |
 
 ## `@osva-ai/connector-slack`
 
@@ -318,6 +338,8 @@ pnpm test:package-acceptance
 `test:package-acceptance:hubspot` packs `@osva-ai/connector-hubspot`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (HubSpot v0.1.0).
 
 `test:package-acceptance:stripe` packs `@osva-ai/connector-stripe`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Stripe v0.1.0).
+
+`test:package-acceptance:npm` packs `@osva-ai/connector-npm`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (npm M17.4).
 
 ## Release
 
