@@ -2,7 +2,7 @@
 
 Quickstart for running the npm registry MCP connector as a **stdio** server.
 
-**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.0-rc.2`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.3`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
 **Target first public version:** `0.1.0`. The package is **not published yet**; use `pnpm test:package-acceptance:npm` or `pnpm pack` in `packages/npm` until bootstrap publish.
 

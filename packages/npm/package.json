@@ -52,7 +52,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@osva-ai/connector-sdk": "1.1.0-rc.2"
+    "@osva-ai/connector-sdk": "1.1.3"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "2.0.0",
