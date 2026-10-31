@@ -86,6 +86,9 @@ jobs:
       - name: Packaged Stripe acceptance
         run: pnpm test:package-acceptance:stripe
 
+      - name: Packaged npm acceptance
+        run: pnpm test:package-acceptance:npm
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

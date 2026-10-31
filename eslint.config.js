@@ -12,6 +12,7 @@ export default tseslint.config(
       "packages/shopify/src/**/*.ts",
       "packages/ga4/src/**/*.ts",
       "packages/gsc/src/**/*.ts",
+      "packages/npm/src/**/*.ts",
     ],
     rules: {
       "no-restricted-imports": [

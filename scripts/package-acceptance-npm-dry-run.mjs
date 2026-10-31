@@ -45,6 +45,9 @@ export const NPM_BIN_STRIP_PATTERN_HUBSPOT =
 export const NPM_BIN_STRIP_PATTERN_STRIPE =
   /bin\[osva-connector-stripe\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_NPM =
+  /bin\[osva-connector-npm\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
