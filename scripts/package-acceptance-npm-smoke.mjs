@@ -120,9 +120,7 @@ async function testMcpDiscoveryAndSchemas() {
     const metadataTool = listed.tools.find(
       (t) => t.name === "npm_package_metadata",
     );
-    if (
-      metadataTool?.inputSchema?.required?.includes("packageName") !== true
-    ) {
+    if (metadataTool?.inputSchema?.required?.includes("packageName") !== true) {
       throw new Error("npm_package_metadata schema missing packageName.");
     }
 

@@ -240,12 +240,12 @@ Quickstart: **[docs/INSTALL-STRIPE.md](./docs/INSTALL-STRIPE.md)**. Tool referen
 
 MCP **stdio** connector for the public npm registry: **package metadata** and **last-month download** statistics (read-only, no credentials).
 
-| Requirement | Value                                                                   |
-| ----------- | ----------------------------------------------------------------------- |
-| Node.js     | **24+**                                                                 |
+| Requirement | Value                                                                 |
+| ----------- | --------------------------------------------------------------------- |
+| Node.js     | **24+**                                                               |
 | npm package | `@osva-ai/connector-npm` (see [install guide](./docs/INSTALL-NPM.md)) |
-| Credential  | None                                                                    |
-| Binary      | `osva-connector-npm` → MCP stdio server                                 |
+| Credential  | None                                                                  |
+| Binary      | `osva-connector-npm` → MCP stdio server                               |
 
 **Install (after npm publication):**
 

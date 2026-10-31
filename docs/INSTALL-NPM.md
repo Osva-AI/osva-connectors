@@ -27,9 +27,9 @@ npx osva-connector-npm
 
 ## Environment variables
 
-| Variable | Required | Notes |
-| -------- | -------- | ----- |
-| `OSVA_CONNECTOR_NPM_TIMEOUT_MS` | No | HTTP deadline in ms (default `10000`, range `1000`–`60000`) |
+| Variable                        | Required | Notes                                                       |
+| ------------------------------- | -------- | ----------------------------------------------------------- |
+| `OSVA_CONNECTOR_NPM_TIMEOUT_MS` | No       | HTTP deadline in ms (default `10000`, range `1000`–`60000`) |
 
 ## MCP host (stdio)
 
