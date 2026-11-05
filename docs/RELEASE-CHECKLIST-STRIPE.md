@@ -1,5 +1,7 @@
 # Release checklist — `@osva-ai/connector-stripe`
 
+**M19 verified publication (2026-11-06):** `@osva-ai/connector-stripe@0.1.0` on npm with **`@osva-ai/connector-sdk@1.1.4`**; GitHub OIDC trusted publisher environment **`npm`**. Record: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
+
 - [ ] `pnpm --filter @osva-ai/connector-stripe lint` and `typecheck`
 - [ ] `pnpm --filter @osva-ai/connector-stripe test`
 - [ ] `pnpm --filter @osva-ai/connector-stripe build`
