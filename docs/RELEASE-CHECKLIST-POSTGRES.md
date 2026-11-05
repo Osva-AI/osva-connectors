@@ -14,7 +14,7 @@ Publishing is **independent** from [`@osva-ai/connector-github`](./RELEASE-CHECK
 - [ ] PostgreSQL 16 Docker fixture up; `pnpm test:package-acceptance:postgres` passes with `OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL` set
 - [ ] Integration tests pass (`postgres-*integration.test.ts` on CI or locally)
 - [ ] `pnpm verify:boundaries` passes
-- [ ] `packages/postgres/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts`
+- [ ] `packages/postgres/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts` (`0.1.1` for M19.3 patch)
 - [ ] `git status` clean at release commit
 - [ ] `git diff --check` clean
 
@@ -76,13 +76,19 @@ The GitHub connector keeps its **separate** trusted publisher pointing at `npm-r
 
 ## Publish via GitHub Actions (after bootstrap)
 
-- [ ] Review [0.1.0 release notes](./releases/0.1.0-RELEASE-NOTES-postgres.md)
+### M19.3 patch (`0.1.1`) — SDK `1.1.4` realignment
+
+- [ ] Confirm patch is **not** on npm: `npm view @osva-ai/connector-postgres@0.1.1 version` → 404
+- [ ] Review [0.1.1 release notes](./releases/0.1.1-RELEASE-NOTES-postgres.md)
 - [ ] **Actions → Release PostgreSQL to npm** ([npm-release-postgres.yml](../.github/workflows/npm-release-postgres.yml))
-  - `expected_version`: `0.1.0`
-  - First run: `dry_run=true` (repeatable even after `0.1.0` exists on npm)
-  - Upload: `dry_run=false`, `confirm_publish=true`, after environment approval
-- [ ] Post-publish: `npm view @osva-ai/connector-postgres@0.1.0`
+  - `expected_version`: **`0.1.1`**
+  - `dry_run`: **true** first
+  - Upload: `dry_run=false`, `confirm_publish=true`, after **Environment `npm`** approval
+- [ ] Post-publish: `npm view @osva-ai/connector-postgres@0.1.1` and SDK pin **`1.1.4`** on tarball
+- [ ] Post-publish: `npm dist-tag add @osva-ai/connector-postgres@0.1.1 latest` (if needed)
 - [ ] Post-publish: clean install smoke from [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md)
+
+Historical first publish: [0.1.0 release notes](./releases/0.1.0-RELEASE-NOTES-postgres.md) — **do not republish**.
 
 **Note:** You cannot republish an existing version to “test” OIDC. Use `dry_run=true` on the workflow, or publish a new patch version after bootstrap.
 

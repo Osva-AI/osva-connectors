@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-ga4";
 export const CONNECTOR_NAME = "OSVA Google Analytics 4 Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const GA4_PROPERTY_LIST_TOOL = "ga4.property.list";
 export const GA4_PROPERTY_GET_TOOL = "ga4.property.get";

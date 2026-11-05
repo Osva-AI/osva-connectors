@@ -4,12 +4,12 @@ Quickstart for running the npm registry MCP connector as a **stdio** server.
 
 **Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0`. The package is **not published yet**; use `pnpm test:package-acceptance:npm` or `pnpm pack` in `packages/npm` until bootstrap publish.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** remains immutable with connector-sdk **`1.1.3`** on the tarball.
 
 ## Install from npm (after publication)
 
 ```bash
-npm install @osva-ai/connector-npm@0.1.0
+npm install @osva-ai/connector-npm@0.1.1
 npx osva-connector-npm
 ```
 
@@ -21,7 +21,7 @@ No API keys or tokens are required for public registry metadata.
 pnpm --filter @osva-ai/connector-npm build
 pnpm pack --dir /tmp/npm-pack packages/npm
 cd /path/to/consumer
-npm install /tmp/npm-pack/osva-ai-connector-npm-0.1.0.tgz
+npm install /tmp/npm-pack/osva-ai-connector-npm-0.1.1.tgz
 npx osva-connector-npm
 ```
 
@@ -38,7 +38,7 @@ npx osva-connector-npm
   "mcpServers": {
     "osva-npm": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-npm@0.1.0"]
+      "args": ["-y", "@osva-ai/connector-npm@0.1.1"]
     }
   }
 }
@@ -105,7 +105,7 @@ Compatible with OSVA **1.1.x** MCP hosts and ToolPolicy. Matches the canonical t
 
 ### Migrating example 19 from vendored connector
 
-1. Publish or pack `@osva-ai/connector-npm@0.1.0`.
+1. Publish or pack `@osva-ai/connector-npm@0.1.1`.
 2. Replace the vendored `src/connector/` copy with a dependency on `@osva-ai/connector-npm`.
 3. Point TRUSTED_TYPESCRIPT STDIO at `node_modules/@osva-ai/connector-npm/dist/stdio.js` (or `npx osva-connector-npm`).
 4. Keep the same MCP tool names (`npm_package_metadata`, `npm_downloads`) — no agent prompt changes required.

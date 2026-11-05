@@ -2,7 +2,7 @@
 
 OSVA Connector Profile V1 **read-only** MCP connector for Google Analytics 4 (GA4).
 
-This package is developed in the [osva-connectors](https://github.com/Osva-AI/osva-connectors) monorepo. Target first public npm version **`0.1.0`** — **not published yet** as of G3 preparation; see [docs/INSTALL-GA4.md](../../docs/INSTALL-GA4.md).
+This package is developed in the [osva-connectors](https://github.com/Osva-AI/osva-connectors) monorepo. Recommended npm version **`0.1.1`** (SDK **`1.1.4`**); see [docs/INSTALL-GA4.md](../../docs/INSTALL-GA4.md).
 
 ## Capabilities
 
@@ -79,7 +79,7 @@ After npm publication:
 ```json
 {
   "command": "npx",
-  "args": ["-y", "@osva-ai/connector-ga4@0.1.0"],
+  "args": ["-y", "@osva-ai/connector-ga4@0.1.1"],
   "env": {
     "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/service-account.json"
   }

@@ -197,35 +197,35 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 
 Verified on npm registry (`pnpm view <package> version`, 2026-11-05). **Published** = installable from the public registry at the listed version. **Source-only** = implemented in this repo; use `pnpm pack` / tarball acceptance until first publish.
 
-| Package                            | Repo version | npm latest | Status        | Notes                                                         |
-| ---------------------------------- | ------------ | ---------- | ------------- | ------------------------------------------------------------- |
-| `@osva-ai/connector-github`        | `0.3.0`      | `0.3.0`    | **Published** | SDK on registry tarball is still `1.1.0-rc.2` until republish |
-| `@osva-ai/connector-postgres`      | `0.1.0`      | `0.1.0`    | **Published** | Same SDK drift as github wave                                 |
-| `@osva-ai/connector-shopify`       | `0.1.0`      | `0.1.0`    | **Published** | Same SDK drift                                                |
-| `@osva-ai/connector-ga4`           | `0.1.0`      | `0.1.0`    | **Published** | Same SDK drift                                                |
-| `@osva-ai/connector-npm`           | `0.1.0`      | `0.1.0`    | **Published** | Registry tarball pins SDK `1.1.3`                             |
-| `@osva-ai/connector-gsc`           | `0.1.0`      | —          | Source-only   | Wave 2 candidate                                              |
-| `@osva-ai/connector-slack`         | `0.1.0`      | —          | Source-only   | **Wave 1** — publication-ready (M19.3)                        |
-| `@osva-ai/connector-google-drive`  | `0.1.0`      | —          | Source-only   |                                                               |
-| `@osva-ai/connector-google-sheets` | `0.1.0`      | —          | Source-only   |                                                               |
-| `@osva-ai/connector-google-ads`    | `0.1.0`      | —          | Source-only   |                                                               |
-| `@osva-ai/connector-meta-ads`      | `0.1.0`      | —          | Source-only   |                                                               |
-| `@osva-ai/connector-klaviyo`       | `0.1.0`      | —          | Source-only   |                                                               |
-| `@osva-ai/connector-whatsapp`      | `0.1.0`      | —          | Source-only   |                                                               |
-| `@osva-ai/connector-hubspot`       | `0.1.0`      | —          | Source-only   | **Wave 1** — publication-ready (M19.3)                        |
-| `@osva-ai/connector-stripe`        | `0.1.0`      | —          | Source-only   | **Wave 1** — publication-ready (M19.3)                        |
+| Package                            | Repo version | npm latest | Status        | Notes                                                                               |
+| ---------------------------------- | ------------ | ---------- | ------------- | ----------------------------------------------------------------------------------- |
+| `@osva-ai/connector-github`        | `0.3.1`      | `0.3.0`    | **Published** | npm **latest** is still `0.3.0` until `0.3.1` ships; tarball will pin SDK `1.1.4`   |
+| `@osva-ai/connector-postgres`      | `0.1.1`      | `0.1.0`    | **Published** | npm **latest** is still `0.1.0` until `0.1.1` ships                                 |
+| `@osva-ai/connector-shopify`       | `0.1.1`      | `0.1.0`    | **Published** | npm **latest** is still `0.1.0` until `0.1.1` ships                                 |
+| `@osva-ai/connector-ga4`           | `0.1.1`      | `0.1.0`    | **Published** | npm **latest** is still `0.1.0` until `0.1.1` ships                                 |
+| `@osva-ai/connector-npm`           | `0.1.1`      | `0.1.0`    | **Published** | npm **latest** is still `0.1.0` until `0.1.1` ships; prior tarball pins SDK `1.1.3` |
+| `@osva-ai/connector-gsc`           | `0.1.0`      | —          | Source-only   | Wave 2 candidate                                                                    |
+| `@osva-ai/connector-slack`         | `0.1.0`      | —          | Source-only   | **Wave 1** — publication-ready (M19.3)                                              |
+| `@osva-ai/connector-google-drive`  | `0.1.0`      | —          | Source-only   |                                                                                     |
+| `@osva-ai/connector-google-sheets` | `0.1.0`      | —          | Source-only   |                                                                                     |
+| `@osva-ai/connector-google-ads`    | `0.1.0`      | —          | Source-only   |                                                                                     |
+| `@osva-ai/connector-meta-ads`      | `0.1.0`      | —          | Source-only   |                                                                                     |
+| `@osva-ai/connector-klaviyo`       | `0.1.0`      | —          | Source-only   |                                                                                     |
+| `@osva-ai/connector-whatsapp`      | `0.1.0`      | —          | Source-only   |                                                                                     |
+| `@osva-ai/connector-hubspot`       | `0.1.0`      | —          | Source-only   | **Wave 1** — publication-ready (M19.3)                                              |
+| `@osva-ai/connector-stripe`        | `0.1.0`      | —          | Source-only   | **Wave 1** — publication-ready (M19.3)                                              |
 
 ### Registry realignment (do not republish immutable versions)
 
 Existing npm versions cannot be overwritten. After this repository aligns on SDK **1.1.4**, ship **new semver** releases for packages already on the registry:
 
-| Package                       | npm latest (immutable) | SDK on registry tarball | Repo `package.json` (this branch)        | Next compatible npm version |
-| ----------------------------- | ---------------------- | ----------------------- | ---------------------------------------- | --------------------------- |
-| `@osva-ai/connector-github`   | `0.3.0`                | `1.1.0-rc.2`            | `0.3.0` (SDK pin updated in source only) | **`0.3.1`** patch           |
-| `@osva-ai/connector-postgres` | `0.1.0`                | `1.1.0-rc.2`            | `0.1.0`                                  | **`0.1.1`** patch           |
-| `@osva-ai/connector-shopify`  | `0.1.0`                | `1.1.0-rc.2`            | `0.1.0`                                  | **`0.1.1`** patch           |
-| `@osva-ai/connector-ga4`      | `0.1.0`                | `1.1.0-rc.2`            | `0.1.0`                                  | **`0.1.1`** patch           |
-| `@osva-ai/connector-npm`      | `0.1.0`                | `1.1.3`                 | `0.1.0`                                  | **`0.1.1`** patch           |
+| Package                       | npm latest (immutable) | SDK on registry tarball | Repo `package.json` (this branch)    | Next compatible npm version             |
+| ----------------------------- | ---------------------- | ----------------------- | ------------------------------------ | --------------------------------------- |
+| `@osva-ai/connector-github`   | `0.3.0`                | `1.1.0-rc.2`            | **`0.3.1`** (SDK `1.1.4` on tarball) | Publish **`0.3.1`**, retag **`latest`** |
+| `@osva-ai/connector-postgres` | `0.1.0`                | `1.1.0-rc.2`            | **`0.1.1`**                          | Publish **`0.1.1`**, retag **`latest`** |
+| `@osva-ai/connector-shopify`  | `0.1.0`                | `1.1.0-rc.2`            | **`0.1.1`**                          | Publish **`0.1.1`**, retag **`latest`** |
+| `@osva-ai/connector-ga4`      | `0.1.0`                | `1.1.0-rc.2`            | **`0.1.1`**                          | Publish **`0.1.1`**, retag **`latest`** |
+| `@osva-ai/connector-npm`      | `0.1.0`                | `1.1.3`                 | **`0.1.1`**                          | Publish **`0.1.1`**, retag **`latest`** |
 
 Wave 1 first-publication candidates (`npm view @<pkg>@0.1.0` → 404 as of 2026-11-05): `@osva-ai/connector-slack`, `@osva-ai/connector-stripe`, `@osva-ai/connector-hubspot` at **`0.1.0`**.
 

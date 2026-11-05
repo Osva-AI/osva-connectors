@@ -6,12 +6,12 @@ Quickstart for external developers running the GitHub connector as an MCP stdio 
 
 ## Install from npm (after first publication)
 
-These commands assume `@osva-ai/connector-github@0.3.0` (or later) is published to the npm registry.
+These commands assume `@osva-ai/connector-github@0.3.1` (or later) is published to the npm registry. Registry **`0.3.0`** remains available but pins an older connector-sdk; prefer **`0.3.1+`** for SDK **`1.1.4`**.
 
 ### POSIX (bash/zsh)
 
 ```bash
-npm install @osva-ai/connector-github@0.3.0
+npm install @osva-ai/connector-github@0.3.1
 export OSVA_CONNECTOR_GITHUB_TOKEN="github_pat_YOUR_TOKEN_HERE"
 npx osva-connector-github
 ```
@@ -19,7 +19,7 @@ npx osva-connector-github
 ### Windows (PowerShell)
 
 ```powershell
-npm install @osva-ai/connector-github@0.3.0
+npm install @osva-ai/connector-github@0.3.1
 $env:OSVA_CONNECTOR_GITHUB_TOKEN = "github_pat_YOUR_TOKEN_HERE"
 npx osva-connector-github
 ```
@@ -48,7 +48,7 @@ Example MCP client configuration (shape varies by host). **Requires a published 
   "mcpServers": {
     "osva-github": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-github@0.3.0"],
+      "args": ["-y", "@osva-ai/connector-github@0.3.1"],
       "env": {
         "OSVA_CONNECTOR_GITHUB_TOKEN": "github_pat_YOUR_TOKEN_HERE"
       }

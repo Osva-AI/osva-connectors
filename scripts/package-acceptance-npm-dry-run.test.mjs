@@ -36,7 +36,7 @@ test("acceptance dry-run passes on clean success", () => {
   const outcome = classifyNpmPublishDryRunForAcceptance(
     {
       status: 0,
-      stdout: "npm notice package: @osva-ai/connector-github@0.3.0",
+      stdout: "npm notice package: @osva-ai/connector-github@0.3.1",
     },
     NPM_BIN_STRIP_PATTERN_GITHUB,
   );

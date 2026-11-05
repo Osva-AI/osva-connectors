@@ -13,7 +13,7 @@ Publishing is **independent** from other connectors (workflow: [npm-release-npm.
 - [ ] `pnpm --filter @osva-ai/connector-npm build` produces `packages/npm/dist`
 - [ ] `pnpm test:package-acceptance:npm` passes (tarball install + MCP smoke outside repo)
 - [ ] `pnpm verify:boundaries` passes
-- [ ] `packages/npm/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts` (`0.1.0`)
+- [ ] `packages/npm/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts` (`0.1.1` for M19.3 patch)
 - [ ] `@osva-ai/connector-sdk` runtime pin is **`1.1.4`** (verified by package acceptance smoke)
 - [ ] `git status` clean at release commit
 - [ ] `git diff --check` clean
@@ -121,19 +121,19 @@ npm **trusted publishing (OIDC) cannot create a brand-new package** — the pack
 Use this after `0.1.0` is on npm; **no registry upload**.
 
 - [ ] **Actions → Release npm registry connector to npm** ([npm-release-npm.yml](../.github/workflows/npm-release-npm.yml))
-  - `expected_version`: matches `packages/npm/package.json` (e.g. `0.1.0` while no bump has landed)
+  - `expected_version`: matches `packages/npm/package.json` (e.g. **`0.1.1`** for M19.3 patch)
   - `dry_run`: **true**
   - `confirm_publish`: **false**
 
-### Subsequent semver upload — OIDC (not for `0.1.0`)
+### M19.3 patch upload — OIDC (`0.1.1`)
 
-When releasing **`0.1.1`** or later:
-
-- [ ] Bump `packages/npm/package.json` `version` and `CONNECTOR_VERSION` in `src/constants.ts`; merge to **`main`**
-- [ ] Confirm the new version is **not** on npm: `npm view @osva-ai/connector-npm@<version> version` → 404
-- [ ] Run workflow with `dry_run=true` and `expected_version` = new semver
+- [ ] Review [0.1.1 release notes](./releases/0.1.1-RELEASE-NOTES-npm.md)
+- [ ] Confirm **`0.1.1`** is **not** on npm: `npm view @osva-ai/connector-npm@0.1.1 version` → 404
+- [ ] Run workflow with `dry_run=true`, `expected_version`: **`0.1.1`**
 - [ ] Upload: `dry_run=false`, `confirm_publish=true`, after Environment **`npm`** approval
-- [ ] Post-publish: `npm view @osva-ai/connector-npm@<version>` and clean install smoke from [INSTALL-NPM.md](./INSTALL-NPM.md)
+- [ ] Post-publish: `npm view @osva-ai/connector-npm@0.1.1` and SDK pin **`1.1.4`** on tarball
+- [ ] Post-publish: `npm dist-tag add @osva-ai/connector-npm@0.1.1 latest` (if needed)
+- [ ] Post-publish: clean install smoke from [INSTALL-NPM.md](./INSTALL-NPM.md)
 
 **Note:** The workflow **refuses upload** if `expected_version` is already on the registry. You cannot republish **`0.1.0`** (or any immutable version) to “test” OIDC — use `dry_run=true` for packaging checks, or ship a **new patch** for the first OIDC upload.
 
@@ -144,7 +144,7 @@ After bootstrap only (no semver bump yet): promote **`latest`** if needed: `npm 
 ```powershell
 cd packages\npm
 pnpm pack --pack-destination $env:TEMP\osva-npm-pack
-$tar = Get-ChildItem $env:TEMP\osva-npm-pack\osva-ai-connector-npm-0.1.0.tgz
+$tar = Get-ChildItem $env:TEMP\osva-npm-pack\osva-ai-connector-npm-0.1.1.tgz
 Get-FileHash $tar.FullName -Algorithm SHA256
 tar -tzf $tar.FullName
 ```
