@@ -2,6 +2,8 @@
 
 Use this checklist for the **first public npm release** and subsequent semver releases.
 
+**M19 verified publication (2026-11-06):** `@osva-ai/connector-github@0.3.1` on npm with **`@osva-ai/connector-sdk@1.1.4`**; **`latest`** → **0.3.1**; GitHub OIDC trusted publisher environment **`npm`**. Record: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
+
 ## Engineering verification (repository)
 
 - [ ] `main` is green on [CI](../../.github/workflows/ci.yml) for the release commit

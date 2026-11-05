@@ -2,6 +2,8 @@
 
 Use this checklist for the **first public npm release (`0.1.0`)** and subsequent semver releases.
 
+**M19 verified publication (2026-11-06):** `@osva-ai/connector-ga4@0.1.1` on npm with **`@osva-ai/connector-sdk@1.1.4`**. Record: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
+
 Publishing is **independent** from other connectors (workflow: [npm-release-ga4.yml](../.github/workflows/npm-release-ga4.yml)).
 
 ## Engineering verification (repository)
