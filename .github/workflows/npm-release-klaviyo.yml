@@ -122,7 +122,7 @@ jobs:
 
       - name: Packaged Klaviyo acceptance
         working-directory: .
-        run: pnpm test:package-acceptance:ga4
+        run: pnpm test:package-acceptance:klaviyo
 
       - name: Check npm for existing version (publish only)
         if: inputs.dry_run == false && inputs.confirm_publish == true
