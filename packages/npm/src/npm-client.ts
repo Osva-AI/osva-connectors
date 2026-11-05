@@ -1,6 +1,7 @@
 import { ConnectorSdkError, rateLimitError } from "@osva-ai/connector-sdk";
 
 import {
+  DEFAULT_NPM_USER_AGENT,
   MAX_HTTP_RESPONSE_BYTES,
   NPM_DOWNLOADS_ORIGIN,
   NPM_REGISTRY_ORIGIN,
@@ -41,7 +42,7 @@ export function createNpmClient(
 ): NpmClient {
   const fetchImpl = options.fetch ?? globalThis.fetch.bind(globalThis);
   const timeoutMs = options.timeoutMs ?? 10_000;
-  const userAgent = options.userAgent ?? "@osva-ai/connector-npm/0.1.0";
+  const userAgent = options.userAgent ?? DEFAULT_NPM_USER_AGENT;
   const maxResponseBytes = options.maxResponseBytes ?? MAX_HTTP_RESPONSE_BYTES;
 
   return {

@@ -8,12 +8,12 @@ Quickstart for external developers running the PostgreSQL connector as an MCP st
 
 ## Install from npm (after first publication)
 
-Target first public version: **`0.1.0`**. The package is **not published yet** as of P0.6; use `pnpm pack` / tarball install for pre-release validation until bootstrap publish completes.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** remains immutable with an older connector-sdk pin.
 
 ### POSIX (bash/zsh)
 
 ```bash
-npm install @osva-ai/connector-postgres@0.1.0
+npm install @osva-ai/connector-postgres@0.1.1
 export OSVA_CONNECTOR_POSTGRES_URL="postgresql://ROLE:PASSWORD@HOST:5432/DATABASE"
 export OSVA_CONNECTOR_POSTGRES_SSL_MODE="verify"
 npx osva-connector-postgres
@@ -22,7 +22,7 @@ npx osva-connector-postgres
 ### Windows (PowerShell)
 
 ```powershell
-npm install @osva-ai/connector-postgres@0.1.0
+npm install @osva-ai/connector-postgres@0.1.1
 $env:OSVA_CONNECTOR_POSTGRES_URL = "postgresql://ROLE:PASSWORD@HOST:5432/DATABASE"
 $env:OSVA_CONNECTOR_POSTGRES_SSL_MODE = "verify"
 npx osva-connector-postgres
@@ -77,7 +77,7 @@ Example MCP client configuration (shape varies by host):
   "mcpServers": {
     "osva-postgres": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-postgres@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-postgres@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_POSTGRES_URL": "postgresql://ROLE:PASSWORD@HOST:5432/DATABASE",
         "OSVA_CONNECTOR_POSTGRES_SSL_MODE": "verify",

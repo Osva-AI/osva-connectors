@@ -13,7 +13,7 @@ Publishing is **independent** from [`@osva-ai/connector-github`](./RELEASE-CHECK
 - [ ] `pnpm --filter @osva-ai/connector-shopify build` produces `packages/shopify/dist`
 - [ ] `pnpm test:package-acceptance:shopify` passes (tarball install + MCP smoke outside repo)
 - [ ] `pnpm verify:boundaries` passes
-- [ ] `packages/shopify/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts` (`0.1.0`)
+- [ ] `packages/shopify/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts` (`0.1.1` for M19.3 patch)
 - [ ] `git status` clean at release commit
 - [ ] `git diff --check` clean
 
@@ -74,13 +74,19 @@ npm **trusted publishing (OIDC) cannot create a brand-new package** — the pack
 
 ### Post-bootstrap GitHub Actions publish
 
-- [ ] Review [0.1.0 release notes](./releases/0.1.0-RELEASE-NOTES-shopify.md)
+#### M19.3 patch (`0.1.1`) — SDK `1.1.4` realignment
+
+- [ ] Confirm patch is **not** on npm: `npm view @osva-ai/connector-shopify@0.1.1 version` → 404
+- [ ] Review [0.1.1 release notes](./releases/0.1.1-RELEASE-NOTES-shopify.md)
 - [ ] **Actions → Release Shopify to npm** ([npm-release-shopify.yml](../.github/workflows/npm-release-shopify.yml))
-  - `expected_version`: `0.1.0`
-  - Validation: `dry_run=true` (repeatable even after `0.1.0` exists on npm)
-  - Upload: `dry_run=false`, `confirm_publish=true`, after **GitHub Environment `npm`** approval
-- [ ] Post-publish: `npm view @osva-ai/connector-shopify@0.1.0`
+  - `expected_version`: **`0.1.1`**
+  - `dry_run`: **true** first
+  - Upload: `dry_run=false`, `confirm_publish=true`, after **Environment `npm`** approval
+- [ ] Post-publish: `npm view @osva-ai/connector-shopify@0.1.1` and SDK pin **`1.1.4`** on tarball
+- [ ] Post-publish: `npm dist-tag add @osva-ai/connector-shopify@0.1.1 latest` (if needed)
 - [ ] Post-publish: clean install checks from [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md)
+
+Historical first publish: [0.1.0 release notes](./releases/0.1.0-RELEASE-NOTES-shopify.md) — **do not republish**.
 
 **Note:** You cannot republish an existing version to “test” OIDC. Use `dry_run=true` on the workflow, or publish a new patch version after bootstrap.
 

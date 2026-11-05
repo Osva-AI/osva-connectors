@@ -65,13 +65,19 @@ After the first successful upload:
 
 ## Publish (manual — after checklist)
 
-- [ ] Draft release notes reviewed ([0.3.0 draft](./releases/0.3.0-RELEASE-NOTES.md))
+### M19.3 patch (`0.3.1`) — SDK `1.1.4` realignment
+
+- [ ] Confirm patch is **not** on npm: `npm view @osva-ai/connector-github@0.3.1 version` → 404
+- [ ] Draft release notes reviewed ([0.3.1 draft](./releases/0.3.1-RELEASE-NOTES.md))
 - [ ] Run [Release to npm](../../.github/workflows/npm-release.yml) via **Actions → Run workflow**
-  - Set **expected_version** to match `package.json`
-  - Run with **dry_run** first (`npm publish --dry-run`)
-  - Re-run with **dry_run** disabled only after operator approval and environment gate
-- [ ] Post-publish: `npm view @osva-ai/connector-github@<version>` succeeds
-- [ ] Post-publish: clean install smoke from [INSTALL.md](./INSTALL.md) (new machine or temp directory)
+  - `expected_version`: **`0.3.1`** (must match `packages/github/package.json`)
+  - `dry_run`: **true** first (`npm publish --dry-run`)
+  - Upload: `dry_run=false`, `confirm_publish=true`, after **Environment `npm`** approval
+- [ ] Post-publish: `npm view @osva-ai/connector-github@0.3.1` and tarball dependency `@osva-ai/connector-sdk@1.1.4`
+- [ ] Post-publish: `npm dist-tag add @osva-ai/connector-github@0.3.1 latest` (if needed)
+- [ ] Post-publish: clean install smoke from [INSTALL.md](./INSTALL.md)
+
+Historical first publish (`0.3.0` bootstrap): [0.3.0 draft](./releases/0.3.0-RELEASE-NOTES.md) — **do not republish**.
 
 ## Explicitly out of scope for automated publish
 

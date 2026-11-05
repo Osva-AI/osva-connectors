@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-shopify";
 export const CONNECTOR_NAME = "OSVA Shopify Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const SHOPIFY_SHOP_GET_TOOL = "shopify.shop.get";
 export const SHOPIFY_PRODUCT_LIST_TOOL = "shopify.product.list";

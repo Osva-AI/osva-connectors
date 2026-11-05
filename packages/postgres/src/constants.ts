@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-postgres";
 export const CONNECTOR_NAME = "OSVA PostgreSQL Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 /** MCP tool name (dot-separated, stable for Connector Profile V1). */
 export const POSTGRES_CONNECTION_TEST_TOOL = "postgres.connection.test";

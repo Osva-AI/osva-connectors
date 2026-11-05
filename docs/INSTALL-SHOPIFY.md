@@ -4,14 +4,14 @@ Quickstart for external developers running the Shopify connector as an MCP stdio
 
 **Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0`. The package is **not published yet** as of S3 preparation; use monorepo `pnpm test:package-acceptance:shopify` or `pnpm pack` until bootstrap publish completes.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** remains immutable with an older connector-sdk pin.
 
 ## Install from npm (after first publication)
 
 ### POSIX (bash/zsh)
 
 ```bash
-npm install @osva-ai/connector-shopify@0.1.0
+npm install @osva-ai/connector-shopify@0.1.1
 export OSVA_CONNECTOR_SHOPIFY_SHOP="your-store"
 export OSVA_CONNECTOR_SHOPIFY_ACCESS_TOKEN="shpat_YOUR_TOKEN_HERE"
 npx osva-connector-shopify
@@ -20,7 +20,7 @@ npx osva-connector-shopify
 ### Windows (PowerShell)
 
 ```powershell
-npm install @osva-ai/connector-shopify@0.1.0
+npm install @osva-ai/connector-shopify@0.1.1
 $env:OSVA_CONNECTOR_SHOPIFY_SHOP = "your-store"
 $env:OSVA_CONNECTOR_SHOPIFY_ACCESS_TOKEN = "shpat_YOUR_TOKEN_HERE"
 npx osva-connector-shopify
@@ -65,7 +65,7 @@ Only **`*.myshopify.com`** hosts derived from the shop identifier are contacted;
   "mcpServers": {
     "osva-shopify": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-shopify@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-shopify@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_SHOPIFY_SHOP": "your-store",
         "OSVA_CONNECTOR_SHOPIFY_ACCESS_TOKEN": "shpat_YOUR_TOKEN_HERE"
@@ -113,8 +113,8 @@ Details: [packages/shopify/README.md](../packages/shopify/README.md).
 In a **fresh temporary directory** (not the monorepo):
 
 ```bash
-npm install @osva-ai/connector-shopify@0.1.0 @modelcontextprotocol/client@2.0.0
-npm view @osva-ai/connector-shopify@0.1.0 version
+npm install @osva-ai/connector-shopify@0.1.1 @modelcontextprotocol/client@2.0.0
+npm view @osva-ai/connector-shopify@0.1.1 version
 npm view @osva-ai/connector-shopify bin
 ```
 

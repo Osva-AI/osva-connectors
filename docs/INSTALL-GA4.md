@@ -4,7 +4,7 @@ Quickstart for external developers running the Google Analytics 4 (GA4) connecto
 
 **Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0`. The package is **not published yet** as of G3 preparation; use monorepo `pnpm test:package-acceptance:ga4` or `pnpm pack` until bootstrap publish completes.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** remains immutable with an older connector-sdk pin.
 
 ## Google Cloud and GA4 access
 
@@ -26,7 +26,7 @@ Credentials are **never** accepted through MCP tool arguments.
 ### POSIX (bash/zsh)
 
 ```bash
-npm install @osva-ai/connector-ga4@0.1.0
+npm install @osva-ai/connector-ga4@0.1.1
 export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
 export OSVA_CONNECTOR_GA4_PROPERTY_ID="123456789"
 npx osva-connector-ga4
@@ -35,7 +35,7 @@ npx osva-connector-ga4
 ### Windows (PowerShell)
 
 ```powershell
-npm install @osva-ai/connector-ga4@0.1.0
+npm install @osva-ai/connector-ga4@0.1.1
 $env:GOOGLE_APPLICATION_CREDENTIALS = "C:\path\to\service-account.json"
 $env:OSVA_CONNECTOR_GA4_PROPERTY_ID = "123456789"
 npx osva-connector-ga4
@@ -58,7 +58,7 @@ Do not commit service account JSON or store it in tracked files. Inject paths an
   "mcpServers": {
     "osva-ga4": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-ga4@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-ga4@0.1.1"],
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/service-account.json",
         "OSVA_CONNECTOR_GA4_PROPERTY_ID": "123456789"
@@ -118,8 +118,8 @@ On Windows, some hosts accept `"command": "npx.cmd"`.
 In a **fresh temporary directory** (not the monorepo):
 
 ```bash
-npm install @osva-ai/connector-ga4@0.1.0 @modelcontextprotocol/client@2.0.0
-npm view @osva-ai/connector-ga4@0.1.0 version
+npm install @osva-ai/connector-ga4@0.1.1 @modelcontextprotocol/client@2.0.0
+npm view @osva-ai/connector-ga4@0.1.1 version
 npm view @osva-ai/connector-ga4 bin
 ```
 

@@ -21,7 +21,7 @@ on:
       expected_version:
         description: Must match packages/npm/package.json version (upload only for a semver not yet on npm)
         required: true
-        default: "0.1.0"
+        default: "0.1.1"
       dry_run:
         description: When true, validate and run npm publish --dry-run only (no registry upload; safe after bootstrap)
         type: boolean

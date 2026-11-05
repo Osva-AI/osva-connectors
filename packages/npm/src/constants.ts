@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-npm";
 export const CONNECTOR_NAME = "OSVA npm Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const NPM_PACKAGE_METADATA_TOOL = "npm_package_metadata";
 export const NPM_DOWNLOADS_TOOL = "npm_downloads";

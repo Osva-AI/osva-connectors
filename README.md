@@ -16,7 +16,7 @@ MCP **stdio** connector for GitHub: repository and issue **read**, **issue creat
 **Install (after npm publication):**
 
 ```bash
-npm install @osva-ai/connector-github@0.3.0
+npm install @osva-ai/connector-github@0.3.1
 ```
 
 Full quickstart (PowerShell and bash, token scopes, MCP host JSON, tool examples): **[docs/INSTALL.md](./docs/INSTALL.md)**.
@@ -37,7 +37,7 @@ MCP **stdio** connector for PostgreSQL: connection test, schema/table/column **d
 **Install (after npm publication):**
 
 ```bash
-npm install @osva-ai/connector-postgres@<version>
+npm install @osva-ai/connector-postgres@0.1.1
 ```
 
 Full quickstart (TLS, least-privilege role, MCP host JSON, five tools, timeouts): **[docs/INSTALL-POSTGRES.md](./docs/INSTALL-POSTGRES.md)**.
@@ -58,7 +58,7 @@ MCP **stdio** connector for Google Analytics 4: property **discovery**, reportin
 **Install (after npm publication):**
 
 ```bash
-npm install @osva-ai/connector-ga4@0.1.0
+npm install @osva-ai/connector-ga4@0.1.1
 ```
 
 Full quickstart (Google Cloud APIs, property access, MCP host JSON, seven tools, pagination): **[docs/INSTALL-GA4.md](./docs/INSTALL-GA4.md)**.
@@ -250,7 +250,7 @@ MCP **stdio** connector for the public npm registry: **package metadata** and **
 **Install (after npm publication):**
 
 ```bash
-npm install @osva-ai/connector-npm@0.1.0
+npm install @osva-ai/connector-npm@0.1.1
 ```
 
 Quickstart: **[docs/INSTALL-NPM.md](./docs/INSTALL-NPM.md)**. Tool reference: **[packages/npm/README.md](./packages/npm/README.md)**.
@@ -346,27 +346,27 @@ pnpm test:package-acceptance
 **GitHub connector**
 
 - [Release checklist](./docs/RELEASE-CHECKLIST.md)
-- [Draft 0.3.0 release notes](./docs/releases/0.3.0-RELEASE-NOTES.md)
+- [Draft 0.3.1 release notes (M19.3 patch)](./docs/releases/0.3.1-RELEASE-NOTES.md) · [0.3.0 first publish](./docs/releases/0.3.0-RELEASE-NOTES.md)
 - Manual npm workflow: [.github/workflows/npm-release.yml](./.github/workflows/npm-release.yml) (`workflow_dispatch` only)
 
 **PostgreSQL connector**
 
 - [Release checklist (PostgreSQL)](./docs/RELEASE-CHECKLIST-POSTGRES.md)
-- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-postgres.md)
+- [Draft 0.1.1 release notes (M19.3 patch)](./docs/releases/0.1.1-RELEASE-NOTES-postgres.md) · [0.1.0 first publish](./docs/releases/0.1.0-RELEASE-NOTES-postgres.md)
 - Manual npm workflow: [.github/workflows/npm-release-postgres.yml](./.github/workflows/npm-release-postgres.yml) (`workflow_dispatch` only)
 
 **Shopify connector**
 
 - [Install guide (Shopify)](./docs/INSTALL-SHOPIFY.md)
 - [Release checklist (Shopify)](./docs/RELEASE-CHECKLIST-SHOPIFY.md)
-- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-shopify.md)
+- [Draft 0.1.1 release notes (M19.3 patch)](./docs/releases/0.1.1-RELEASE-NOTES-shopify.md) · [0.1.0 first publish](./docs/releases/0.1.0-RELEASE-NOTES-shopify.md)
 - Manual npm workflow: [.github/workflows/npm-release-shopify.yml](./.github/workflows/npm-release-shopify.yml) (`workflow_dispatch` only)
 
 **GA4 connector**
 
 - [Install guide (GA4)](./docs/INSTALL-GA4.md)
 - [Release checklist (GA4)](./docs/RELEASE-CHECKLIST-GA4.md)
-- [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-ga4.md)
+- [Draft 0.1.1 release notes (M19.3 patch)](./docs/releases/0.1.1-RELEASE-NOTES-ga4.md) · [0.1.0 first publish](./docs/releases/0.1.0-RELEASE-NOTES-ga4.md)
 - Manual npm workflow: [.github/workflows/npm-release-ga4.yml](./.github/workflows/npm-release-ga4.yml) (`workflow_dispatch` only)
 
 **GSC connector**
