@@ -14,7 +14,7 @@ Publishing is **independent** from other connectors (workflow: [npm-release-npm.
 - [ ] `pnpm test:package-acceptance:npm` passes (tarball install + MCP smoke outside repo)
 - [ ] `pnpm verify:boundaries` passes
 - [ ] `packages/npm/package.json` `version` matches `CONNECTOR_VERSION` in `src/constants.ts` (`0.1.0`)
-- [ ] `@osva-ai/connector-sdk` runtime pin is **`1.1.3`** (verified by package acceptance smoke)
+- [ ] `@osva-ai/connector-sdk` runtime pin is **`1.1.4`** (verified by package acceptance smoke)
 - [ ] `git status` clean at release commit
 - [ ] `git diff --check` clean
 
@@ -23,7 +23,7 @@ Publishing is **independent** from other connectors (workflow: [npm-release-npm.
 - [ ] `pnpm pack` in `packages/npm` includes `dist/`, `README.md`, `LICENSE` (no `test/`, fixtures, or `.env`)
 - [ ] `engines.node` is `>=24`
 - [ ] `bin.osva-connector-npm` is `dist/stdio.js` (no `./` prefix — npm must not strip the bin)
-- [ ] Runtime deps are public npm packages only (`@osva-ai/connector-sdk@1.1.3`); no workspace or private packages
+- [ ] Runtime deps are public npm packages only (`@osva-ai/connector-sdk@1.1.4`); no workspace or private packages
 
 ## npm registry (operator)
 

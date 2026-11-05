@@ -6,7 +6,7 @@ Read-only MCP **stdio** connector for the public npm registry and npm downloads 
 | ----------- | ------------------------------------------------------------------------------------------ |
 | Node.js     | **24+**                                                                                    |
 | npm package | `@osva-ai/connector-npm@0.1.0` (not published yet — use `pnpm pack` or package acceptance) |
-| SDK         | `@osva-ai/connector-sdk@1.1.3` (public npm)                                                |
+| SDK         | `@osva-ai/connector-sdk@1.1.4` (public npm)                                                |
 | Credentials | None                                                                                       |
 | Binary      | `osva-connector-npm`                                                                       |
 

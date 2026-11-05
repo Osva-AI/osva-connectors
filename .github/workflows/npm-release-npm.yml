@@ -87,7 +87,7 @@ jobs:
             console.error(`CONNECTOR_VERSION mismatch: constants=${match?.[1] ?? "missing"} expected=${expected}`);
             process.exit(1);
           }
-          if (pkg.dependencies?.["@osva-ai/connector-sdk"] !== "1.1.3") {
+          if (pkg.dependencies?.["@osva-ai/connector-sdk"] !== "1.1.4") {
             console.error(`Unexpected connector-sdk pin: ${pkg.dependencies?.["@osva-ai/connector-sdk"]}`);
             process.exit(1);
           }

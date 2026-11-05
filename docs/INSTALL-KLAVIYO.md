@@ -2,7 +2,7 @@
 
 Quickstart for running the Klaviyo connector as an MCP stdio server.
 
-**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.0-rc.2`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
 **Target first public version:** `0.1.0`. The package is **not published yet**; use `pnpm test:package-acceptance:klaviyo` or `pnpm pack` until bootstrap publish.
 

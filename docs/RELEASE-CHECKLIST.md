@@ -18,7 +18,7 @@ Use this checklist for the **first public npm release** and subsequent semver re
 
 - [ ] `pnpm pack` in `packages/github` includes `dist/`, `README.md`, `LICENSE` only (no tests, fixtures, or `.env`)
 - [ ] `engines.node` is `>=24`
-- [ ] `@osva-ai/connector-sdk` remains the tested RC pin (`1.1.0-rc.2` unless compatibility work says otherwise)
+- [ ] `@osva-ai/connector-sdk` remains the tested RC pin (`1.1.4` unless compatibility work says otherwise)
 
 ## npm registry (operator)
 

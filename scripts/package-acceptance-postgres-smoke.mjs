@@ -130,7 +130,7 @@ async function assertSdkFromRegistry(installDir) {
   );
   const raw = await fs.readFile(sdkPkg, "utf8");
   const manifest = JSON.parse(raw);
-  if (manifest.version !== "1.1.0-rc.2") {
+  if (manifest.version !== "1.1.4") {
     throw new Error(
       `Unexpected @osva-ai/connector-sdk version: ${manifest.version}`,
     );
