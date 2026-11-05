@@ -18,7 +18,7 @@ Publishing uses [npm-release-meta-ads.yml](../.github/workflows/npm-release-meta
 
 - [ ] `pnpm pack` includes `dist/`, `README.md`, `LICENSE` (no `test/` or secrets)
 - [ ] `bin.osva-connector-meta-ads` → `dist/stdio.js`
-- [ ] `@osva-ai/connector-sdk@1.1.0-rc.2` pin verified
+- [ ] `@osva-ai/connector-sdk@1.1.4` pin verified
 
 ## npm (operator)
 

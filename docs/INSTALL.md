@@ -2,7 +2,7 @@
 
 Quickstart for external developers running the GitHub connector as an MCP stdio server.
 
-**Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.0-rc.2`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+**Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
 ## Install from npm (after first publication)
 

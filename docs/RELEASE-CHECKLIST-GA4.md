@@ -22,7 +22,7 @@ Publishing is **independent** from other connectors (workflow: [npm-release-ga4.
 - [ ] `pnpm pack` in `packages/ga4` includes `dist/`, `README.md`, `LICENSE` (no `test/`, fixtures, or `.env`)
 - [ ] `engines.node` is `>=24`
 - [ ] `bin.osva-connector-ga4` is `dist/stdio.js` (no `./` prefix — npm must not strip the bin)
-- [ ] `@osva-ai/connector-sdk` pin is the tested RC (`1.1.0-rc.2` unless compatibility work says otherwise)
+- [ ] `@osva-ai/connector-sdk` pin is the tested RC (`1.1.4` unless compatibility work says otherwise)
 - [ ] Runtime deps are public npm packages (`@osva-ai/connector-sdk`, `google-auth-library`, `zod`); no unpublished private packages
 
 ## npm registry (operator)

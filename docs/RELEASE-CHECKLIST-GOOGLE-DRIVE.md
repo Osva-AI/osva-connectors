@@ -18,7 +18,7 @@ Publishing uses [npm-release-google-drive.yml](../.github/workflows/npm-release-
 
 - [ ] `pnpm pack` includes `dist/`, `README.md`, `LICENSE` (no `test/` or secrets)
 - [ ] `bin.osva-connector-google-drive` → `dist/stdio.js`
-- [ ] `@osva-ai/connector-sdk@1.1.0-rc.2` pin verified
+- [ ] `@osva-ai/connector-sdk@1.1.4` pin verified
 
 ## npm (operator)
 

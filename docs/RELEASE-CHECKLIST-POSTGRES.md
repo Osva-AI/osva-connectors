@@ -23,7 +23,7 @@ Publishing is **independent** from [`@osva-ai/connector-github`](./RELEASE-CHECK
 - [ ] `pnpm pack` in `packages/postgres` includes `dist/`, `README.md`, `LICENSE` (no `test/`, `docker/`, fixtures, or `.env`)
 - [ ] `engines.node` is `>=24`
 - [ ] `bin.osva-connector-postgres` is `dist/stdio.js` (no `./` prefix — npm must not strip the bin)
-- [ ] `@osva-ai/connector-sdk` pin is the tested RC (`1.1.0-rc.2` unless compatibility work says otherwise)
+- [ ] `@osva-ai/connector-sdk` pin is the tested RC (`1.1.4` unless compatibility work says otherwise)
 - [ ] `@modelcontextprotocol/server@2.0.0` remains a **direct** dependency (stdio entry imports `@modelcontextprotocol/server/stdio`)
 
 ## npm registry (operator)

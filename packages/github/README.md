@@ -26,7 +26,7 @@ Use a **dedicated token** scoped only to repositories that agents should access.
 
 OSVA **ToolPolicy** and explicit tool bindings control whether an agent may invoke a tool at the platform boundary. The GitHub token controls which repositories GitHub allows. MCP tool discovery does **not** imply approval. The Community ToolPolicy may be permissive; least-privilege deployments should bind only required tools and use read-only tokens when writes are not needed.
 
-This connector does **not** implement human approval, risk scoring, or workspace authorization. `@osva-ai/connector-sdk` tool definitions expose `name`, `description`, `inputSchema`, and a handler only—there is no supported approval or risk metadata field on tools in SDK `1.1.0-rc.2`. Agents granted a mutating tool may invoke it unless the calling OSVA application enforces additional restrictions.
+This connector does **not** implement human approval, risk scoring, or workspace authorization. `@osva-ai/connector-sdk` tool definitions expose `name`, `description`, `inputSchema`, and a handler only—there is no supported approval or risk metadata field on tools in SDK `1.1.4`. Agents granted a mutating tool may invoke it unless the calling OSVA application enforces additional restrictions.
 
 **Recommended deployment:** dedicated fine-grained PAT scoped to specific repositories; ToolPolicy/tool bindings listing only required tools; separate credentials for read-only vs write workflows; explicit human approval in OSVA Console or workflow **before** mutating tool calls when your policy requires it.
 

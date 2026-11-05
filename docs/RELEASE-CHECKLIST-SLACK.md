@@ -22,7 +22,7 @@ Publishing is **independent** from other connectors (workflow: [npm-release-slac
 - [ ] `pnpm pack` in `packages/slack` includes `dist/`, `README.md`, `LICENSE` (no `test/`, fixtures, or `.env`)
 - [ ] `engines.node` is `>=24`
 - [ ] `bin.osva-connector-slack` is `dist/stdio.js` (no `./` prefix)
-- [ ] `@osva-ai/connector-sdk` pin is `1.1.0-rc.2` unless compatibility work says otherwise
+- [ ] `@osva-ai/connector-sdk` pin is `1.1.4` unless compatibility work says otherwise
 - [ ] Runtime deps are public npm packages only
 
 ## npm registry (operator)

@@ -2,7 +2,7 @@
 
 Quickstart for external developers running the Google Analytics 4 (GA4) connector as an MCP stdio server against properties you control.
 
-**Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.0-rc.2`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+**Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
 **Target first public version:** `0.1.0`. The package is **not published yet** as of G3 preparation; use monorepo `pnpm test:package-acceptance:ga4` or `pnpm pack` until bootstrap publish completes.
 

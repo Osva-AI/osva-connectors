@@ -229,8 +229,8 @@ importers:
   packages/ga4:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       google-auth-library:
         specifier: ^10.5.0
         version: 10.9.1(supports-color@7.2.0)
@@ -266,8 +266,8 @@ importers:
         specifier: ^6.1.7
         version: 6.1.8
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       octokit:
         specifier: ^4.1.4
         version: 4.1.4
@@ -300,8 +300,8 @@ importers:
   packages/google-ads:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       google-auth-library:
         specifier: ^10.5.0
         version: 10.9.1(supports-color@7.2.0)
@@ -334,8 +334,8 @@ importers:
   packages/google-drive:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       google-auth-library:
         specifier: ^10.5.0
         version: 10.9.1(supports-color@7.2.0)
@@ -368,8 +368,8 @@ importers:
   packages/google-sheets:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       google-auth-library:
         specifier: ^10.5.0
         version: 10.9.1(supports-color@7.2.0)
@@ -402,8 +402,8 @@ importers:
   packages/gsc:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       google-auth-library:
         specifier: ^10.5.0
         version: 10.9.1(supports-color@7.2.0)
@@ -436,8 +436,8 @@ importers:
   packages/hubspot:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -467,8 +467,8 @@ importers:
   packages/klaviyo:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -498,8 +498,8 @@ importers:
   packages/meta-ads:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -529,8 +529,8 @@ importers:
   packages/npm:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.3
-        version: 1.1.3
+        specifier: 1.1.4
+        version: 1.1.4
     devDependencies:
       "@modelcontextprotocol/client":
         specifier: 2.0.0
@@ -560,8 +560,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       pg:
         specifier: ^8.16.3
         version: 8.23.1
@@ -603,8 +603,8 @@ importers:
   packages/shopify:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -634,8 +634,8 @@ importers:
   packages/slack:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -665,8 +665,8 @@ importers:
   packages/stripe:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -696,8 +696,8 @@ importers:
   packages/whatsapp:
     dependencies:
       "@osva-ai/connector-sdk":
-        specifier: 1.1.0-rc.2
-        version: 1.1.0-rc.2(hono@4.13.13)
+        specifier: 1.1.4
+        version: 1.1.4
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -860,19 +860,6 @@ packages:
         integrity: sha512-z8QBKqdfXLPzkLQuG4xp8hrVEMm1PZ1IgxMN2sMbJiFiAKOWXnAzogXn2W4aqIBlP1ea6U5yiqVquvUNM1Cj6Q==,
       }
     engines: { node: ">=20" }
-
-  "@modelcontextprotocol/node@2.0.0":
-    resolution:
-      {
-        integrity: sha512-Y4hAC2XdGDUdDOCbLDOCA4+aL3NUldjsOWlDL/YwpAxrPhRm1xHd7lZ+mLacvZ9t3PaH28wgNoaLQGrIk1P2pg==,
-      }
-    engines: { node: ">=20" }
-    peerDependencies:
-      "@modelcontextprotocol/server": ^2.0.0
-      hono: ^4.11.4
-    peerDependenciesMeta:
-      hono:
-        optional: true
 
   "@modelcontextprotocol/node@2.1.2":
     resolution:
@@ -1079,31 +1066,17 @@ packages:
       }
     engines: { node: ">= 18" }
 
-  "@osva-ai/connector-sdk@1.1.0-rc.2":
+  "@osva-ai/connector-sdk@1.1.4":
     resolution:
       {
-        integrity: sha512-0ZV4CoaCd9h7mNqvnY2dKE3nay/QbRBefOyvjrAzzEch9/PldNyRUmXyKQR3jqJyMlKyI+F70Mdo+d+nDkrJQQ==,
+        integrity: sha512-P+R76pvjzTPLDY6fktva3YqzjWxv+QLyzwj0PLqqdhKcmJcn0a+trpcDT/rIGnUwWt0SOnQhnU8aeMYMBPF4cA==,
       }
     engines: { node: ">=24" }
 
-  "@osva-ai/connector-sdk@1.1.3":
+  "@osva-ai/contracts@1.1.4":
     resolution:
       {
-        integrity: sha512-vl+5vM1UWqqmNEyXSrqX3tiWPsYtLu64V/vmcMi/uf92aEsb6XB0GNt4NYyYh6EnpVWBgz681AmPiilUi8x4/w==,
-      }
-    engines: { node: ">=24" }
-
-  "@osva-ai/contracts@1.1.0-rc.2":
-    resolution:
-      {
-        integrity: sha512-2e0vsopDmEqu+xhN2RZSCaISpX8oGyGNFn81yTBms81Q7rZUXhj6MWVlGX53P6Rw10ZbKHDPE43pgr/nvnVkQA==,
-      }
-    engines: { node: ">=24" }
-
-  "@osva-ai/contracts@1.1.3":
-    resolution:
-      {
-        integrity: sha512-02MMqJQCP7COpU/WJmYROayCOiguXkX3sKNWhrxYgdg0TFOnwNv+sjv4+/xR86Y9Pe6lKbEsoE9bdNlWkX3Odw==,
+        integrity: sha512-lJJGY7sTapKv+m6+OKgKKxTjSncBBc2lMmBViDvqvh0Pi2w9Sc/MUkJEMM1mYHhS1q3T+XyrKer6tHTzPRskpg==,
       }
     engines: { node: ">=24" }
 
@@ -2772,12 +2745,6 @@ packages:
       }
     engines: { node: ">=10" }
 
-  zod@4.6.5:
-    resolution:
-      {
-        integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==,
-      }
-
   zod@4.6.7:
     resolution:
       {
@@ -2870,13 +2837,6 @@ snapshots:
   "@modelcontextprotocol/core@2.4.0":
     dependencies:
       zod: 4.6.7
-
-  "@modelcontextprotocol/node@2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.13.13)":
-    dependencies:
-      "@hono/node-server": 1.19.17(hono@4.13.13)
-      "@modelcontextprotocol/server": 2.0.0
-    optionalDependencies:
-      hono: 4.13.13
 
   "@modelcontextprotocol/node@2.1.2(@modelcontextprotocol/server@2.4.0)":
     dependencies:
@@ -3041,27 +3001,14 @@ snapshots:
       "@octokit/request-error": 6.1.8
       "@octokit/webhooks-methods": 5.1.1
 
-  "@osva-ai/connector-sdk@1.1.0-rc.2(hono@4.13.13)":
-    dependencies:
-      "@modelcontextprotocol/node": 2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.13.13)
-      "@modelcontextprotocol/server": 2.0.0
-      "@osva-ai/contracts": 1.1.0-rc.2
-      zod: 4.6.5
-    transitivePeerDependencies:
-      - hono
-
-  "@osva-ai/connector-sdk@1.1.3":
+  "@osva-ai/connector-sdk@1.1.4":
     dependencies:
       "@modelcontextprotocol/node": 2.1.2(@modelcontextprotocol/server@2.4.0)
       "@modelcontextprotocol/server": 2.4.0
-      "@osva-ai/contracts": 1.1.3
+      "@osva-ai/contracts": 1.1.4
       zod: 4.6.7
 
-  "@osva-ai/contracts@1.1.0-rc.2":
-    dependencies:
-      zod: 4.6.5
-
-  "@osva-ai/contracts@1.1.3":
+  "@osva-ai/contracts@1.1.4":
     dependencies:
       zod: 4.6.7
 
@@ -3950,7 +3897,5 @@ snapshots:
   xtend@4.0.2: {}
 
   yocto-queue@0.1.0: {}
-
-  zod@4.6.5: {}
 
   zod@4.6.7: {}

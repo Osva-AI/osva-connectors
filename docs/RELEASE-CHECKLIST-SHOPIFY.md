@@ -22,7 +22,7 @@ Publishing is **independent** from [`@osva-ai/connector-github`](./RELEASE-CHECK
 - [ ] `pnpm pack` in `packages/shopify` includes `dist/`, `README.md`, `LICENSE` (no `test/`, fixtures, or `.env`)
 - [ ] `engines.node` is `>=24`
 - [ ] `bin.osva-connector-shopify` is `dist/stdio.js` (no `./` prefix — npm must not strip the bin)
-- [ ] `@osva-ai/connector-sdk` pin is the tested RC (`1.1.0-rc.2` unless compatibility work says otherwise)
+- [ ] `@osva-ai/connector-sdk` pin is the tested RC (`1.1.4` unless compatibility work says otherwise)
 - [ ] Only public npm dependencies (`@osva-ai/connector-sdk`, `zod`); no unpublished private packages
 
 ## npm registry (operator)
