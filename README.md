@@ -103,6 +103,44 @@ npm install @osva-ai/connector-google-drive@0.1.0
 
 Quickstart: **[docs/INSTALL-GOOGLE-DRIVE.md](./docs/INSTALL-GOOGLE-DRIVE.md)**. Tool reference: **[packages/google-drive/README.md](./packages/google-drive/README.md)**.
 
+## `@osva-ai/connector-gmail`
+
+MCP **stdio** connector for Gmail: profile and mailbox **reads**, **labels**, draft listing, and **plain-text draft / send** tools when explicitly enabled and allowlisted by the host.
+
+| Requirement | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                     |
+| npm package | `@osva-ai/connector-gmail` (see [install guide](./docs/INSTALL-GMAIL.md))   |
+| Credential  | Host OAuth access token (`OSVA_CONNECTOR_GMAIL_ACCESS_TOKEN`) or Google ADC |
+| Binary      | `osva-connector-gmail` → MCP stdio server                                   |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-gmail@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-GMAIL.md](./docs/INSTALL-GMAIL.md)**. Tool reference: **[packages/gmail/README.md](./packages/gmail/README.md)**.
+
+## `@osva-ai/connector-google-calendar`
+
+MCP **stdio** connector for Google Calendar: calendar **discovery**, bounded **event** and **free/busy** reads, and **event mutations** when explicitly enabled with a calendar allowlist.
+
+| Requirement | Value                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                                       |
+| npm package | `@osva-ai/connector-google-calendar` (see [install guide](./docs/INSTALL-GOOGLE-CALENDAR.md)) |
+| Credential  | Host OAuth access token or Google ADC                                                         |
+| Binary      | `osva-connector-google-calendar` → MCP stdio server                                           |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-google-calendar@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-GOOGLE-CALENDAR.md](./docs/INSTALL-GOOGLE-CALENDAR.md)**. Tool reference: **[packages/google-calendar/README.md](./packages/google-calendar/README.md)**.
+
 ## `@osva-ai/connector-google-sheets`
 
 MCP **stdio** connector for Google Sheets: spreadsheet **metadata**, bounded **value reads**, and controlled **RAW writes** when explicitly enabled.
@@ -257,23 +295,25 @@ Quickstart: **[docs/INSTALL-NPM.md](./docs/INSTALL-NPM.md)**. Tool reference: **
 
 ## Packages in this repository
 
-| Package                                                        | Description                                                 |
-| -------------------------------------------------------------- | ----------------------------------------------------------- |
-| [`@osva-ai/connector-github`](./packages/github)               | GitHub MCP connector (five tools)                           |
-| [`@osva-ai/connector-postgres`](./packages/postgres)           | PostgreSQL MCP connector (five read-only tools)             |
-| [`@osva-ai/connector-shopify`](./packages/shopify)             | Shopify MCP connector (seven read-only tools)               |
-| [`@osva-ai/connector-ga4`](./packages/ga4)                     | Google Analytics 4 MCP connector (seven read-only tools)    |
-| [`@osva-ai/connector-gsc`](./packages/gsc)                     | Google Search Console MCP connector (eight read-only tools) |
-| [`@osva-ai/connector-slack`](./packages/slack)                 | Slack MCP connector (five read tools, two write tools)      |
-| [`@osva-ai/connector-google-drive`](./packages/google-drive)   | Google Drive MCP connector (eight read-only tools)          |
-| [`@osva-ai/connector-google-sheets`](./packages/google-sheets) | Google Sheets MCP connector (eight tools; writes gated)     |
-| [`@osva-ai/connector-google-ads`](./packages/google-ads)       | Google Ads MCP connector (nine read-only tools)             |
-| [`@osva-ai/connector-meta-ads`](./packages/meta-ads)           | Meta Ads MCP connector (ten read-only tools)                |
-| [`@osva-ai/connector-klaviyo`](./packages/klaviyo)             | Klaviyo MCP connector (ten read-only tools)                 |
-| [`@osva-ai/connector-whatsapp`](./packages/whatsapp)           | WhatsApp Cloud API MCP connector (eight tools; send gated)  |
-| [`@osva-ai/connector-hubspot`](./packages/hubspot)             | HubSpot MCP connector (ten read-only tools)                 |
-| [`@osva-ai/connector-stripe`](./packages/stripe)               | Stripe MCP connector (ten read-only tools)                  |
-| [`@osva-ai/connector-npm`](./packages/npm)                     | npm registry MCP connector (two read-only tools)            |
+| Package                                                            | Description                                                 |
+| ------------------------------------------------------------------ | ----------------------------------------------------------- |
+| [`@osva-ai/connector-github`](./packages/github)                   | GitHub MCP connector (five tools)                           |
+| [`@osva-ai/connector-postgres`](./packages/postgres)               | PostgreSQL MCP connector (five read-only tools)             |
+| [`@osva-ai/connector-shopify`](./packages/shopify)                 | Shopify MCP connector (seven read-only tools)               |
+| [`@osva-ai/connector-ga4`](./packages/ga4)                         | Google Analytics 4 MCP connector (seven read-only tools)    |
+| [`@osva-ai/connector-gsc`](./packages/gsc)                         | Google Search Console MCP connector (eight read-only tools) |
+| [`@osva-ai/connector-slack`](./packages/slack)                     | Slack MCP connector (five read tools, two write tools)      |
+| [`@osva-ai/connector-google-drive`](./packages/google-drive)       | Google Drive MCP connector (eight read-only tools)          |
+| [`@osva-ai/connector-gmail`](./packages/gmail)                     | Gmail MCP connector (reads; drafts/sends host-gated)        |
+| [`@osva-ai/connector-google-calendar`](./packages/google-calendar) | Google Calendar MCP connector (reads; mutations gated)      |
+| [`@osva-ai/connector-google-sheets`](./packages/google-sheets)     | Google Sheets MCP connector (eight tools; writes gated)     |
+| [`@osva-ai/connector-google-ads`](./packages/google-ads)           | Google Ads MCP connector (nine read-only tools)             |
+| [`@osva-ai/connector-meta-ads`](./packages/meta-ads)               | Meta Ads MCP connector (ten read-only tools)                |
+| [`@osva-ai/connector-klaviyo`](./packages/klaviyo)                 | Klaviyo MCP connector (ten read-only tools)                 |
+| [`@osva-ai/connector-whatsapp`](./packages/whatsapp)               | WhatsApp Cloud API MCP connector (eight tools; send gated)  |
+| [`@osva-ai/connector-hubspot`](./packages/hubspot)                 | HubSpot MCP connector (ten read-only tools)                 |
+| [`@osva-ai/connector-stripe`](./packages/stripe)                   | Stripe MCP connector (ten read-only tools)                  |
+| [`@osva-ai/connector-npm`](./packages/npm)                         | npm registry MCP connector (two read-only tools)            |
 
 ## `@osva-ai/connector-slack`
 
@@ -324,6 +364,10 @@ pnpm test:package-acceptance
 `test:package-acceptance:slack` packs `@osva-ai/connector-slack`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Slack v0.1.0).
 
 `test:package-acceptance:google-drive` packs `@osva-ai/connector-google-drive`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Drive GD1).
+
+`test:package-acceptance:gmail` packs `@osva-ai/connector-gmail`, verifies tarball boundaries, and smoke-tests the packaged stdio binary.
+
+`test:package-acceptance:google-calendar` packs `@osva-ai/connector-google-calendar`, verifies tarball boundaries, and smoke-tests the packaged stdio binary.
 
 `test:package-acceptance:google-sheets` packs `@osva-ai/connector-google-sheets`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (Google Sheets GS1).
 
@@ -396,6 +440,16 @@ pnpm test:package-acceptance
 - [Release checklist (Google Sheets)](./docs/RELEASE-CHECKLIST-GOOGLE-SHEETS.md)
 - [Draft 0.1.0 release notes](./docs/releases/0.1.0-RELEASE-NOTES-google-sheets.md)
 - Manual npm workflow: [.github/workflows/npm-release-google-sheets.yml](./.github/workflows/npm-release-google-sheets.yml) (`workflow_dispatch` only)
+
+**Gmail connector**
+
+- [Install guide (Gmail)](./docs/INSTALL-GMAIL.md)
+- [Release checklist (Gmail)](./docs/RELEASE-CHECKLIST-GMAIL.md)
+
+**Google Calendar connector**
+
+- [Install guide (Google Calendar)](./docs/INSTALL-GOOGLE-CALENDAR.md)
+- [Release checklist (Google Calendar)](./docs/RELEASE-CHECKLIST-GOOGLE-CALENDAR.md)
 
 **Google Ads connector**
 

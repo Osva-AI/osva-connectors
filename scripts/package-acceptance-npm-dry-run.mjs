@@ -24,6 +24,12 @@ export const NPM_BIN_STRIP_PATTERN_SLACK =
 export const NPM_BIN_STRIP_PATTERN_GOOGLE_DRIVE =
   /bin\[osva-connector-google-drive\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_GMAIL =
+  /bin\[osva-connector-gmail\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_GOOGLE_CALENDAR =
+  /bin\[osva-connector-google-calendar\].*invalid and removed/i;
+
 export const NPM_BIN_STRIP_PATTERN_GOOGLE_SHEETS =
   /bin\[osva-connector-google-sheets\].*invalid and removed/i;
 

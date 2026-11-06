@@ -125,6 +125,29 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `ads.asset.performance` (read-only)
 - `ads.report.query` (read-only; constrained GAQL)
 
+### `@osva-ai/connector-gmail`
+
+- `gmail.profile.get` (read-only)
+- `gmail.message.list` (read-only)
+- `gmail.message.get` (read-only)
+- `gmail.thread.list` (read-only)
+- `gmail.thread.get` (read-only)
+- `gmail.label.list` (read-only)
+- `gmail.draft.list` (read-only)
+- `gmail.draft.create` (mutating; drafts env + recipient allowlist)
+- `gmail.draft.update` (mutating; drafts env + recipient allowlist)
+- `gmail.message.send` (mutating; send env + host approval + allowlist; not auto-retried)
+
+### `@osva-ai/connector-google-calendar`
+
+- `calendar.calendar.list` (read-only)
+- `calendar.event.list` (read-only)
+- `calendar.event.get` (read-only)
+- `calendar.freebusy.query` (read-only; POST to freeBusy endpoint)
+- `calendar.event.create` (mutating; write env + host approval + calendar allowlist)
+- `calendar.event.update` (mutating; events.patch; same gates)
+- `calendar.event.delete` (mutating; same gates)
+
 ### `@osva-ai/connector-google-drive`
 
 - `drive.file.list` (read-only)
@@ -199,28 +222,30 @@ Verified on npm registry (`npm view <package> version`, **2026-11-06**). **Publi
 
 M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
 
-| Package                            | Repo version | npm latest (2026-11-06) | Status        | Notes                                                   |
-| ---------------------------------- | ------------ | ----------------------- | ------------- | ------------------------------------------------------- |
-| `@osva-ai/connector-github`        | `0.3.1`      | **`0.3.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-postgres`      | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-shopify`       | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-ga4`           | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-npm`           | `0.1.1`      | **`0.1.1`**             | **Published** | **`stable-candidate`** remains **`0.1.0`** (legacy tag) |
-| `@osva-ai/connector-slack`         | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-stripe`        | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-hubspot`       | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-gsc`           | `0.1.0`      | —                       | Source-only   | Out of M19 publication scope                            |
-| `@osva-ai/connector-google-drive`  | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-google-sheets` | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-google-ads`    | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-meta-ads`      | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-klaviyo`       | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-whatsapp`      | `0.1.0`      | —                       | Source-only   |                                                         |
+| Package                              | Repo version | npm latest (2026-11-06) | Status        | Notes                                                   |
+| ------------------------------------ | ------------ | ----------------------- | ------------- | ------------------------------------------------------- |
+| `@osva-ai/connector-github`          | `0.3.1`      | **`0.3.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-postgres`        | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-shopify`         | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-ga4`             | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-npm`             | `0.1.1`      | **`0.1.1`**             | **Published** | **`stable-candidate`** remains **`0.1.0`** (legacy tag) |
+| `@osva-ai/connector-slack`           | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
+| `@osva-ai/connector-stripe`          | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
+| `@osva-ai/connector-hubspot`         | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
+| `@osva-ai/connector-gsc`             | `0.1.0`      | —                       | Source-only   | Out of M19 publication scope                            |
+| `@osva-ai/connector-google-drive`    | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-gmail`           | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-google-calendar` | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-google-sheets`   | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-google-ads`      | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-meta-ads`        | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-klaviyo`         | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-whatsapp`        | `0.1.0`      | —                       | Source-only   |                                                         |
 
-**Summary:** **8 / 15** connector packages are on the public npm registry at M19-aligned versions (**SDK 1.1.4** on published tarballs). **7 / 15** remain source-only.
+**Summary:** **8 / 17** connector packages are on the public npm registry at M19-aligned versions (**SDK 1.1.4** on published tarballs). **9 / 17** remain source-only.
 
 ### Immutable-version history (reference only)
 
 Older semver lines (**`0.3.0`**, **`0.1.0`** on realignment packages) remain on npm with legacy SDK pins (**`1.1.0-rc.2`** / **`1.1.3`**). Prefer **`latest`** coordinates in the table above for new installs.
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-NPM.md](./INSTALL-NPM.md), [RELEASE-CHECKLIST-NPM.md](./RELEASE-CHECKLIST-NPM.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md), [INSTALL-STRIPE.md](./INSTALL-STRIPE.md), [RELEASE-CHECKLIST-STRIPE.md](./RELEASE-CHECKLIST-STRIPE.md), and [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-NPM.md](./INSTALL-NPM.md), [RELEASE-CHECKLIST-NPM.md](./RELEASE-CHECKLIST-NPM.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GMAIL.md](./INSTALL-GMAIL.md), [INSTALL-GOOGLE-CALENDAR.md](./INSTALL-GOOGLE-CALENDAR.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GMAIL.md](./RELEASE-CHECKLIST-GMAIL.md), [RELEASE-CHECKLIST-GOOGLE-CALENDAR.md](./RELEASE-CHECKLIST-GOOGLE-CALENDAR.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md), [INSTALL-STRIPE.md](./INSTALL-STRIPE.md), [RELEASE-CHECKLIST-STRIPE.md](./RELEASE-CHECKLIST-STRIPE.md), and [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
