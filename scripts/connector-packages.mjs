@@ -20,4 +20,6 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-hubspot",
   "@osva-ai/connector-stripe",
   "@osva-ai/connector-npm",
+  "@osva-ai/connector-notion",
+  "@osva-ai/connector-linear",
 ];

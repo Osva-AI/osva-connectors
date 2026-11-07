@@ -206,6 +206,31 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `slack.message.post` (mutating; write env guard)
 - `slack.message.reply` (mutating; write env guard)
 
+### `@osva-ai/connector-notion`
+
+- `notion.search` (read-only)
+- `notion.page.get` (read-only)
+- `notion.block.children.list` (read-only)
+- `notion.database.get` (read-only)
+- `notion.datasource.get` (read-only)
+- `notion.datasource.query` (read-only)
+- `notion.page.create` (mutating; write env guard)
+- `notion.page.update` (mutating; write env guard)
+- `notion.block.children.append` (mutating; write env guard)
+
+### `@osva-ai/connector-linear`
+
+- `linear.viewer.get` (read-only)
+- `linear.team.list` (read-only)
+- `linear.issue.list` (read-only)
+- `linear.issue.get` (read-only)
+- `linear.issue.search` (read-only)
+- `linear.project.list` (read-only)
+- `linear.project.get` (read-only)
+- `linear.issue.create` (mutating; write env guard)
+- `linear.issue.update` (mutating; write env guard)
+- `linear.comment.create` (mutating; write env guard)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -241,8 +266,10 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-meta-ads`        | `0.1.0`      | —                       | Source-only   |                                                         |
 | `@osva-ai/connector-klaviyo`         | `0.1.0`      | —                       | Source-only   |                                                         |
 | `@osva-ai/connector-whatsapp`        | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-notion`          | `0.1.0`      | —                       | Source-only   | B3.2 knowledge product                                  |
+| `@osva-ai/connector-linear`          | `0.1.0`      | —                       | Source-only   | B3.2 knowledge product                                  |
 
-**Summary:** **8 / 17** connector packages are on the public npm registry at M19-aligned versions (**SDK 1.1.4** on published tarballs). **9 / 17** remain source-only.
+**Summary:** **8 / 19** connector packages are on the public npm registry at M19-aligned versions (**SDK 1.1.4** on published tarballs). **11 / 19** remain source-only.
 
 ### Immutable-version history (reference only)
 
