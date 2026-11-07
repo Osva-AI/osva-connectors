@@ -22,4 +22,7 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-npm",
   "@osva-ai/connector-notion",
   "@osva-ai/connector-linear",
+  "@osva-ai/connector-exa",
+  "@osva-ai/connector-tavily",
+  "@osva-ai/connector-firecrawl",
 ];

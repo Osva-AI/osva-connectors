@@ -2,6 +2,8 @@
 
 Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](https://www.npmjs.com/package/@osva-ai/connector-sdk) and [Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md).
 
+This monorepo contains **22** connector packages. As of **2026-11-07** (`npm view`), **15** are published on the public npm registry and **7** remain source-only (**Gmail**, **Google Calendar**, **Notion**, **Linear**, **Exa**, **Tavily**, **Firecrawl**). See [docs/compatibility.md](./docs/compatibility.md#release-status).
+
 ## `@osva-ai/connector-github`
 
 MCP **stdio** connector for GitHub: repository and issue **read**, **issue create**, and **issue comment create**.
@@ -292,6 +294,63 @@ npm install @osva-ai/connector-linear@0.1.0
 ```
 
 Quickstart: **[docs/INSTALL-LINEAR.md](./docs/INSTALL-LINEAR.md)**. Tool reference: **[packages/linear/README.md](./packages/linear/README.md)**.
+
+## `@osva-ai/connector-exa`
+
+MCP **stdio** connector for Exa: **web search**, **URL contents**, and **grounded answers** (provider-generated; not independently verified).
+
+| Requirement | Value                                                                 |
+| ----------- | --------------------------------------------------------------------- |
+| Node.js     | **24+**                                                               |
+| npm package | `@osva-ai/connector-exa` (see [install guide](./docs/INSTALL-EXA.md)) |
+| Credential  | `OSVA_CONNECTOR_EXA_API_KEY`                                          |
+| Binary      | `osva-connector-exa` → MCP stdio server                               |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-exa@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-EXA.md](./docs/INSTALL-EXA.md)**. Tool reference: **[packages/exa/README.md](./packages/exa/README.md)**.
+
+## `@osva-ai/connector-tavily`
+
+MCP **stdio** connector for Tavily: **search**, **extract**, and **bounded crawl** (provider-side egress; conservative client limits).
+
+| Requirement | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                     |
+| npm package | `@osva-ai/connector-tavily` (see [install guide](./docs/INSTALL-TAVILY.md)) |
+| Credential  | `OSVA_CONNECTOR_TAVILY_API_KEY`                                             |
+| Binary      | `osva-connector-tavily` → MCP stdio server                                  |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-tavily@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-TAVILY.md](./docs/INSTALL-TAVILY.md)**. Tool reference: **[packages/tavily/README.md](./packages/tavily/README.md)**.
+
+## `@osva-ai/connector-firecrawl`
+
+MCP **stdio** connector for Firecrawl **v2**: **scrape**, **search**, **map**, and **async crawl** (`crawl.start` / `crawl.status`).
+
+| Requirement | Value                                                                             |
+| ----------- | --------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                           |
+| npm package | `@osva-ai/connector-firecrawl` (see [install guide](./docs/INSTALL-FIRECRAWL.md)) |
+| Credential  | `OSVA_CONNECTOR_FIRECRAWL_API_KEY`                                                |
+| Binary      | `osva-connector-firecrawl` → MCP stdio server                                     |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-firecrawl@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-FIRECRAWL.md](./docs/INSTALL-FIRECRAWL.md)**. Tool reference: **[packages/firecrawl/README.md](./packages/firecrawl/README.md)**.
 
 ## `@osva-ai/connector-stripe`
 

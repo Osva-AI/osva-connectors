@@ -231,6 +231,26 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `linear.issue.update` (mutating; write env guard)
 - `linear.comment.create` (mutating; write env guard)
 
+### `@osva-ai/connector-exa`
+
+- `exa.search` (read-only)
+- `exa.contents.get` (read-only)
+- `exa.answer` (read-only; provider-generated answer with disclaimer)
+
+### `@osva-ai/connector-tavily`
+
+- `tavily.search` (read-only)
+- `tavily.extract` (read-only)
+- `tavily.crawl` (read-only; bounded crawl limits)
+
+### `@osva-ai/connector-firecrawl`
+
+- `firecrawl.scrape` (read-only)
+- `firecrawl.search` (read-only)
+- `firecrawl.map` (read-only)
+- `firecrawl.crawl.start` (read-only; returns crawl ID only)
+- `firecrawl.crawl.status` (read-only; poll status / paginated results)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -243,7 +263,7 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 
 ## Release status
 
-Verified on npm registry (`npm view <package> version`, **2026-11-06**). **Published** = installable from the public registry at the listed version. **Source-only** = implemented in this repo; use `pnpm pack` / tarball acceptance until first publish.
+Verified on npm registry (`npm view <package> version`, **2026-11-07**). **Published** = installable from the public registry at the listed version. **Source-only** = implemented in this repo; use `pnpm pack` / tarball acceptance until first publish.
 
 M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
 
@@ -257,19 +277,22 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-slack`           | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
 | `@osva-ai/connector-stripe`          | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
 | `@osva-ai/connector-hubspot`         | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-gsc`             | `0.1.0`      | —                       | Source-only   | Out of M19 publication scope                            |
-| `@osva-ai/connector-google-drive`    | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-gmail`           | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-google-calendar` | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-google-sheets`   | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-google-ads`      | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-meta-ads`        | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-klaviyo`         | `0.1.0`      | —                       | Source-only   |                                                         |
-| `@osva-ai/connector-whatsapp`        | `0.1.0`      | —                       | Source-only   |                                                         |
+| `@osva-ai/connector-gsc`             | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
+| `@osva-ai/connector-google-drive`    | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
+| `@osva-ai/connector-gmail`           | `0.1.0`      | —                       | Source-only   | B3.1 Google Workspace (unpublished)                     |
+| `@osva-ai/connector-google-calendar` | `0.1.0`      | —                       | Source-only   | B3.1 Google Workspace (unpublished)                     |
+| `@osva-ai/connector-google-sheets`   | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
+| `@osva-ai/connector-google-ads`      | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
+| `@osva-ai/connector-meta-ads`        | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
+| `@osva-ai/connector-klaviyo`         | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
+| `@osva-ai/connector-whatsapp`        | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
 | `@osva-ai/connector-notion`          | `0.1.0`      | —                       | Source-only   | B3.2 knowledge product                                  |
 | `@osva-ai/connector-linear`          | `0.1.0`      | —                       | Source-only   | B3.2 knowledge product                                  |
+| `@osva-ai/connector-exa`             | `0.1.0`      | —                       | Source-only   | B3.3 research & web intelligence                        |
+| `@osva-ai/connector-tavily`          | `0.1.0`      | —                       | Source-only   | B3.3 research & web intelligence                        |
+| `@osva-ai/connector-firecrawl`       | `0.1.0`      | —                       | Source-only   | B3.3 research & web intelligence                        |
 
-**Summary:** **8 / 19** connector packages are on the public npm registry at M19-aligned versions (**SDK 1.1.4** on published tarballs). **11 / 19** remain source-only.
+**Summary:** **22** connector packages in source. **15 / 22** are on the public npm registry (**SDK 1.1.4** on published tarballs). **7 / 22** remain source-only: **Gmail**, **Google Calendar**, **Notion**, **Linear**, **Exa**, **Tavily**, and **Firecrawl**.
 
 ### Immutable-version history (reference only)
 
