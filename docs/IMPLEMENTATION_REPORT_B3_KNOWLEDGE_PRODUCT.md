@@ -68,14 +68,14 @@ No new shared monorepo package. Patterns copied from `packages/hubspot`, `packag
 
 ## Final audit fixes (B3.2 review)
 
-| Area | Defect | Fix |
-| --- | --- | --- |
-| Notion `2026-03-11` | Page update sent deprecated `archived` | Tool + REST client use `inTrash` → `in_trash` (legacy `2025-09-03` still maps to `archived`) |
-| Notion `2026-03-11` | Block append omitted `position` | Optional `position` (`end` / `start` / `after_block`); no legacy `after` tool input |
-| Notion normalize | `meeting_notes` not handled | Rich-text/title normalization; legacy `transcription` tagged |
-| Notion normalize | Response `archived` only | Normalized `inTrash` from `in_trash` or `archived` |
-| Linear mutations | `success: false` ignored | Explicit failure when mutation payload reports `success === false` |
-| Linear team allowlist | `issue.list` without `teamId` bypass | Require `teamId` when allowlist configured; filter search results; verify on `issue.get` |
+| Area                  | Defect                                 | Fix                                                                                          |
+| --------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Notion `2026-03-11`   | Page update sent deprecated `archived` | Tool + REST client use `inTrash` → `in_trash` (legacy `2025-09-03` still maps to `archived`) |
+| Notion `2026-03-11`   | Block append omitted `position`        | Optional `position` (`end` / `start` / `after_block`); no legacy `after` tool input          |
+| Notion normalize      | `meeting_notes` not handled            | Rich-text/title normalization; legacy `transcription` tagged                                 |
+| Notion normalize      | Response `archived` only               | Normalized `inTrash` from `in_trash` or `archived`                                           |
+| Linear mutations      | `success: false` ignored               | Explicit failure when mutation payload reports `success === false`                           |
+| Linear team allowlist | `issue.list` without `teamId` bypass   | Require `teamId` when allowlist configured; filter search results; verify on `issue.get`     |
 
 Regression tests: `notion-api-version-regression.test.ts`, `linear-graphql-regression.test.ts`, team allowlist case in `connector-fake-provider.test.ts`.
 
