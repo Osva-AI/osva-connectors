@@ -447,6 +447,32 @@ npm install @osva-ai/connector-firecrawl@0.1.0
 
 Quickstart: **[docs/INSTALL-FIRECRAWL.md](./docs/INSTALL-FIRECRAWL.md)**. Tool reference: **[packages/firecrawl/README.md](./packages/firecrawl/README.md)**.
 
+## `@osva-ai/connector-qdrant`
+
+MCP **stdio** connector for Qdrant: **collection** list/get, **point** get/scroll/query/count, and gated **upsert**.
+
+| Requirement | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                     |
+| npm package | `@osva-ai/connector-qdrant` (see [install guide](./docs/INSTALL-QDRANT.md)) |
+| Config      | `OSVA_CONNECTOR_QDRANT_URL`, optional `OSVA_CONNECTOR_QDRANT_API_KEY`       |
+| Binary      | `osva-connector-qdrant` → MCP stdio server                                  |
+
+Quickstart: **[docs/INSTALL-QDRANT.md](./docs/INSTALL-QDRANT.md)**. Tool reference: **[packages/qdrant/README.md](./packages/qdrant/README.md)**.
+
+## `@osva-ai/connector-pinecone`
+
+MCP **stdio** connector for Pinecone: **index** list/describe/stats, **vector** query/fetch/list, and gated **upsert** (dense indexes only).
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-pinecone` (see [install guide](./docs/INSTALL-PINECONE.md)) |
+| Credential  | `OSVA_CONNECTOR_PINECONE_API_KEY`                                               |
+| Binary      | `osva-connector-pinecone` → MCP stdio server                                    |
+
+Quickstart: **[docs/INSTALL-PINECONE.md](./docs/INSTALL-PINECONE.md)**. Tool reference: **[packages/pinecone/README.md](./packages/pinecone/README.md)**.
+
 ## `@osva-ai/connector-stripe`
 
 MCP **stdio** connector for Stripe: **account**, **balance**, **balance transactions**, **PaymentIntents**, **charges**, **refunds**, **subscriptions**, **invoices**, and minimal **customer** metadata (read-only).

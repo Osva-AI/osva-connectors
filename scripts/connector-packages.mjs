@@ -30,4 +30,6 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-outlook",
   "@osva-ai/connector-onedrive",
   "@osva-ai/connector-teams",
+  "@osva-ai/connector-qdrant",
+  "@osva-ai/connector-pinecone",
 ];

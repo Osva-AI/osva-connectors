@@ -1,0 +1,211 @@
+/**
+ * MCP smoke tests for an isolated npm install of @osva-ai/connector-qdrant.
+ */
+import { Client } from "@modelcontextprotocol/client";
+import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
+import fs from "node:fs/promises";
+import path from "node:path";
+
+const FAKE_API_KEY = "qdrant_fixture_acceptance_smoke_key_0123456789abcdef";
+const FAKE_URL = "https://example.cloud.qdrant.io";
+
+const EXPECTED_TOOLS = [
+  "qdrant.collection.list",
+  "qdrant.collection.get",
+  "qdrant.point.get",
+  "qdrant.point.scroll",
+  "qdrant.point.query",
+  "qdrant.point.count",
+  "qdrant.point.upsert",
+];
+
+const INSTALL_DIR = process.cwd();
+const REPO_ROOT_MARKER = path.join(
+  "osva-connectors",
+  "packages",
+  "qdrant",
+  "src",
+);
+
+function npmBinShim() {
+  const binDir = path.join(INSTALL_DIR, "node_modules", ".bin");
+  if (process.platform === "win32") {
+    return {
+      command: path.join(binDir, "osva-connector-qdrant.cmd"),
+      args: [],
+      shell: true,
+    };
+  }
+  return {
+    command: path.join(binDir, "osva-connector-qdrant"),
+    args: [],
+    shell: false,
+  };
+}
+
+function childEnvWithConfig() {
+  const env = { ...process.env };
+  env.OSVA_CONNECTOR_QDRANT_URL = FAKE_URL;
+  env.OSVA_CONNECTOR_QDRANT_API_KEY = FAKE_API_KEY;
+  return env;
+}
+
+function childEnvMissingUrl() {
+  const env = { ...process.env };
+  delete env.OSVA_CONNECTOR_QDRANT_URL;
+  env.OSVA_CONNECTOR_QDRANT_API_KEY = FAKE_API_KEY;
+  return env;
+}
+
+async function assertNotLinkedToSourceCheckout(packageDir) {
+  const resolved = await fs.realpath(packageDir);
+  if (
+    resolved.replace(/\\/g, "/").includes(REPO_ROOT_MARKER.replace(/\\/g, "/"))
+  ) {
+    throw new Error(
+      `Installed package resolves to source checkout: ${resolved}`,
+    );
+  }
+}
+
+async function assertSdkFromRegistry(installDir) {
+  const sdkPkg = path.join(
+    installDir,
+    "node_modules",
+    "@osva-ai/connector-sdk",
+    "package.json",
+  );
+  const raw = await fs.readFile(sdkPkg, "utf8");
+  const manifest = JSON.parse(raw);
+  if (manifest.version !== "1.1.4") {
+    throw new Error(
+      `Unexpected @osva-ai/connector-sdk version: ${manifest.version}`,
+    );
+  }
+}
+
+async function testExportResolution() {
+  const main = await import("@osva-ai/connector-qdrant");
+  if (typeof main.createQdrantConnector !== "function") {
+    throw new Error("Missing createQdrantConnector export.");
+  }
+  const stdioEntry = path.join(
+    INSTALL_DIR,
+    "node_modules",
+    "@osva-ai/connector-qdrant",
+    "dist",
+    "stdio.js",
+  );
+  await fs.access(stdioEntry);
+}
+
+async function connectMcpClient(env) {
+  const shim = npmBinShim();
+  let serverStderr = "";
+  const transport = new StdioClientTransport({
+    command: shim.command,
+    args: shim.args,
+    env,
+    stderr: "pipe",
+  });
+  transport.stderr?.on("data", (chunk) => {
+    serverStderr += String(chunk);
+  });
+  const client = new Client({
+    name: "package-acceptance-qdrant",
+    version: "1.0.0",
+  });
+  try {
+    await client.connect(transport);
+  } catch (error) {
+    throw new Error(
+      `MCP connect failed: ${error instanceof Error ? error.message : error}\nserver stderr: ${serverStderr}`,
+    );
+  }
+  return { client, getServerStderr: () => serverStderr };
+}
+
+async function testMissingUrlRejected() {
+  const shim = npmBinShim();
+  const transport = new StdioClientTransport({
+    command: shim.command,
+    args: shim.args,
+    env: childEnvMissingUrl(),
+    stderr: "pipe",
+  });
+  const client = new Client({
+    name: "package-acceptance-qdrant-missing-url",
+    version: "1.0.0",
+  });
+  try {
+    await client.connect(transport);
+    throw new Error("Expected stdio startup to fail without Qdrant URL.");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message.includes("Expected stdio startup")
+    ) {
+      throw error;
+    }
+  } finally {
+    try {
+      await client.close();
+    } catch {
+      // expected
+    }
+  }
+}
+
+async function testMcpDiscoveryAndSchemas() {
+  const { client, getServerStderr } =
+    await connectMcpClient(childEnvWithConfig());
+  try {
+    const listed = await client.listTools({});
+    const names = listed.tools.map((t) => t.name);
+    for (const expected of EXPECTED_TOOLS) {
+      if (!names.includes(expected)) {
+        throw new Error(`Missing tool ${expected} in tools/list.`);
+      }
+    }
+    if (names.length !== EXPECTED_TOOLS.length) {
+      throw new Error(
+        `Expected exactly ${EXPECTED_TOOLS.length} tools, got ${names.length}.`,
+      );
+    }
+
+    const invalid = await client.callTool({
+      name: "qdrant.collection.get",
+      arguments: { collectionName: "" },
+    });
+    if (invalid.isError !== true) {
+      throw new Error("Expected error for invalid collection name.");
+    }
+  } finally {
+    try {
+      await client.close();
+    } catch (error) {
+      throw new Error(
+        `MCP close failed: ${error instanceof Error ? error.message : error}\nserver stderr: ${getServerStderr()}`,
+      );
+    }
+  }
+}
+
+async function main() {
+  const connectorDir = path.join(
+    INSTALL_DIR,
+    "node_modules",
+    "@osva-ai/connector-qdrant",
+  );
+  await assertNotLinkedToSourceCheckout(connectorDir);
+  await assertSdkFromRegistry(INSTALL_DIR);
+  await testExportResolution();
+  await testMissingUrlRejected();
+  await testMcpDiscoveryAndSchemas();
+  console.log("package-acceptance-qdrant-smoke: ok");
+}
+
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+});

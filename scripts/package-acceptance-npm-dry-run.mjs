@@ -69,6 +69,12 @@ export const NPM_BIN_STRIP_PATTERN_TAVILY =
 export const NPM_BIN_STRIP_PATTERN_FIRECRAWL =
   /bin\[osva-connector-firecrawl\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_QDRANT =
+  /bin\[osva-connector-qdrant\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_PINECONE =
+  /bin\[osva-connector-pinecone\].*invalid and removed/i;
+
 export const NPM_BIN_STRIP_PATTERN_JIRA =
   /bin\[osva-connector-jira\].*invalid and removed/i;
 

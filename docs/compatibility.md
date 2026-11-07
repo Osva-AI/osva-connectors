@@ -306,6 +306,26 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `firecrawl.crawl.start` (read-only; returns crawl ID only)
 - `firecrawl.crawl.status` (read-only; poll status / paginated results)
 
+### `@osva-ai/connector-qdrant`
+
+- `qdrant.collection.list` (read-only)
+- `qdrant.collection.get` (read-only)
+- `qdrant.point.get` (read-only)
+- `qdrant.point.scroll` (read-only)
+- `qdrant.point.query` (read-only)
+- `qdrant.point.count` (read-only)
+- `qdrant.point.upsert` (mutating; gated)
+
+### `@osva-ai/connector-pinecone`
+
+- `pinecone.index.list` (read-only)
+- `pinecone.index.describe` (read-only)
+- `pinecone.index.stats` (read-only)
+- `pinecone.vector.query` (read-only; dense indexes only)
+- `pinecone.vector.fetch` (read-only)
+- `pinecone.vector.list` (read-only)
+- `pinecone.vector.upsert` (mutating; gated; dense indexes only)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -351,8 +371,10 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-outlook`         | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
 | `@osva-ai/connector-onedrive`        | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
 | `@osva-ai/connector-teams`           | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
+| `@osva-ai/connector-qdrant`          | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
+| `@osva-ai/connector-pinecone`        | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
 
-**Summary:** **22 / 27** connector packages are on the public npm registry; **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
+**Summary:** **22 / 29** connector packages are on the public npm registry; **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
 
 ### Immutable-version history (reference only)
 
