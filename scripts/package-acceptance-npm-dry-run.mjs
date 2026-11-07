@@ -60,6 +60,15 @@ export const NPM_BIN_STRIP_PATTERN_NOTION =
 export const NPM_BIN_STRIP_PATTERN_LINEAR =
   /bin\[osva-connector-linear\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_EXA =
+  /bin\[osva-connector-exa\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_TAVILY =
+  /bin\[osva-connector-tavily\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_FIRECRAWL =
+  /bin\[osva-connector-firecrawl\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
