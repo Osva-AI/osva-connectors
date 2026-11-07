@@ -255,6 +255,44 @@ npm install @osva-ai/connector-hubspot@0.1.0
 
 Quickstart: **[docs/INSTALL-HUBSPOT.md](./docs/INSTALL-HUBSPOT.md)**. Tool reference: **[packages/hubspot/README.md](./packages/hubspot/README.md)**.
 
+## `@osva-ai/connector-notion`
+
+MCP **stdio** connector for Notion: **search**, **pages**, **databases**, **data sources**, **block children**, and gated **page/block mutations**.
+
+| Requirement | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                     |
+| npm package | `@osva-ai/connector-notion` (see [install guide](./docs/INSTALL-NOTION.md)) |
+| Credential  | `OSVA_CONNECTOR_NOTION_ACCESS_TOKEN`                                        |
+| Binary      | `osva-connector-notion` → MCP stdio server                                  |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-notion@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-NOTION.md](./docs/INSTALL-NOTION.md)**. Tool reference: **[packages/notion/README.md](./packages/notion/README.md)**.
+
+## `@osva-ai/connector-linear`
+
+MCP **stdio** connector for Linear: **viewer**, **teams**, **issues**, **search**, **projects**, and gated **issue/comment mutations**.
+
+| Requirement | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                     |
+| npm package | `@osva-ai/connector-linear` (see [install guide](./docs/INSTALL-LINEAR.md)) |
+| Credential  | `OSVA_CONNECTOR_LINEAR_API_KEY` and/or `OSVA_CONNECTOR_LINEAR_ACCESS_TOKEN` |
+| Binary      | `osva-connector-linear` → MCP stdio server                                  |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-linear@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-LINEAR.md](./docs/INSTALL-LINEAR.md)**. Tool reference: **[packages/linear/README.md](./packages/linear/README.md)**.
+
 ## `@osva-ai/connector-stripe`
 
 MCP **stdio** connector for Stripe: **account**, **balance**, **balance transactions**, **PaymentIntents**, **charges**, **refunds**, **subscriptions**, **invoices**, and minimal **customer** metadata (read-only).

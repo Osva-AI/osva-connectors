@@ -54,6 +54,12 @@ export const NPM_BIN_STRIP_PATTERN_STRIPE =
 export const NPM_BIN_STRIP_PATTERN_NPM =
   /bin\[osva-connector-npm\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_NOTION =
+  /bin\[osva-connector-notion\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_LINEAR =
+  /bin\[osva-connector-linear\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
