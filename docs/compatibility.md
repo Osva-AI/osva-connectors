@@ -326,6 +326,25 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `pinecone.vector.list` (read-only)
 - `pinecone.vector.upsert` (mutating; gated; dense indexes only)
 
+### `@osva-ai/connector-mixpanel`
+
+- `mixpanel.report.get` (read-only)
+- `mixpanel.segmentation.run` (read-only)
+- `mixpanel.funnel.get` (read-only)
+- `mixpanel.retention.run` (read-only)
+- `mixpanel.cohort.list` (read-only)
+- `mixpanel.event.top` (read-only)
+
+### `@osva-ai/connector-amplitude`
+
+- `amplitude.event.list` (read-only)
+- `amplitude.event.segmentation` (read-only)
+- `amplitude.funnel.run` (read-only)
+- `amplitude.retention.run` (read-only)
+- `amplitude.user.active` (read-only; aggregate series only)
+- `amplitude.chart.get` (read-only)
+- `amplitude.session.average` (read-only)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -373,11 +392,13 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-teams`           | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
 | `@osva-ai/connector-qdrant`          | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
 | `@osva-ai/connector-pinecone`        | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
+| `@osva-ai/connector-mixpanel`        | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
+| `@osva-ai/connector-amplitude`       | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
 
-**Summary:** **22 / 29** connector packages are on the public npm registry; **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
+**Summary:** **22 / 31** connector packages are on the public npm registry; **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
 
 ### Immutable-version history (reference only)
 
 Older semver lines (**`0.3.0`**, **`0.1.0`** on realignment packages) remain on npm with legacy SDK pins (**`1.1.0-rc.2`** / **`1.1.3`**). Prefer **`latest`** coordinates in the table above for new installs.
 
-See [INSTALL.md](./INSTALL.md), [INSTALL-NPM.md](./INSTALL-NPM.md), [RELEASE-CHECKLIST-NPM.md](./RELEASE-CHECKLIST-NPM.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GMAIL.md](./INSTALL-GMAIL.md), [INSTALL-GOOGLE-CALENDAR.md](./INSTALL-GOOGLE-CALENDAR.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GMAIL.md](./RELEASE-CHECKLIST-GMAIL.md), [RELEASE-CHECKLIST-GOOGLE-CALENDAR.md](./RELEASE-CHECKLIST-GOOGLE-CALENDAR.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md), [INSTALL-STRIPE.md](./INSTALL-STRIPE.md), [RELEASE-CHECKLIST-STRIPE.md](./RELEASE-CHECKLIST-STRIPE.md), and [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
+See [INSTALL.md](./INSTALL.md), [INSTALL-NPM.md](./INSTALL-NPM.md), [RELEASE-CHECKLIST-NPM.md](./RELEASE-CHECKLIST-NPM.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GMAIL.md](./INSTALL-GMAIL.md), [INSTALL-GOOGLE-CALENDAR.md](./INSTALL-GOOGLE-CALENDAR.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GMAIL.md](./RELEASE-CHECKLIST-GMAIL.md), [RELEASE-CHECKLIST-GOOGLE-CALENDAR.md](./RELEASE-CHECKLIST-GOOGLE-CALENDAR.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md), [INSTALL-STRIPE.md](./INSTALL-STRIPE.md), [RELEASE-CHECKLIST-STRIPE.md](./RELEASE-CHECKLIST-STRIPE.md), [INSTALL-MIXPANEL.md](./INSTALL-MIXPANEL.md), [INSTALL-AMPLITUDE.md](./INSTALL-AMPLITUDE.md), [RELEASE-CHECKLIST-MIXPANEL.md](./RELEASE-CHECKLIST-MIXPANEL.md), [RELEASE-CHECKLIST-AMPLITUDE.md](./RELEASE-CHECKLIST-AMPLITUDE.md), and [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).
