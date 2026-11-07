@@ -2,7 +2,7 @@
 
 **Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
 
-Target first public version: **`0.1.0`** (source-only until bootstrap publish).
+**Published:** `@osva-ai/connector-linear@0.1.0` on npm ([B3 publication record](./B3_PUBLICATION_RECORD.md)).
 
 ## Linear credentials
 

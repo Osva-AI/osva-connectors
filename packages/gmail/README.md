@@ -2,7 +2,7 @@
 
 OSVA Connector Profile V1 **Gmail** MCP connector (stdio): bounded **reads**, **labels**, **draft listing**, and **plain-text draft compose / send** when explicitly enabled by the host.
 
-Target first public npm version **`0.1.0`** — **not published yet**; use `pnpm test:package-acceptance:gmail` or `pnpm pack` before release.
+Published on npm as **`@osva-ai/connector-gmail@0.1.0`** ([B3 record](../../docs/B3_PUBLICATION_RECORD.md)). Before a patch release, run `pnpm test:package-acceptance:gmail` and `pnpm test:package-acceptance:registry-b3`.
 
 ## Capabilities
 

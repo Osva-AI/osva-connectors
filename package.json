@@ -18,6 +18,7 @@
     "test:package-acceptance:exa": "node scripts/package-acceptance-exa.mjs",
     "test:package-acceptance:tavily": "node scripts/package-acceptance-tavily.mjs",
     "test:package-acceptance:firecrawl": "node scripts/package-acceptance-firecrawl.mjs",
+    "test:package-acceptance:registry-b3": "node scripts/package-acceptance-registry-b3.mjs",
     "test:package-acceptance:slack": "node scripts/package-acceptance-slack.mjs",
     "verify:boundaries": "node scripts/check-package-boundaries.mjs",
     "test:package-acceptance": "node scripts/package-acceptance.mjs",
