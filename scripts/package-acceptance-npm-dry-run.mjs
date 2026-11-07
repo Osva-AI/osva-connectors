@@ -75,6 +75,15 @@ export const NPM_BIN_STRIP_PATTERN_JIRA =
 export const NPM_BIN_STRIP_PATTERN_CONFLUENCE =
   /bin\[osva-connector-confluence\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_OUTLOOK =
+  /bin\[osva-connector-outlook\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_ONEDRIVE =
+  /bin\[osva-connector-onedrive\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_TEAMS =
+  /bin\[osva-connector-teams\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 

@@ -2,7 +2,7 @@
 
 Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](https://www.npmjs.com/package/@osva-ai/connector-sdk) and [Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md).
 
-This monorepo contains **24** connector packages. As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira** and **Confluence** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
+This monorepo contains **27** connector packages. As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
 
 ## `@osva-ai/connector-github`
 
@@ -332,6 +332,63 @@ npm install @osva-ai/connector-confluence@0.1.0
 ```
 
 Quickstart: **[docs/INSTALL-CONFLUENCE.md](./docs/INSTALL-CONFLUENCE.md)**. Tool reference: **[packages/confluence/README.md](./packages/confluence/README.md)**.
+
+## `@osva-ai/connector-outlook`
+
+MCP **stdio** connector for Microsoft Outlook (Graph delegated `/me`): **mail folders**, **messages**, **calendar** reads, **message search**, and gated **send** / **event create**.
+
+| Requirement | Value                                                                         |
+| ----------- | ----------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                       |
+| npm package | `@osva-ai/connector-outlook` (see [install guide](./docs/INSTALL-OUTLOOK.md)) |
+| Credential  | `OSVA_CONNECTOR_OUTLOOK_ACCESS_TOKEN` (delegated Graph token from host)       |
+| Binary      | `osva-connector-outlook` → MCP stdio server                                   |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-outlook@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-OUTLOOK.md](./docs/INSTALL-OUTLOOK.md)**. Tool reference: **[packages/outlook/README.md](./packages/outlook/README.md)**.
+
+## `@osva-ai/connector-onedrive`
+
+MCP **stdio** connector for OneDrive via **Microsoft Graph**: **drive** metadata, **folder listing**, **file read** (bounded text), **search**, and gated **small file upload**.
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-onedrive` (see [install guide](./docs/INSTALL-ONEDRIVE.md)) |
+| Credential  | `OSVA_CONNECTOR_ONEDRIVE_ACCESS_TOKEN` (delegated Graph token from host)        |
+| Binary      | `osva-connector-onedrive` → MCP stdio server                                    |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-onedrive@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-ONEDRIVE.md](./docs/INSTALL-ONEDRIVE.md)**. Tool reference: **[packages/onedrive/README.md](./packages/onedrive/README.md)**.
+
+## `@osva-ai/connector-teams`
+
+MCP **stdio** connector for Microsoft Teams (Graph delegated): **teams**, **channels**, **chats**, **messages** / **replies** reads, and gated **channel** / **chat** sends.
+
+| Requirement | Value                                                                     |
+| ----------- | ------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                   |
+| npm package | `@osva-ai/connector-teams` (see [install guide](./docs/INSTALL-TEAMS.md)) |
+| Credential  | `OSVA_CONNECTOR_TEAMS_ACCESS_TOKEN` (delegated Graph token from host)     |
+| Binary      | `osva-connector-teams` → MCP stdio server                                 |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-teams@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-TEAMS.md](./docs/INSTALL-TEAMS.md)**. Tool reference: **[packages/teams/README.md](./packages/teams/README.md)**.
 
 ## `@osva-ai/connector-exa`
 

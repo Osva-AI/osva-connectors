@@ -241,6 +241,38 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `confluence.page.create` (mutating; write env guard)
 - `confluence.page.update` (mutating; write env guard)
 
+### `@osva-ai/connector-outlook`
+
+- `outlook.mailFolder.list` (read-only)
+- `outlook.message.list` (read-only)
+- `outlook.message.get` (read-only)
+- `outlook.message.search` (read-only)
+- `outlook.calendar.list` (read-only)
+- `outlook.event.list` (read-only)
+- `outlook.event.get` (read-only)
+- `outlook.message.send` (mutating; send env guard)
+- `outlook.event.create` (mutating; write env guard)
+
+### `@osva-ai/connector-onedrive`
+
+- `onedrive.drive.get` (read-only)
+- `onedrive.item.list` (read-only)
+- `onedrive.item.get` (read-only)
+- `onedrive.file.read` (read-only)
+- `onedrive.file.search` (read-only)
+- `onedrive.file.upload.small` (mutating; write env guard)
+
+### `@osva-ai/connector-teams`
+
+- `teams.team.list` (read-only)
+- `teams.channel.list` (read-only)
+- `teams.channel.message.list` (read-only)
+- `teams.channel.reply.list` (read-only)
+- `teams.chat.list` (read-only)
+- `teams.chat.message.list` (read-only)
+- `teams.channel.message.send` (mutating; send env guard)
+- `teams.chat.message.send` (mutating; send env guard)
+
 ### `@osva-ai/connector-linear`
 
 - `linear.viewer.get` (read-only)
@@ -316,8 +348,11 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-firecrawl`       | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
 | `@osva-ai/connector-jira`            | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
 | `@osva-ai/connector-confluence`      | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
+| `@osva-ai/connector-outlook`         | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
+| `@osva-ai/connector-onedrive`        | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
+| `@osva-ai/connector-teams`           | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
 
-**Summary:** **22 / 24** connector packages are on the public npm registry; **Jira** and **Confluence** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
+**Summary:** **22 / 27** connector packages are on the public npm registry; **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
 
 ### Immutable-version history (reference only)
 
