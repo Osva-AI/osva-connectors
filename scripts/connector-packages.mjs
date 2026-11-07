@@ -25,4 +25,6 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-exa",
   "@osva-ai/connector-tavily",
   "@osva-ai/connector-firecrawl",
+  "@osva-ai/connector-confluence",
+  "@osva-ai/connector-jira",
 ];

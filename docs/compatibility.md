@@ -218,6 +218,29 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `notion.page.update` (mutating; write env guard)
 - `notion.block.children.append` (mutating; write env guard)
 
+### `@osva-ai/connector-jira`
+
+- `jira.project.list` (read-only)
+- `jira.project.get` (read-only)
+- `jira.issue.search` (read-only)
+- `jira.issue.get` (read-only)
+- `jira.issue.transitions.list` (read-only)
+- `jira.issue.create` (mutating; write env guard)
+- `jira.issue.update` (mutating; write env guard)
+- `jira.issue.comment.create` (mutating; write env guard)
+- `jira.issue.transition` (mutating; write env guard)
+
+### `@osva-ai/connector-confluence`
+
+- `confluence.space.list` (read-only)
+- `confluence.space.get` (read-only)
+- `confluence.page.list` (read-only)
+- `confluence.page.get` (read-only)
+- `confluence.search` (read-only)
+- `confluence.page.children.list` (read-only)
+- `confluence.page.create` (mutating; write env guard)
+- `confluence.page.update` (mutating; write env guard)
+
 ### `@osva-ai/connector-linear`
 
 - `linear.viewer.get` (read-only)
@@ -263,36 +286,38 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 
 ## Release status
 
-Verified on npm registry (`npm view <package> version`, **2026-11-08**). **Published** = installable from the public registry at the listed version. **Source-only** = implemented in this repo but not yet on npm (none remaining).
+Verified on npm registry (`npm view <package> version`, **2026-11-08**). **Published** = installable from the public registry at the listed version. **Source-only** = implemented in this repo but not yet on npm.
 
 M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md). B3 completion: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
 
-| Package                              | Repo version | npm latest (2026-11-08) | Status        | Notes                                                   |
-| ------------------------------------ | ------------ | ----------------------- | ------------- | ------------------------------------------------------- |
-| `@osva-ai/connector-github`          | `0.3.1`      | **`0.3.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-postgres`        | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-shopify`         | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-ga4`             | `0.1.1`      | **`0.1.1`**             | **Published** | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-npm`             | `0.1.1`      | **`0.1.1`**             | **Published** | **`stable-candidate`** remains **`0.1.0`** (legacy tag) |
-| `@osva-ai/connector-slack`           | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-stripe`          | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-hubspot`         | `0.1.0`      | **`0.1.0`**             | **Published** | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-gsc`             | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-google-drive`    | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-gmail`           | `0.1.0`      | **`0.1.0`**             | **Published** | B3.1 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-google-calendar` | `0.1.0`      | **`0.1.0`**             | **Published** | B3.1 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-google-sheets`   | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-google-ads`      | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-meta-ads`        | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-klaviyo`         | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-whatsapp`        | `0.1.0`      | **`0.1.0`**             | **Published** |                                                         |
-| `@osva-ai/connector-notion`          | `0.1.0`      | **`0.1.0`**             | **Published** | B3.2 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-linear`          | `0.1.0`      | **`0.1.0`**             | **Published** | B3.2 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-exa`             | `0.1.0`      | **`0.1.0`**             | **Published** | B3.3 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-tavily`          | `0.1.0`      | **`0.1.0`**             | **Published** | B3.3 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-firecrawl`       | `0.1.0`      | **`0.1.0`**             | **Published** | B3.3 bootstrap; registry acceptance 2026-11-08          |
+| Package                              | Repo version | npm latest (2026-11-08) | Status          | Notes                                                   |
+| ------------------------------------ | ------------ | ----------------------- | --------------- | ------------------------------------------------------- |
+| `@osva-ai/connector-github`          | `0.3.1`      | **`0.3.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-postgres`        | `0.1.1`      | **`0.1.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-shopify`         | `0.1.1`      | **`0.1.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-ga4`             | `0.1.1`      | **`0.1.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
+| `@osva-ai/connector-npm`             | `0.1.1`      | **`0.1.1`**             | **Published**   | **`stable-candidate`** remains **`0.1.0`** (legacy tag) |
+| `@osva-ai/connector-slack`           | `0.1.0`      | **`0.1.0`**             | **Published**   | M19 Wave 1 first publication                            |
+| `@osva-ai/connector-stripe`          | `0.1.0`      | **`0.1.0`**             | **Published**   | M19 Wave 1 first publication                            |
+| `@osva-ai/connector-hubspot`         | `0.1.0`      | **`0.1.0`**             | **Published**   | M19 Wave 1 first publication                            |
+| `@osva-ai/connector-gsc`             | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-google-drive`    | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-gmail`           | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.1 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-google-calendar` | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.1 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-google-sheets`   | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-google-ads`      | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-meta-ads`        | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-klaviyo`         | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-whatsapp`        | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
+| `@osva-ai/connector-notion`          | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.2 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-linear`          | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.2 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-exa`             | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-tavily`          | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-firecrawl`       | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
+| `@osva-ai/connector-jira`            | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
+| `@osva-ai/connector-confluence`      | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
 
-**Summary:** **22 / 22** connector packages in source are on the public npm registry (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
+**Summary:** **22 / 24** connector packages are on the public npm registry; **Jira** and **Confluence** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
 
 ### Immutable-version history (reference only)
 

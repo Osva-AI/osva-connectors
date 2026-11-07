@@ -2,7 +2,7 @@
 
 Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](https://www.npmjs.com/package/@osva-ai/connector-sdk) and [Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md).
 
-This monorepo contains **22** connector packages. As of **2026-11-08** (`npm view`), **all 22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines). B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
+This monorepo contains **24** connector packages. As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira** and **Confluence** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
 
 ## `@osva-ai/connector-github`
 
@@ -295,6 +295,44 @@ npm install @osva-ai/connector-linear@0.1.0
 
 Quickstart: **[docs/INSTALL-LINEAR.md](./docs/INSTALL-LINEAR.md)**. Tool reference: **[packages/linear/README.md](./packages/linear/README.md)**.
 
+## `@osva-ai/connector-jira`
+
+MCP **stdio** connector for Jira Cloud: bounded **project** and **issue** reads (JQL via `search/jql`), transition discovery, and gated **issue mutations**.
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-jira` (see [install guide](./docs/INSTALL-JIRA.md))         |
+| Credential  | Site URL + email/API token, site URL + access token, or cloud ID + access token |
+| Binary      | `osva-connector-jira` → MCP stdio server                                        |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-jira@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-JIRA.md](./docs/INSTALL-JIRA.md)**. Tool reference: **[packages/jira/README.md](./packages/jira/README.md)**.
+
+## `@osva-ai/connector-confluence`
+
+MCP **stdio** connector for Confluence Cloud: bounded **space** and **page** reads, **CQL search**, child page listing, and gated **page mutations**.
+
+| Requirement | Value                                                                               |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                             |
+| npm package | `@osva-ai/connector-confluence` (see [install guide](./docs/INSTALL-CONFLUENCE.md)) |
+| Credential  | Site URL + email/API token, site URL + access token, or cloud ID + access token     |
+| Binary      | `osva-connector-confluence` → MCP stdio server                                      |
+
+**Install (after npm publication):**
+
+```bash
+npm install @osva-ai/connector-confluence@0.1.0
+```
+
+Quickstart: **[docs/INSTALL-CONFLUENCE.md](./docs/INSTALL-CONFLUENCE.md)**. Tool reference: **[packages/confluence/README.md](./packages/confluence/README.md)**.
+
 ## `@osva-ai/connector-exa`
 
 MCP **stdio** connector for Exa: **web search**, **URL contents**, and **grounded answers** (provider-generated; not independently verified).
@@ -572,7 +610,7 @@ pnpm test:package-acceptance
 
 **B3 batch (Gmail, Google Calendar, Notion, Linear, Exa, Tavily, Firecrawl)**
 
-- [B3 publication record](./docs/B3_PUBLICATION_RECORD.md) — **22 / 22** connectors on npm; registry acceptance: `pnpm test:package-acceptance:registry-b3`
+- [B3 publication record](./docs/B3_PUBLICATION_RECORD.md) — **22 / 24** connectors on npm; registry acceptance: `pnpm test:package-acceptance:registry-b3`
 - Optional Windows preflight: [scripts/publish-b3-batch.ps1](./scripts/publish-b3-batch.ps1) (DryRun only; see record for Publish limitations)
 
 ## Security

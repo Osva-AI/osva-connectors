@@ -69,6 +69,12 @@ export const NPM_BIN_STRIP_PATTERN_TAVILY =
 export const NPM_BIN_STRIP_PATTERN_FIRECRAWL =
   /bin\[osva-connector-firecrawl\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_JIRA =
+  /bin\[osva-connector-jira\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_CONFLUENCE =
+  /bin\[osva-connector-confluence\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
