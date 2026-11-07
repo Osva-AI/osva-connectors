@@ -27,4 +27,7 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-firecrawl",
   "@osva-ai/connector-confluence",
   "@osva-ai/connector-jira",
+  "@osva-ai/connector-outlook",
+  "@osva-ai/connector-onedrive",
+  "@osva-ai/connector-teams",
 ];
