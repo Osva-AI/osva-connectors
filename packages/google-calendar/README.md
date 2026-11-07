@@ -2,7 +2,7 @@
 
 OSVA Connector Profile V1 **Google Calendar** MCP connector (stdio): **calendar discovery**, bounded **event reads**, **free/busy**, and **event mutations** when explicitly enabled and host-approved.
 
-Target first public npm version **`0.1.0`** — **not published yet**; use `pnpm test:package-acceptance:google-calendar` or `pnpm pack` before release.
+Published on npm as **`@osva-ai/connector-google-calendar@0.1.0`** ([B3 record](../../docs/B3_PUBLICATION_RECORD.md)).
 
 ## Capabilities
 

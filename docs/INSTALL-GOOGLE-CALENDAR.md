@@ -4,7 +4,7 @@ Quickstart for running the Google Calendar connector as an MCP stdio server.
 
 **Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0`. The package is **not published yet**; use `pnpm test:package-acceptance:google-calendar` until bootstrap publish.
+**Published:** `@osva-ai/connector-google-calendar@0.1.0` on npm ([B3 publication record](./B3_PUBLICATION_RECORD.md)). For monorepo checks before a patch release, use `pnpm test:package-acceptance:google-calendar` or `pnpm test:package-acceptance:registry-b3`.
 
 ## Google Cloud
 

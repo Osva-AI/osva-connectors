@@ -2,7 +2,7 @@
 
 Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](https://www.npmjs.com/package/@osva-ai/connector-sdk) and [Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md).
 
-This monorepo contains **22** connector packages. As of **2026-11-07** (`npm view`), **15** are published on the public npm registry and **7** remain source-only (**Gmail**, **Google Calendar**, **Notion**, **Linear**, **Exa**, **Tavily**, **Firecrawl**). See [docs/compatibility.md](./docs/compatibility.md#release-status).
+This monorepo contains **22** connector packages. As of **2026-11-08** (`npm view`), **all 22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines). B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
 
 ## `@osva-ai/connector-github`
 
@@ -482,6 +482,8 @@ pnpm test:package-acceptance
 
 `test:package-acceptance:npm` packs `@osva-ai/connector-npm`, verifies tarball boundaries, and smoke-tests the packaged stdio binary (npm M17.4).
 
+`test:package-acceptance:registry-b3` installs all seven B3 connectors at **`@0.1.0`** from the **public npm registry** (fresh cache, no `pnpm pack`) and reuses MCP smoke fixtures ([B3 publication record](./docs/B3_PUBLICATION_RECORD.md)).
+
 ## Release
 
 **GitHub connector**
@@ -567,6 +569,11 @@ pnpm test:package-acceptance
 - [Install guide (npm)](./docs/INSTALL-NPM.md)
 - [Release checklist (npm)](./docs/RELEASE-CHECKLIST-NPM.md)
 - Manual npm workflow: [.github/workflows/npm-release-npm.yml](./.github/workflows/npm-release-npm.yml) (`workflow_dispatch` only)
+
+**B3 batch (Gmail, Google Calendar, Notion, Linear, Exa, Tavily, Firecrawl)**
+
+- [B3 publication record](./docs/B3_PUBLICATION_RECORD.md) — **22 / 22** connectors on npm; registry acceptance: `pnpm test:package-acceptance:registry-b3`
+- Optional Windows preflight: [scripts/publish-b3-batch.ps1](./scripts/publish-b3-batch.ps1) (DryRun only; see record for Publish limitations)
 
 ## Security
 
