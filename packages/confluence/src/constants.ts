@@ -1,0 +1,50 @@
+export const CONNECTOR_KEY = "osva-connector-confluence";
+export const CONNECTOR_NAME = "OSVA Confluence Connector";
+export const CONNECTOR_VERSION = "0.1.0";
+
+export const CONFLUENCE_SPACE_LIST_TOOL = "confluence.space.list";
+export const CONFLUENCE_SPACE_GET_TOOL = "confluence.space.get";
+export const CONFLUENCE_PAGE_LIST_TOOL = "confluence.page.list";
+export const CONFLUENCE_PAGE_GET_TOOL = "confluence.page.get";
+export const CONFLUENCE_SEARCH_TOOL = "confluence.search";
+export const CONFLUENCE_PAGE_CHILDREN_LIST_TOOL =
+  "confluence.page.children.list";
+export const CONFLUENCE_PAGE_CREATE_TOOL = "confluence.page.create";
+export const CONFLUENCE_PAGE_UPDATE_TOOL = "confluence.page.update";
+
+export const CONFLUENCE_SITE_URL_ENV = "OSVA_CONNECTOR_CONFLUENCE_SITE_URL";
+export const CONFLUENCE_CLOUD_ID_ENV = "OSVA_CONNECTOR_CONFLUENCE_CLOUD_ID";
+export const CONFLUENCE_EMAIL_ENV = "OSVA_CONNECTOR_CONFLUENCE_EMAIL";
+export const CONFLUENCE_API_TOKEN_ENV = "OSVA_CONNECTOR_CONFLUENCE_API_TOKEN";
+export const CONFLUENCE_ACCESS_TOKEN_ENV =
+  "OSVA_CONNECTOR_CONFLUENCE_ACCESS_TOKEN";
+export const CONFLUENCE_WRITE_ENABLED_ENV =
+  "OSVA_CONNECTOR_CONFLUENCE_WRITE_ENABLED";
+export const CONFLUENCE_HOST_WRITES_APPROVED_ENV =
+  "OSVA_CONNECTOR_CONFLUENCE_HOST_WRITES_APPROVED";
+export const CONFLUENCE_ALLOWED_SPACE_IDS_ENV =
+  "OSVA_CONNECTOR_CONFLUENCE_ALLOWED_SPACE_IDS";
+export const CONFLUENCE_TIMEOUT_MS_ENV = "OSVA_CONNECTOR_CONFLUENCE_TIMEOUT_MS";
+
+export const ATLASSIAN_GATEWAY_ORIGIN = "https://api.atlassian.com";
+
+export const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+export const MIN_REQUEST_TIMEOUT_MS = 1_000;
+export const MAX_REQUEST_TIMEOUT_MS = 120_000;
+
+export const LIST_DEFAULT_PAGE_SIZE = 25;
+export const LIST_MAX_PAGE_SIZE = 50;
+export const MAX_CURSOR_LENGTH = 2048;
+export const MAX_CONFLUENCE_ID_LENGTH = 64;
+export const MAX_CQL_LENGTH = 2_048;
+export const MAX_PAGE_TITLE_LENGTH = 512;
+export const MAX_BODY_STORAGE_LENGTH = 100_000;
+
+export const MAX_HTTP_RESPONSE_BYTES = 2_097_152;
+export const READ_ONLY_MAX_RETRIES = 1;
+export const READ_ONLY_RETRY_DELAY_MS = 1_000;
+
+export {
+  OUTPUT_MAX_PROVIDER_STRING_LENGTH,
+  OUTPUT_MAX_STRUCTURED_JSON_BYTES,
+} from "./output-budget.js";
