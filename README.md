@@ -473,6 +473,32 @@ MCP **stdio** connector for Pinecone: **index** list/describe/stats, **vector** 
 
 Quickstart: **[docs/INSTALL-PINECONE.md](./docs/INSTALL-PINECONE.md)**. Tool reference: **[packages/pinecone/README.md](./packages/pinecone/README.md)**.
 
+## `@osva-ai/connector-mixpanel`
+
+MCP **stdio** connector for Mixpanel Query API: **Insights** saved reports, **segmentation**, **funnels**, **retention**, **cohorts**, and **top events** (read-only).
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-mixpanel` (see [install guide](./docs/INSTALL-MIXPANEL.md)) |
+| Credentials | Mixpanel service account + project ID (`OSVA_CONNECTOR_MIXPANEL_*`)             |
+| Binary      | `osva-connector-mixpanel` → MCP stdio server                                    |
+
+Quickstart: **[docs/INSTALL-MIXPANEL.md](./docs/INSTALL-MIXPANEL.md)**. Tool reference: **[packages/mixpanel/README.md](./packages/mixpanel/README.md)**.
+
+## `@osva-ai/connector-amplitude`
+
+MCP **stdio** connector for Amplitude Dashboard REST: **events**, **segmentation**, **funnels**, **retention**, **active users**, **saved charts**, and **session averages** (read-only).
+
+| Requirement | Value                                                                             |
+| ----------- | --------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                           |
+| npm package | `@osva-ai/connector-amplitude` (see [install guide](./docs/INSTALL-AMPLITUDE.md)) |
+| Credentials | Project API key + secret (`OSVA_CONNECTOR_AMPLITUDE_*`)                           |
+| Binary      | `osva-connector-amplitude` → MCP stdio server                                     |
+
+Quickstart: **[docs/INSTALL-AMPLITUDE.md](./docs/INSTALL-AMPLITUDE.md)**. Tool reference: **[packages/amplitude/README.md](./packages/amplitude/README.md)**.
+
 ## `@osva-ai/connector-stripe`
 
 MCP **stdio** connector for Stripe: **account**, **balance**, **balance transactions**, **PaymentIntents**, **charges**, **refunds**, **subscriptions**, **invoices**, and minimal **customer** metadata (read-only).

@@ -32,4 +32,6 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-teams",
   "@osva-ai/connector-qdrant",
   "@osva-ai/connector-pinecone",
+  "@osva-ai/connector-mixpanel",
+  "@osva-ai/connector-amplitude",
 ];
