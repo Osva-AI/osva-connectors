@@ -102,6 +102,15 @@ export const NPM_BIN_STRIP_PATTERN_WOOCOMMERCE =
 export const NPM_BIN_STRIP_PATTERN_BIGCOMMERCE =
   /bin\[osva-connector-bigcommerce\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_ZENDESK =
+  /bin\[osva-connector-zendesk\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_INTERCOM =
+  /bin\[osva-connector-intercom\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_FRESHDESK =
+  /bin\[osva-connector-freshdesk\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
@@ -139,15 +148,20 @@ export function runNpmPublishDryRunForAcceptance(
   binStripPattern,
   extraArgs = [],
 ) {
-  const result = spawnSync(
-    "npm",
-    ["publish", "--dry-run", "--access", "public", ...extraArgs],
-    {
-      cwd,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      shell: process.platform === "win32",
-    },
-  );
+  const npmArgs = ["publish", "--dry-run", "--access", "public", ...extraArgs];
+  const result =
+    process.platform === "win32"
+      ? spawnSync("cmd.exe", ["/d", "/s", "/c", "npm", ...npmArgs], {
+          cwd,
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "pipe"],
+          shell: false,
+        })
+      : spawnSync("npm", npmArgs, {
+          cwd,
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "pipe"],
+          shell: false,
+        });
   return classifyNpmPublishDryRunForAcceptance(result, binStripPattern);
 }

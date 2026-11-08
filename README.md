@@ -525,6 +525,45 @@ MCP **stdio** connector for BigCommerce Admin **Catalog v3** + **Orders v2**: **
 
 Quickstart: **[docs/INSTALL-BIGCOMMERCE.md](./docs/INSTALL-BIGCOMMERCE.md)**. Tool reference: **[packages/bigcommerce/README.md](./packages/bigcommerce/README.md)**.
 
+## `@osva-ai/connector-zendesk`
+
+MCP **stdio** connector for Zendesk Support: bounded **ticket** reads/search, **comments**, **users**, and gated **private notes** / **status** updates.
+
+| Requirement | Value                                                                         |
+| ----------- | ----------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                       |
+| npm package | `@osva-ai/connector-zendesk` (see [install guide](./docs/INSTALL-ZENDESK.md)) |
+| Credentials | Subdomain + agent email + API token (`OSVA_CONNECTOR_ZENDESK_*`)              |
+| Binary      | `osva-connector-zendesk` → MCP stdio server                                   |
+
+Quickstart: **[docs/INSTALL-ZENDESK.md](./docs/INSTALL-ZENDESK.md)**. Tool reference: **[packages/zendesk/README.md](./packages/zendesk/README.md)**.
+
+## `@osva-ai/connector-intercom`
+
+MCP **stdio** connector for Intercom: **conversations**, **contacts**, **admins**, and gated **admin notes** / **open-closed state** updates (`Intercom-Version: 2.17`).
+
+| Requirement | Value                                                                           |
+| ----------- | ------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                         |
+| npm package | `@osva-ai/connector-intercom` (see [install guide](./docs/INSTALL-INTERCOM.md)) |
+| Credentials | Access token, region (`us`/`eu`/`au`), admin id (`OSVA_CONNECTOR_INTERCOM_*`)   |
+| Binary      | `osva-connector-intercom` → MCP stdio server                                    |
+
+Quickstart: **[docs/INSTALL-INTERCOM.md](./docs/INSTALL-INTERCOM.md)**. Tool reference: **[packages/intercom/README.md](./packages/intercom/README.md)**.
+
+## `@osva-ai/connector-freshdesk`
+
+MCP **stdio** connector for Freshdesk: bounded **ticket**/**contact** reads/search, **conversations**, and gated **private notes** / **status** updates.
+
+| Requirement | Value                                                                             |
+| ----------- | --------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                           |
+| npm package | `@osva-ai/connector-freshdesk` (see [install guide](./docs/INSTALL-FRESHDESK.md)) |
+| Credentials | Domain + API key (`OSVA_CONNECTOR_FRESHDESK_*`)                                   |
+| Binary      | `osva-connector-freshdesk` → MCP stdio server                                     |
+
+Quickstart: **[docs/INSTALL-FRESHDESK.md](./docs/INSTALL-FRESHDESK.md)**. Tool reference: **[packages/freshdesk/README.md](./packages/freshdesk/README.md)**.
+
 ## `@osva-ai/connector-stripe`
 
 MCP **stdio** connector for Stripe: **account**, **balance**, **balance transactions**, **PaymentIntents**, **charges**, **refunds**, **subscriptions**, **invoices**, and minimal **customer** metadata (read-only).
