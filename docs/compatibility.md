@@ -394,8 +394,10 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-pinecone`        | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
 | `@osva-ai/connector-mixpanel`        | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
 | `@osva-ai/connector-amplitude`       | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
+| `@osva-ai/connector-woocommerce`     | `0.1.0`      | —                       | **Source-only** | B4.5 commerce platforms; npm bootstrap pending          |
+| `@osva-ai/connector-bigcommerce`     | `0.1.0`      | —                       | **Source-only** | B4.5 commerce platforms; npm bootstrap pending          |
 
-**Summary:** **22 / 31** connector packages are on the public npm registry; **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0` (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
+**Summary:** **22 / 33** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap: **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, and **BigCommerce** (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md). B4.5 commerce closeout: [IMPLEMENTATION_REPORT_B4_COMMERCE_PLATFORMS.md](./IMPLEMENTATION_REPORT_B4_COMMERCE_PLATFORMS.md).
 
 ### Immutable-version history (reference only)
 

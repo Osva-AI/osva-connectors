@@ -34,4 +34,6 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-pinecone",
   "@osva-ai/connector-mixpanel",
   "@osva-ai/connector-amplitude",
+  "@osva-ai/connector-woocommerce",
+  "@osva-ai/connector-bigcommerce",
 ];

@@ -1,0 +1,9 @@
+# Install `@osva-ai/connector-woocommerce`
+
+Source-only until npm bootstrap (see [RELEASE-CHECKLIST-WOOCOMMERCE.md](./RELEASE-CHECKLIST-WOOCOMMERCE.md)).
+
+```bash
+npm install @osva-ai/connector-woocommerce@0.1.0
+```
+
+Required env: `OSVA_CONNECTOR_WOOCOMMERCE_STORE_URL`, `OSVA_CONNECTOR_WOOCOMMERCE_CONSUMER_KEY`, `OSVA_CONNECTOR_WOOCOMMERCE_CONSUMER_SECRET`. Mutations require `OSVA_CONNECTOR_WOOCOMMERCE_WRITE_ENABLED` and `OSVA_CONNECTOR_WOOCOMMERCE_HOST_WRITES_APPROVED`.
