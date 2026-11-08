@@ -1,0 +1,9 @@
+# Install `@osva-ai/connector-zendesk`
+
+Source-only until npm bootstrap (see [RELEASE-CHECKLIST-zendesk.md](./RELEASE-CHECKLIST-zendesk.md)).
+
+```bash
+npm install @osva-ai/connector-zendesk@0.1.0
+```
+
+Required env: `OSVA_CONNECTOR_ZENDESK_SUBDOMAIN`, `OSVA_CONNECTOR_ZENDESK_EMAIL`, `OSVA_CONNECTOR_ZENDESK_API_TOKEN`. Mutations require `OSVA_CONNECTOR_ZENDESK_NOTES_ENABLED` / `OSVA_CONNECTOR_ZENDESK_STATUS_ENABLED` and `OSVA_CONNECTOR_ZENDESK_HOST_WRITES_APPROVED`, plus `OSVA_CONNECTOR_ZENDESK_ALLOWED_TICKET_IDS`.

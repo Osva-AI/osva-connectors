@@ -89,6 +89,15 @@ jobs:
       - name: Packaged npm acceptance
         run: pnpm test:package-acceptance:npm
 
+      - name: Zendesk package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:zendesk
+
+      - name: Intercom package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:intercom
+
+      - name: Freshdesk package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:freshdesk
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

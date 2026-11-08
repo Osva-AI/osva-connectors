@@ -36,4 +36,7 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-amplitude",
   "@osva-ai/connector-woocommerce",
   "@osva-ai/connector-bigcommerce",
+  "@osva-ai/connector-zendesk",
+  "@osva-ai/connector-intercom",
+  "@osva-ai/connector-freshdesk",
 ];
