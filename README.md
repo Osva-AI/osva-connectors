@@ -564,6 +564,39 @@ MCP **stdio** connector for Freshdesk: bounded **ticket**/**contact** reads/sear
 
 Quickstart: **[docs/INSTALL-FRESHDESK.md](./docs/INSTALL-FRESHDESK.md)**. Tool reference: **[packages/freshdesk/README.md](./packages/freshdesk/README.md)**.
 
+## `@osva-ai/connector-salesforce`
+
+MCP **stdio** connector for Salesforce CRM: **Account** / **Contact** / **Opportunity** reads, **opportunity stage** discovery, and gated **stage updates** and **Task** creation (fixed SOQL templates only).
+
+| Requirement | Value                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                                           |
+| npm package | `@osva-ai/connector-salesforce` (source-only; [INSTALL-SALESFORCE](./docs/INSTALL-SALESFORCE.md)) |
+| Credentials | Instance URL + OAuth access token (`OSVA_CONNECTOR_SALESFORCE_*`)                                 |
+| Binary      | `osva-connector-salesforce` → MCP stdio server                                                    |
+
+## `@osva-ai/connector-pipedrive`
+
+MCP **stdio** connector for Pipedrive API v2: **pipelines**, **stages**, **deals**, **persons**, **organizations**, and gated **deal stage** updates.
+
+| Requirement | Value                                                                                          |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                                        |
+| npm package | `@osva-ai/connector-pipedrive` (source-only; [INSTALL-PIPEDRIVE](./docs/INSTALL-PIPEDRIVE.md)) |
+| Credentials | Company domain + API token (`OSVA_CONNECTOR_PIPEDRIVE_*`)                                      |
+| Binary      | `osva-connector-pipedrive` → MCP stdio server                                                  |
+
+## `@osva-ai/connector-zoho-crm`
+
+MCP **stdio** connector for Zoho CRM API v8: **Leads**, **Accounts**, **Contacts**, **Deals**, stage metadata, gated **stage updates** and **deal notes** (client portal sharing forced off).
+
+| Requirement | Value                                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                                     |
+| npm package | `@osva-ai/connector-zoho-crm` (source-only; [INSTALL-ZOHO-CRM](./docs/INSTALL-ZOHO-CRM.md)) |
+| Credentials | Region + OAuth token (`OSVA_CONNECTOR_ZOHO_CRM_*`)                                          |
+| Binary      | `osva-connector-zoho-crm` → MCP stdio server                                                |
+
 ## `@osva-ai/connector-stripe`
 
 MCP **stdio** connector for Stripe: **account**, **balance**, **balance transactions**, **PaymentIntents**, **charges**, **refunds**, **subscriptions**, **invoices**, and minimal **customer** metadata (read-only).

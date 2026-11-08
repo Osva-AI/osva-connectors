@@ -111,6 +111,15 @@ export const NPM_BIN_STRIP_PATTERN_INTERCOM =
 export const NPM_BIN_STRIP_PATTERN_FRESHDESK =
   /bin\[osva-connector-freshdesk\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_SALESFORCE =
+  /bin\[osva-connector-salesforce\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_PIPEDRIVE =
+  /bin\[osva-connector-pipedrive\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_ZOHO_CRM =
+  /bin\[osva-connector-zoho-crm\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
