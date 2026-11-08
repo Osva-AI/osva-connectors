@@ -2,7 +2,7 @@
 
 Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](https://www.npmjs.com/package/@osva-ai/connector-sdk) and [Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md).
 
-This monorepo contains **27** connector packages. As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira**, **Confluence**, **Outlook**, **OneDrive**, and **Teams** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
+This monorepo contains **33** connector packages. As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **WooCommerce**, and **BigCommerce** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
 
 ## `@osva-ai/connector-github`
 
@@ -498,6 +498,32 @@ MCP **stdio** connector for Amplitude Dashboard REST: **events**, **segmentation
 | Binary      | `osva-connector-amplitude` → MCP stdio server                                     |
 
 Quickstart: **[docs/INSTALL-AMPLITUDE.md](./docs/INSTALL-AMPLITUDE.md)**. Tool reference: **[packages/amplitude/README.md](./packages/amplitude/README.md)**.
+
+## `@osva-ai/connector-woocommerce`
+
+MCP **stdio** connector for WooCommerce REST **v3**: **products**, **variations**, **categories**, **orders**, and **order notes** with host ID allowlists and gated **product** / **order status** updates.
+
+| Requirement | Value                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                               |
+| npm package | `@osva-ai/connector-woocommerce` (see [install guide](./docs/INSTALL-WOOCOMMERCE.md)) |
+| Credentials | Store URL + WooCommerce REST consumer key/secret (`OSVA_CONNECTOR_WOOCOMMERCE_*`)     |
+| Binary      | `osva-connector-woocommerce` → MCP stdio server                                       |
+
+Quickstart: **[docs/INSTALL-WOOCOMMERCE.md](./docs/INSTALL-WOOCOMMERCE.md)**. Tool reference: **[packages/woocommerce/README.md](./packages/woocommerce/README.md)**.
+
+## `@osva-ai/connector-bigcommerce`
+
+MCP **stdio** connector for BigCommerce Admin **Catalog v3** + **Orders v2**: **products**, **variants**, **category trees**, **orders**, and gated **product** / **order status** updates.
+
+| Requirement | Value                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------- |
+| Node.js     | **24+**                                                                               |
+| npm package | `@osva-ai/connector-bigcommerce` (see [install guide](./docs/INSTALL-BIGCOMMERCE.md)) |
+| Credentials | Store hash + API token (`OSVA_CONNECTOR_BIGCOMMERCE_*`)                               |
+| Binary      | `osva-connector-bigcommerce` → MCP stdio server                                       |
+
+Quickstart: **[docs/INSTALL-BIGCOMMERCE.md](./docs/INSTALL-BIGCOMMERCE.md)**. Tool reference: **[packages/bigcommerce/README.md](./packages/bigcommerce/README.md)**.
 
 ## `@osva-ai/connector-stripe`
 

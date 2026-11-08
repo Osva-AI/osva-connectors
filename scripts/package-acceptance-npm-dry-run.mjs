@@ -96,6 +96,12 @@ export const NPM_BIN_STRIP_PATTERN_TEAMS =
 export const NPM_BIN_STRIP_PATTERN_AMPLITUDE =
   /bin\[osva-connector-amplitude\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_WOOCOMMERCE =
+  /bin\[osva-connector-woocommerce\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_BIGCOMMERCE =
+  /bin\[osva-connector-bigcommerce\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 
