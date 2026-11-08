@@ -345,6 +345,40 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `amplitude.chart.get` (read-only)
 - `amplitude.session.average` (read-only)
 
+### `@osva-ai/connector-zendesk`
+
+- `zendesk.ticket.list` / `get` / `search` / `conversation.list` (read-only)
+- `zendesk.user.list` / `get` (read-only)
+- `zendesk.ticket.comment.add` / `ticket.status.set` (mutating; gated)
+
+### `@osva-ai/connector-intercom`
+
+- `intercom.conversation.list` / `get` / `search` (read-only)
+- `intercom.contact.list` / `get` / `search` (read-only)
+- `intercom.admin.list` (read-only)
+- `intercom.conversation.note.add` / `conversation.state.set` (mutating; gated)
+
+### `@osva-ai/connector-freshdesk`
+
+- `freshdesk.ticket.list` / `get` / `search` / `conversation.list` (read-only)
+- `freshdesk.contact.list` / `get` (read-only)
+- `freshdesk.ticket.note.add` / `ticket.status.set` (mutating; gated)
+
+### `@osva-ai/connector-salesforce` (B4.7)
+
+- `salesforce.account.list` / `get`, `contact.list` / `get`, `opportunity.list` / `get`, `opportunity.stage.list` (read-only)
+- `salesforce.opportunity.stage.set`, `task.create` (mutating; gated)
+
+### `@osva-ai/connector-pipedrive` (B4.7)
+
+- `pipedrive.pipeline.list`, `stage.list`, `deal.list` / `get` / `search`, `person.list` / `get`, `organization.list` / `get` (read-only)
+- `pipedrive.deal.stage.set` (mutating; gated)
+
+### `@osva-ai/connector-zoho-crm` (B4.7)
+
+- `zoho.lead.list` / `get`, `account.list` / `get`, `contact.list` / `get`, `deal.list` / `get`, `deal.stage.list` (read-only)
+- `zoho.deal.stage.set`, `deal.note.add` (mutating; gated)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -396,8 +430,14 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-amplitude`       | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
 | `@osva-ai/connector-woocommerce`     | `0.1.0`      | —                       | **Source-only** | B4.5 commerce platforms; npm bootstrap pending          |
 | `@osva-ai/connector-bigcommerce`     | `0.1.0`      | —                       | **Source-only** | B4.5 commerce platforms; npm bootstrap pending          |
+| `@osva-ai/connector-zendesk`         | `0.1.0`      | —                       | **Source-only** | B4.6 customer support; npm bootstrap pending            |
+| `@osva-ai/connector-intercom`        | `0.1.0`      | —                       | **Source-only** | B4.6 customer support; npm bootstrap pending            |
+| `@osva-ai/connector-freshdesk`       | `0.1.0`      | —                       | **Source-only** | B4.6 customer support; npm bootstrap pending            |
+| `@osva-ai/connector-salesforce`      | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
+| `@osva-ai/connector-pipedrive`       | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
+| `@osva-ai/connector-zoho-crm`        | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
 
-**Summary:** **22 / 36** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap: **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, and **Freshdesk** (**SDK 1.1.4** on published tarballs at current `latest` lines). Registry consumer acceptance for B3: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md). B4.5 commerce closeout: [IMPLEMENTATION_REPORT_B4_COMMERCE_PLATFORMS.md](./IMPLEMENTATION_REPORT_B4_COMMERCE_PLATFORMS.md). B4.6 customer support: **Zendesk**, **Intercom**, **Freshdesk** (install: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md)).
+**Summary:** **22 / 39** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap includes **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, **Freshdesk**, **Salesforce**, **Pipedrive**, and **Zoho CRM** (**SDK 1.1.4** on published tarballs at current `latest` lines). B4.6 customer support: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md). B4.7 CRM & sales (source-only until publication): [INSTALL-SALESFORCE.md](./INSTALL-SALESFORCE.md), [INSTALL-PIPEDRIVE.md](./INSTALL-PIPEDRIVE.md), [INSTALL-ZOHO-CRM.md](./INSTALL-ZOHO-CRM.md).
 
 ### Immutable-version history (reference only)
 

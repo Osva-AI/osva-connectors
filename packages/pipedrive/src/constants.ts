@@ -1,0 +1,48 @@
+export const CONNECTOR_KEY = "osva-connector-pipedrive";
+export const CONNECTOR_NAME = "OSVA Pipedrive Connector";
+export const CONNECTOR_VERSION = "0.1.0";
+
+export const PIPEDRIVE_PIPELINE_LIST_TOOL = "pipedrive.pipeline.list";
+export const PIPEDRIVE_STAGE_LIST_TOOL = "pipedrive.stage.list";
+export const PIPEDRIVE_DEAL_LIST_TOOL = "pipedrive.deal.list";
+export const PIPEDRIVE_DEAL_GET_TOOL = "pipedrive.deal.get";
+export const PIPEDRIVE_DEAL_SEARCH_TOOL = "pipedrive.deal.search";
+export const PIPEDRIVE_PERSON_LIST_TOOL = "pipedrive.person.list";
+export const PIPEDRIVE_PERSON_GET_TOOL = "pipedrive.person.get";
+export const PIPEDRIVE_ORGANIZATION_LIST_TOOL = "pipedrive.organization.list";
+export const PIPEDRIVE_ORGANIZATION_GET_TOOL = "pipedrive.organization.get";
+export const PIPEDRIVE_DEAL_STAGE_SET_TOOL = "pipedrive.deal.stage.set";
+
+export const PIPEDRIVE_COMPANY_DOMAIN_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_COMPANY_DOMAIN";
+export const PIPEDRIVE_API_TOKEN_ENV = "OSVA_CONNECTOR_PIPEDRIVE_API_TOKEN";
+export const PIPEDRIVE_API_BASE_URL_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_API_BASE_URL";
+export const PIPEDRIVE_ALLOWED_DEAL_IDS_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_ALLOWED_DEAL_IDS";
+export const PIPEDRIVE_ALLOWED_STAGE_IDS_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_ALLOWED_STAGE_IDS";
+export const PIPEDRIVE_STAGE_UPDATES_ENABLED_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_STAGE_UPDATES_ENABLED";
+export const PIPEDRIVE_HOST_WRITES_APPROVED_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_HOST_WRITES_APPROVED";
+export const PIPEDRIVE_INCLUDE_PII_ENV = "OSVA_CONNECTOR_PIPEDRIVE_INCLUDE_PII";
+export const PIPEDRIVE_ALLOW_TEST_API_HOST_ENV =
+  "OSVA_CONNECTOR_PIPEDRIVE_ALLOW_TEST_API_HOST";
+export const PIPEDRIVE_TIMEOUT_MS_ENV = "OSVA_CONNECTOR_PIPEDRIVE_TIMEOUT_MS";
+
+export const PRODUCTION_API_HOST_SUFFIX = ".pipedrive.com";
+export const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+export const MIN_REQUEST_TIMEOUT_MS = 1_000;
+export const MAX_REQUEST_TIMEOUT_MS = 120_000;
+export const LIST_DEFAULT_LIMIT = 25;
+export const LIST_MAX_LIMIT = 100;
+export const MAX_CURSOR_LENGTH = 512;
+export const MAX_SEARCH_TERM_LENGTH = 256;
+export const MAX_RESOURCE_ID = 9_007_199_254_740_991;
+export const MAX_HTTP_RESPONSE_BYTES = 2_097_152;
+export const MAX_HTTP_REQUEST_BODY_BYTES = 65_536;
+export const READ_ONLY_MAX_RETRIES = 1;
+export const READ_ONLY_RETRY_DELAY_MS = 1_000;
+export const OUTPUT_MAX_TITLE_LENGTH = 512;
+export const OUTPUT_MAX_NAME_LENGTH = 256;

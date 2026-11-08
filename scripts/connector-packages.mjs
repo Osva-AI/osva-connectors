@@ -39,4 +39,7 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-zendesk",
   "@osva-ai/connector-intercom",
   "@osva-ai/connector-freshdesk",
+  "@osva-ai/connector-salesforce",
+  "@osva-ai/connector-pipedrive",
+  "@osva-ai/connector-zoho-crm",
 ];
