@@ -45,4 +45,7 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-aws-s3",
   "@osva-ai/connector-gcs",
   "@osva-ai/connector-azure-blob",
+  "@osva-ai/connector-supabase",
+  "@osva-ai/connector-bigquery",
+  "@osva-ai/connector-snowflake",
 ];

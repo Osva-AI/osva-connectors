@@ -126,8 +126,17 @@ export const NPM_BIN_STRIP_PATTERN_AWS_S3 =
 export const NPM_BIN_STRIP_PATTERN_GCS =
   /bin\[osva-connector-gcs\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_BIGQUERY =
+  /bin\[osva-connector-bigquery\].*invalid and removed/i;
+
 export const NPM_BIN_STRIP_PATTERN_AZURE_BLOB =
   /bin\[osva-connector-azure-blob\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_SNOWFLAKE =
+  /bin\[osva-connector-snowflake\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_SUPABASE =
+  /bin\[osva-connector-supabase\].*invalid and removed/i;
 
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
