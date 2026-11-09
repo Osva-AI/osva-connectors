@@ -42,4 +42,7 @@ export const CONNECTOR_PACKAGES = [
   "@osva-ai/connector-salesforce",
   "@osva-ai/connector-pipedrive",
   "@osva-ai/connector-zoho-crm",
+  "@osva-ai/connector-aws-s3",
+  "@osva-ai/connector-gcs",
+  "@osva-ai/connector-azure-blob",
 ];

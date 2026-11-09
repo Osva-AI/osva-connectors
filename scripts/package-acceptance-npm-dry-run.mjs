@@ -120,6 +120,15 @@ export const NPM_BIN_STRIP_PATTERN_PIPEDRIVE =
 export const NPM_BIN_STRIP_PATTERN_ZOHO_CRM =
   /bin\[osva-connector-zoho-crm\].*invalid and removed/i;
 
+export const NPM_BIN_STRIP_PATTERN_AWS_S3 =
+  /bin\[osva-connector-aws-s3\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_GCS =
+  /bin\[osva-connector-gcs\].*invalid and removed/i;
+
+export const NPM_BIN_STRIP_PATTERN_AZURE_BLOB =
+  /bin\[osva-connector-azure-blob\].*invalid and removed/i;
+
 const VERSION_ALREADY_PUBLISHED =
   /cannot publish over the previously published versions/i;
 

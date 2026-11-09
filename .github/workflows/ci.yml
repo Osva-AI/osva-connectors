@@ -106,6 +106,12 @@ jobs:
 
       - name: Zoho CRM package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:zoho-crm
+      - name: AWS S3 package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:aws-s3
+      - name: GCS package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:gcs
+      - name: Azure Blob package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:azure-blob
 
   postgres-integration:
     name: PostgreSQL integration
