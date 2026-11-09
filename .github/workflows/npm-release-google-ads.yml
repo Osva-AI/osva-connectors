@@ -3,8 +3,8 @@
 #
 # Prerequisites (configure outside this repository):
 # - npm package @osva-ai/connector-google-ads with public access (bootstrap once — see docs/RELEASE-CHECKLIST-GOOGLE-ADS.md)
-# - npm trusted publisher for GitHub Actions OIDC (recommended), OR
-#   NPM_TOKEN in GitHub Environment "npm" (fallback)
+# - npm trusted publisher for GitHub Actions OIDC (default). Token fallback is opt-in via use_npm_token=true
+#   plus NPM_TOKEN on GitHub Environment "npm". Empty NODE_AUTH_TOKEN blocks OIDC and is not used.
 # - GitHub Environment "npm" with required reviewers
 #
 # Independent from other connector release workflows.
@@ -24,6 +24,10 @@ on:
         default: true
       confirm_publish:
         description: When true and dry_run is false, upload to npm (requires npm environment approval)
+        type: boolean
+        default: false
+      use_npm_token:
+        description: When true, publish with NPM_TOKEN instead of OIDC (explicit fallback; default remains OIDC)
         type: boolean
         default: false
 
@@ -126,12 +130,8 @@ jobs:
 
       - name: Check npm for existing version (publish only)
         if: inputs.dry_run == false && inputs.confirm_publish == true
-        run: |
-          if npm view "@osva-ai/connector-google-ads@${{ inputs.expected_version }}" version 2>/dev/null; then
-            echo "Version ${{ inputs.expected_version }} is already published; aborting upload."
-            exit 1
-          fi
-          echo "Version ${{ inputs.expected_version }} is not published (ok to upload)."
+        working-directory: .
+        run: node scripts/release/check-npm-version-unpublished.mjs "@osva-ai/connector-google-ads" "${{ inputs.expected_version }}"
 
       - name: Validate tarball contents
         run: |
@@ -176,11 +176,20 @@ jobs:
         if: inputs.dry_run == true
         run: npm publish --dry-run --access public --provenance=false
 
+      - name: Configure npm authentication for publish
+        if: inputs.dry_run == false && inputs.confirm_publish == true
+        working-directory: .
+        run: node scripts/release/configure-npm-publish-auth.mjs
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          USE_NPM_TOKEN: ${{ inputs.use_npm_token }}
+
       - name: npm publish
         if: inputs.dry_run == false && inputs.confirm_publish == true
-        run: npm publish --provenance --access public
+        run: node "${{ github.workspace }}/scripts/release/run-npm-publish.mjs"
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          USE_NPM_TOKEN: ${{ inputs.use_npm_token }}
 
       - name: Refuse publish without confirmation
         if: inputs.dry_run == false && inputs.confirm_publish != true

@@ -8,7 +8,8 @@
 # - npm package @osva-ai/connector-npm exists on the registry with public access
 # - npm Trusted Publisher for GitHub Actions OIDC (recommended):
 #     Osva-AI / osva-connectors / workflow npm-release-npm.yml / environment npm
-#   OR NPM_TOKEN in GitHub Environment "npm" (fallback — avoid when OIDC is available)
+# - Token fallback is opt-in via use_npm_token=true plus NPM_TOKEN on GitHub Environment "npm".
+#   Empty NODE_AUTH_TOKEN blocks OIDC and is not used.
 # - GitHub Environment "npm" with required reviewers (must match workflow `environment:` below)
 #
 # Independent from other npm-release-*.yml workflows.
@@ -28,6 +29,10 @@ on:
         default: true
       confirm_publish:
         description: When true and dry_run is false, upload a new semver to npm (requires environment npm approval; never republishes)
+        type: boolean
+        default: false
+      use_npm_token:
+        description: When true, publish with NPM_TOKEN instead of OIDC (explicit fallback; default remains OIDC)
         type: boolean
         default: false
 
@@ -106,17 +111,10 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - name: Refuse upload when version already on npm
+      - name: Check npm for existing version (publish only)
         if: inputs.dry_run == false && inputs.confirm_publish == true
-        run: |
-          if npm view "@osva-ai/connector-npm@${{ inputs.expected_version }}" version 2>/dev/null; then
-            echo "::error::@osva-ai/connector-npm@${{ inputs.expected_version }} is already on the registry (immutable)."
-            echo "Do not republish. First public 0.1.0 is manual bootstrap only (see docs/RELEASE-CHECKLIST-NPM.md)."
-            echo "For OIDC upload, bump packages/npm/package.json and CONNECTOR_VERSION, then re-run with the new expected_version."
-            echo "Use dry_run=true to validate packaging without uploading."
-            exit 1
-          fi
-          echo "Version ${{ inputs.expected_version }} is not on npm (ok to upload)."
+        working-directory: .
+        run: node scripts/release/check-npm-version-unpublished.mjs "@osva-ai/connector-npm" "${{ inputs.expected_version }}"
 
       - name: Install workspace dependencies
         working-directory: .
@@ -187,51 +185,20 @@ jobs:
         if: inputs.dry_run == true
         run: npm publish --dry-run --access public --provenance=false
 
-      # OIDC: with Trusted Publisher configured, npm uses GitHub OIDC (permissions.id-token write, environment npm).
-      # Fallback: NPM_TOKEN secret on GitHub Environment "npm" when OIDC is not configured.
       - name: Configure npm authentication for publish
         if: inputs.dry_run == false && inputs.confirm_publish == true
-        run: |
-          set -euo pipefail
-          NPMRC="$(npm config get userconfig)"
-          if [ -n "${NPM_TOKEN:-}" ]; then
-            echo "Publish authentication: NPM_TOKEN fallback"
-            if [ ! -f "${NPMRC}" ]; then
-              echo "Expected setup-node to create userconfig npmrc."
-              exit 1
-            fi
-            if ! grep -qE '^//registry\.npmjs\.org/:_authToken=' "${NPMRC}"; then
-              echo "Expected //registry.npmjs.org/:_authToken entry in npmrc for token fallback."
-              exit 1
-            fi
-            echo "Token authentication path validated."
-          else
-            echo "Publish authentication: OIDC trusted publishing"
-            if [ -f "${NPMRC}" ]; then
-              sed -i -E '/^\/\/registry\.npmjs\.org\/:_authToken=/d' "${NPMRC}"
-              sed -i -E '/^always-auth=true$/d' "${NPMRC}"
-            fi
-            if [ -f "${NPMRC}" ] && grep -qE '^//registry\.npmjs\.org/:_authToken=' "${NPMRC}"; then
-              echo "Registry _authToken entry still present; OIDC trusted publishing would be blocked."
-              exit 1
-            fi
-            echo "OIDC authentication path validated (no empty registry _authToken placeholder)."
-          fi
+        working-directory: .
+        run: node scripts/release/configure-npm-publish-auth.mjs
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          USE_NPM_TOKEN: ${{ inputs.use_npm_token }}
 
       - name: npm publish
         if: inputs.dry_run == false && inputs.confirm_publish == true
-        run: |
-          set -euo pipefail
-          if [ -n "${NPM_TOKEN:-}" ]; then
-            export NODE_AUTH_TOKEN="${NPM_TOKEN}"
-          else
-            unset NODE_AUTH_TOKEN
-          fi
-          npm publish --provenance --access public
+        run: node "${{ github.workspace }}/scripts/release/run-npm-publish.mjs"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          USE_NPM_TOKEN: ${{ inputs.use_npm_token }}
 
       - name: Refuse publish without confirmation
         if: inputs.dry_run == false && inputs.confirm_publish != true
