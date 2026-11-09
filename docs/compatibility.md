@@ -379,6 +379,21 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `zoho.lead.list` / `get`, `account.list` / `get`, `contact.list` / `get`, `deal.list` / `get`, `deal.stage.list` (read-only)
 - `zoho.deal.stage.set`, `deal.note.add` (mutating; gated)
 
+### `@osva-ai/connector-aws-s3` (B4.8)
+
+- `s3.bucket.list`, `s3.bucket.get`, `s3.object.list`, `s3.object.metadata.get`, `s3.object.text.read`, `s3.object.versions.list` (read-only)
+- `s3.object.text.create`, `s3.object.text.replace` (mutating; gated)
+
+### `@osva-ai/connector-gcs` (B4.8)
+
+- `gcs.bucket.list`, `gcs.bucket.get`, `gcs.object.list`, `gcs.object.metadata.get`, `gcs.object.text.read`, `gcs.object.versions.list` (read-only)
+- `gcs.object.text.create`, `gcs.object.text.replace` (mutating; gated)
+
+### `@osva-ai/connector-azure-blob` (B4.8)
+
+- `azureblob.container.list`, `azureblob.container.get`, `azureblob.blob.list`, `azureblob.blob.metadata.get`, `azureblob.blob.text.read`, `azureblob.blob.versions.list` (read-only)
+- `azureblob.blob.text.create`, `azureblob.blob.text.replace` (mutating; gated)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -436,8 +451,11 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-salesforce`      | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
 | `@osva-ai/connector-pipedrive`       | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
 | `@osva-ai/connector-zoho-crm`        | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
+| `@osva-ai/connector-aws-s3`          | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
+| `@osva-ai/connector-gcs`             | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
+| `@osva-ai/connector-azure-blob`      | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
 
-**Summary:** **22 / 39** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap includes **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, **Freshdesk**, **Salesforce**, **Pipedrive**, and **Zoho CRM** (**SDK 1.1.4** on published tarballs at current `latest` lines). B4.6 customer support: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md). B4.7 CRM & sales (source-only until publication): [INSTALL-SALESFORCE.md](./INSTALL-SALESFORCE.md), [INSTALL-PIPEDRIVE.md](./INSTALL-PIPEDRIVE.md), [INSTALL-ZOHO-CRM.md](./INSTALL-ZOHO-CRM.md).
+**Summary:** **22 / 42** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap includes **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, **Freshdesk**, **Salesforce**, **Pipedrive**, and **Zoho CRM** (**SDK 1.1.4** on published tarballs at current `latest` lines). B4.6 customer support: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md). B4.7 CRM & sales (source-only until publication): [INSTALL-SALESFORCE.md](./INSTALL-SALESFORCE.md), [INSTALL-PIPEDRIVE.md](./INSTALL-PIPEDRIVE.md), [INSTALL-ZOHO-CRM.md](./INSTALL-ZOHO-CRM.md).
 
 ### Immutable-version history (reference only)
 
