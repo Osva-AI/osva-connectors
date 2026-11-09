@@ -394,6 +394,18 @@ Reference: [CONNECTOR_PROFILE_V1.md](https://github.com/Osva-AI/osva/blob/main/d
 - `azureblob.container.list`, `azureblob.container.get`, `azureblob.blob.list`, `azureblob.blob.metadata.get`, `azureblob.blob.text.read`, `azureblob.blob.versions.list` (read-only)
 - `azureblob.blob.text.create`, `azureblob.blob.text.replace` (mutating; gated)
 
+### `@osva-ai/connector-bigquery` (B4.9)
+
+- `bigquery.project.get`, `bigquery.dataset.list`, `bigquery.dataset.get`, `bigquery.table.list`, `bigquery.table.get`, `bigquery.table.columns.list`, `bigquery.table.rows.sample`, `bigquery.table.aggregate` (read-only)
+
+### `@osva-ai/connector-snowflake` (B4.9)
+
+- `snowflake.database.get`, `snowflake.schema.list`, `snowflake.schema.get`, `snowflake.table.list`, `snowflake.table.get`, `snowflake.table.columns.list`, `snowflake.table.rows.sample`, `snowflake.table.aggregate` (read-only)
+
+### `@osva-ai/connector-supabase` (B4.9)
+
+- `supabase.project.get`, `supabase.schema.list`, `supabase.table.list`, `supabase.table.get`, `supabase.table.columns.list`, `supabase.table.rows.list`, `supabase.table.row.get`, `supabase.table.rows.count` (read-only)
+
 Tool names use dot-separated segments and remain stable for a connector version.
 
 ## Output budgets (C3.1)
@@ -454,8 +466,11 @@ M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.
 | `@osva-ai/connector-aws-s3`          | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
 | `@osva-ai/connector-gcs`             | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
 | `@osva-ai/connector-azure-blob`      | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
+| `@osva-ai/connector-bigquery`        | `0.1.0`      | —                       | **Source-only** | B4.9 data warehouses; npm bootstrap pending             |
+| `@osva-ai/connector-snowflake`       | `0.1.0`      | —                       | **Source-only** | B4.9 data warehouses; npm bootstrap pending             |
+| `@osva-ai/connector-supabase`        | `0.1.0`      | —                       | **Source-only** | B4.9 application databases; npm bootstrap pending       |
 
-**Summary:** **22 / 42** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap includes **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, **Freshdesk**, **Salesforce**, **Pipedrive**, and **Zoho CRM** (**SDK 1.1.4** on published tarballs at current `latest` lines). B4.6 customer support: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md). B4.7 CRM & sales (source-only until publication): [INSTALL-SALESFORCE.md](./INSTALL-SALESFORCE.md), [INSTALL-PIPEDRIVE.md](./INSTALL-PIPEDRIVE.md), [INSTALL-ZOHO-CRM.md](./INSTALL-ZOHO-CRM.md).
+**Summary:** **22 / 45** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap includes **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, **Freshdesk**, **Salesforce**, **Pipedrive**, and **Zoho CRM** (**SDK 1.1.4** on published tarballs at current `latest` lines). B4.6 customer support: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md). B4.7 CRM & sales (source-only until publication): [INSTALL-SALESFORCE.md](./INSTALL-SALESFORCE.md), [INSTALL-PIPEDRIVE.md](./INSTALL-PIPEDRIVE.md), [INSTALL-ZOHO-CRM.md](./INSTALL-ZOHO-CRM.md).
 
 ### Immutable-version history (reference only)
 

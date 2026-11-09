@@ -113,6 +113,15 @@ jobs:
       - name: Azure Blob package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:azure-blob
 
+      - name: BigQuery package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:bigquery
+
+      - name: Snowflake package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:snowflake
+
+      - name: Supabase package acceptance (tarball install + MCP smoke)
+        run: pnpm test:package-acceptance:supabase
+
   postgres-integration:
     name: PostgreSQL integration
     runs-on: ubuntu-24.04

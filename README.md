@@ -2,7 +2,7 @@
 
 Official OSVA connector packages built on the public [`@osva-ai/connector-sdk`](https://www.npmjs.com/package/@osva-ai/connector-sdk) and [Connector Profile V1](https://github.com/Osva-AI/osva/blob/main/docs/contracts/CONNECTOR_PROFILE_V1.md).
 
-This monorepo contains **42** connector packages. As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **WooCommerce**, and **BigCommerce** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
+This monorepo contains **45** connector packages (B4.9 adds **BigQuery**, **Snowflake**, and **Supabase** — source-only until npm bootstrap). As of **2026-11-08** (`npm view`), **22** are published on the public npm registry (**SDK `1.1.4`** on current `latest` lines); **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **WooCommerce**, and **BigCommerce** are source-only at `@0.1.0`. B3 bootstrap record: [docs/B3_PUBLICATION_RECORD.md](./docs/B3_PUBLICATION_RECORD.md). M19 history: [docs/M19_PUBLICATION_RECORD.md](./docs/M19_PUBLICATION_RECORD.md). See [docs/compatibility.md](./docs/compatibility.md#release-status).
 
 ## `@osva-ai/connector-github`
 

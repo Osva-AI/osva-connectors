@@ -1,0 +1,57 @@
+export const CONNECTOR_KEY = "osva-connector-supabase";
+export const CONNECTOR_NAME = "OSVA Supabase Connector";
+export const CONNECTOR_VERSION = "0.1.0";
+
+export const SUPABASE_PROJECT_GET_TOOL = "supabase.project.get";
+export const SUPABASE_SCHEMA_LIST_TOOL = "supabase.schema.list";
+export const SUPABASE_TABLE_LIST_TOOL = "supabase.table.list";
+export const SUPABASE_TABLE_GET_TOOL = "supabase.table.get";
+export const SUPABASE_TABLE_COLUMNS_LIST_TOOL = "supabase.table.columns.list";
+export const SUPABASE_TABLE_ROWS_LIST_TOOL = "supabase.table.rows.list";
+export const SUPABASE_TABLE_ROW_GET_TOOL = "supabase.table.row.get";
+export const SUPABASE_TABLE_ROWS_COUNT_TOOL = "supabase.table.rows.count";
+
+export const SUPABASE_PROJECT_URL_ENV = "OSVA_CONNECTOR_SUPABASE_PROJECT_URL";
+export const SUPABASE_PUBLISHABLE_KEY_ENV =
+  "OSVA_CONNECTOR_SUPABASE_PUBLISHABLE_KEY";
+export const SUPABASE_USER_ACCESS_TOKEN_ENV =
+  "OSVA_CONNECTOR_SUPABASE_USER_ACCESS_TOKEN";
+export const SUPABASE_ALLOWED_SCHEMAS_ENV =
+  "OSVA_CONNECTOR_SUPABASE_ALLOWED_SCHEMAS";
+export const SUPABASE_ALLOWED_TABLES_ENV =
+  "OSVA_CONNECTOR_SUPABASE_ALLOWED_TABLES";
+export const SUPABASE_ALLOW_TEST_API_HOST_ENV =
+  "OSVA_CONNECTOR_SUPABASE_ALLOW_TEST_API_HOST";
+export const SUPABASE_TIMEOUT_MS_ENV = "OSVA_CONNECTOR_SUPABASE_TIMEOUT_MS";
+export const SUPABASE_COUNT_EXACT_ENABLED_ENV =
+  "OSVA_CONNECTOR_SUPABASE_COUNT_EXACT_ENABLED";
+
+export const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+export const MIN_REQUEST_TIMEOUT_MS = 1_000;
+export const MAX_REQUEST_TIMEOUT_MS = 120_000;
+
+export const LIST_DEFAULT_PAGE_SIZE = 20;
+export const LIST_MAX_PAGE_SIZE = 100;
+
+export const MAX_SCHEMA_NAME_LENGTH = 128;
+export const MAX_TABLE_NAME_LENGTH = 128;
+export const MAX_COLUMN_NAME_LENGTH = 128;
+export const MAX_FILTER_VALUE_LENGTH = 512;
+export const MAX_FILTERS_PER_REQUEST = 16;
+export const MAX_IN_FILTER_VALUES = 100;
+
+export const MAX_CONTINUATION_TOKEN_LENGTH = 256;
+export const MAX_CONTINUATION_STORE_ENTRIES = 2_048;
+export const DEFAULT_CONTINUATION_TTL_MS = 15 * 60 * 1000;
+
+export const MAX_LOOKUP_VALUE_LENGTH = 512;
+
+export const MAX_HTTP_RESPONSE_BYTES = 1_048_576;
+export const READ_ONLY_MAX_RETRIES = 1;
+export const READ_ONLY_RETRY_DELAY_MS = 250;
+
+export const OUTPUT_MAX_STRUCTURED_JSON_BYTES = 262_144;
+
+export const SUPABASE_REST_PATH = "/rest/v1";
+export const SUPABASE_CLIENT_INFO_HEADER = "X-Client-Info";
+export const SUPABASE_CLIENT_INFO_VALUE = "osva-connector-supabase";
