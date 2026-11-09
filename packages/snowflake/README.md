@@ -35,3 +35,4 @@ OSVA Connector Profile V1 MCP connector for **Snowflake** (read-only catalog and
 - Server-built `SELECT` only; identifiers are quoted from validated allowlists.
 - Structured filters and aggregations (max **2** `GROUP BY` columns).
 - Statement timeout, bounded rows, 256 KiB structured output budget, max **2** concurrent queries.
+- Abort and timeout call snowflake-sdk `statement.cancel()` (driver 2.4.x). Cancellation is **requested** of Snowflake; fake-driver tests cannot prove the warehouse stopped billing. Results are consumed with `streamResult: true` and `streamRows({ start, end })` so the connector does not keep unbounded row arrays. Server-built SQL already includes `LIMIT`.

@@ -32,6 +32,10 @@ export type TrackedByteStream = AsyncIterable<Uint8Array> & {
 export class FakeGcsProviderClient implements GcsProviderClient {
   createCallCount = 0;
   replaceCallCount = 0;
+  listObjectsCallCount = 0;
+  listObjectVersionsCallCount = 0;
+  headObjectCallCount = 0;
+  lastListPrefix?: string;
   lastCreateIfGenerationMatch?: string;
   lastReplaceIfGenerationMatch?: string;
   readonly buckets = new Set<string>(["fixtures-bucket"]);
@@ -86,6 +90,8 @@ export class FakeGcsProviderClient implements GcsProviderClient {
     maxKeys: number;
     continuationToken?: string;
   }): Promise<GcsObjectListResult> {
+    this.listObjectsCallCount += 1;
+    this.lastListPrefix = params.prefix;
     const keys = [...this.objects.keys()]
       .filter(
         (key) =>
@@ -117,6 +123,7 @@ export class FakeGcsProviderClient implements GcsProviderClient {
   }
 
   async headObject(bucket: string, key: string): Promise<GcsObjectMetadata> {
+    this.headObjectCallCount += 1;
     const stored = this.objects.get(`${bucket}/${key}`);
     if (stored === undefined) {
       const error = new Error("missing");
@@ -190,6 +197,8 @@ export class FakeGcsProviderClient implements GcsProviderClient {
     maxKeys: number;
     continuationToken?: string;
   }): Promise<GcsObjectVersionsListResult> {
+    this.listObjectVersionsCallCount += 1;
+    this.lastListPrefix = params.prefix;
     const keys = [...this.objects.keys()]
       .filter(
         (key) =>

@@ -22,3 +22,5 @@ OSVA Connector Profile V1 MCP connector for **Azure Blob Storage**.
 | `OSVA_CONNECTOR_AZURE_BLOB_ACCOUNT_NAME` | Yes      | Storage account name |
 
 Container/prefix allowlists and write gates use `OSVA_CONNECTOR_AZURE_BLOB_*` variables.
+
+Blob listing uses Azure `listBlobsFlat` prefix semantics: the requested prefix must equal an authorized prefix or be a descendant of one. Empty, ancestor, and sibling prefixes are denied when a container is scoped. `[]` is deny-all for that container; `[""]` allows the whole container. Unset allowlists remain unrestricted. Continuation markers are bound to container + prefix and are not raw Azure markers.

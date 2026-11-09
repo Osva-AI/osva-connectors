@@ -40,6 +40,7 @@ import {
 import { QueryExecutor } from "./query-executor.js";
 import {
   assertColumnsPermitted,
+  assertDataQueryAuthorized,
   assertDatasetAllowed,
   assertTableAllowed,
   filterDatasetsByAllowlist,
@@ -281,9 +282,13 @@ export function createBigqueryConnector(
               config.allowedTables?.[parsed.data.datasetId]?.[
                 parsed.data.tableId
               ];
-            if (allowed !== undefined && allowed.length > 0) {
-              const allowSet = new Set(allowed);
-              columns = columns.filter((col) => allowSet.has(col.name));
+            if (allowed !== undefined) {
+              if (allowed.length === 0) {
+                columns = [];
+              } else {
+                const allowSet = new Set(allowed);
+                columns = columns.filter((col) => allowSet.has(col.name));
+              }
             }
             return emitBounded(
               mapColumnsListResponse(
@@ -307,8 +312,8 @@ export function createBigqueryConnector(
           if (!parsed.success) {
             throw invalidInputError();
           }
-          assertDatasetAllowed(config.allowedDatasets, parsed.data.datasetId);
-          assertTableAllowed(
+          assertDataQueryAuthorized(
+            config.allowedDatasets,
             config.allowedTables,
             parsed.data.datasetId,
             parsed.data.tableId,
@@ -396,8 +401,8 @@ export function createBigqueryConnector(
           if (!parsed.success) {
             throw invalidInputError();
           }
-          assertDatasetAllowed(config.allowedDatasets, parsed.data.datasetId);
-          assertTableAllowed(
+          assertDataQueryAuthorized(
+            config.allowedDatasets,
             config.allowedTables,
             parsed.data.datasetId,
             parsed.data.tableId,

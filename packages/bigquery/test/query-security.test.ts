@@ -1,11 +1,13 @@
 import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 import { describe, expect, it } from "vitest";
 
-import { buildSampleQuery } from "../src/query-builder.js";
+import { buildAggregateQuery, buildSampleQuery } from "../src/query-builder.js";
 import { QueryConcurrencyGate, QueryExecutor } from "../src/query-executor.js";
 import { validateFilterForTable } from "../src/structured-filters.js";
 import { FakeBigQueryProviderClient } from "./helpers/fake-provider-client.js";
 import { defaultTestBigqueryConfig } from "./helpers/test-env.js";
+
+const INJECTION_COLUMN = "x`) FROM `p`.`d`.`secrets` --";
 
 describe("query security", () => {
   it("builds parameterized SELECT without raw SQL input surface", () => {
@@ -82,7 +84,7 @@ describe("query security", () => {
     ).toThrow(ConnectorSdkError);
   });
 
-  it("connector aggregate rejects extra group-by", async () => {
+  it("propagates dry-run provider failures without executing", async () => {
     const built = buildSampleQuery({
       projectId: "fixture-project",
       datasetId: "analytics",
@@ -98,5 +100,152 @@ describe("query security", () => {
     await expect(
       executor.executeQuery({ sql: built.sql, params: built.params }),
     ).rejects.toThrow(ConnectorSdkError);
+    expect(client.runQueryCallCount).toBe(0);
+  });
+
+  it("rejects invalid COUNT column on direct query-builder invocation", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "count", column: INJECTION_COLUMN }],
+        limit: 10,
+      }),
+    ).toThrow(ConnectorSdkError);
+  });
+
+  it("rejects invalid SUM column", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "sum", column: INJECTION_COLUMN }],
+        limit: 10,
+      }),
+    ).toThrow(/Invalid column identifier/);
+  });
+
+  it("rejects invalid AVG column", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "avg", column: "user-id" }],
+        limit: 10,
+      }),
+    ).toThrow(ConnectorSdkError);
+  });
+
+  it("rejects invalid MIN and MAX columns", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "min", column: "1value" }],
+        limit: 10,
+      }),
+    ).toThrow(ConnectorSdkError);
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "max", column: "value;" }],
+        limit: 10,
+      }),
+    ).toThrow(ConnectorSdkError);
+  });
+
+  it("rejects invalid aggregate aliases", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "count", alias: "x` AS leaked" }],
+        limit: 10,
+      }),
+    ).toThrow(/Invalid aggregate alias/);
+  });
+
+  it("rejects unsafe generated aliases derived from invalid columns", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "count", column: INJECTION_COLUMN }],
+        limit: 10,
+      }),
+    ).toThrow(ConnectorSdkError);
+  });
+
+  it("rejects invalid group-by identifiers", () => {
+    expect(() =>
+      buildAggregateQuery({
+        projectId: "fixture-project",
+        datasetId: "analytics",
+        tableId: "events",
+        metrics: [{ fn: "count" }],
+        groupBy: ["event_name`; DROP TABLE t; --"],
+        limit: 10,
+      }),
+    ).toThrow(ConnectorSdkError);
+  });
+
+  it("rejects SQL metacharacters and boundary characters in identifiers", () => {
+    const unsafe = [
+      "col`",
+      "col;drop",
+      "col space",
+      ".col",
+      "col.nested",
+      "col-name",
+      "1col",
+      "",
+    ];
+    for (const column of unsafe) {
+      expect(() =>
+        buildAggregateQuery({
+          projectId: "fixture-project",
+          datasetId: "analytics",
+          tableId: "events",
+          metrics: [{ fn: "sum", column }],
+          limit: 10,
+        }),
+      ).toThrow(ConnectorSdkError);
+    }
+  });
+
+  it("builds valid COUNT(*) and COUNT(column) with parameters", () => {
+    const star = buildAggregateQuery({
+      projectId: "fixture-project",
+      datasetId: "analytics",
+      tableId: "events",
+      metrics: [{ fn: "count" }],
+      limit: 5,
+    });
+    expect(star.sql).toContain("COUNT(*)");
+    expect(star.sql).not.toContain(INJECTION_COLUMN);
+    expect(star.params.lim_0).toBe(5);
+
+    const counted = buildAggregateQuery({
+      projectId: "fixture-project",
+      datasetId: "analytics",
+      tableId: "events",
+      metrics: [{ fn: "count", column: "user_id", alias: "users" }],
+      groupBy: ["event_name"],
+      filter: { op: "eq", column: "event_name", value: "signup" },
+      limit: 8,
+    });
+    expect(counted.sql).toContain("COUNT(`user_id`)");
+    expect(counted.sql).toContain("AS `users`");
+    expect(counted.sql).toContain("GROUP BY `event_name`");
+    expect(counted.sql).not.toContain("signup");
+    expect(Object.values(counted.params)).toContain("signup");
   });
 });

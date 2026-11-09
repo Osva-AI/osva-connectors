@@ -30,6 +30,35 @@ function createMockStorage() {
   return { storage, save, getMetadata, file, bucket };
 }
 
+describe("GCS bucket listing pagination", () => {
+  it("disables auto-pagination on getBuckets", async () => {
+    const getBuckets = vi.fn(
+      async (_opts?: {
+        maxResults?: number;
+        pageToken?: string;
+        autoPaginate?: boolean;
+      }) => {
+        void _opts;
+        return [[], undefined];
+      },
+    );
+    const storage = { getBuckets } as unknown as Storage;
+    const client = createGcsSdkProviderClient({
+      projectId: "fixture-project",
+      requestTimeoutMs: 5_000,
+      storage,
+    });
+    await client.listBuckets({ maxResults: 10 });
+    expect(getBuckets).toHaveBeenCalledTimes(1);
+    expect(getBuckets).toHaveBeenCalledWith(
+      expect.objectContaining({
+        maxResults: 10,
+        autoPaginate: false,
+      }),
+    );
+  });
+});
+
 describe("GCS SDK conditional writes", () => {
   it("create passes ifGenerationMatch=0", async () => {
     const { storage, save } = createMockStorage();

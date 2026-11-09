@@ -28,4 +28,22 @@ describe("loadBigqueryConfig", () => {
     expect(config.maxBytesBilled).toBe(5_000_000);
     expect(config.queryTimeoutMs).toBe(45_000);
   });
+
+  it("treats a missing dataset allowlist as unset, not deny-all", () => {
+    const config = loadBigqueryConfig({
+      OSVA_CONNECTOR_BIGQUERY_PROJECT_ID: "fixture-project",
+    });
+    expect(config.allowedDatasets).toBeUndefined();
+    expect(config.allowedTables).toBeUndefined();
+  });
+
+  it("treats an empty dataset allowlist as deny-all", () => {
+    const config = loadBigqueryConfig({
+      OSVA_CONNECTOR_BIGQUERY_PROJECT_ID: "fixture-project",
+      OSVA_CONNECTOR_BIGQUERY_ALLOWED_DATASETS: "   ",
+      OSVA_CONNECTOR_BIGQUERY_ALLOWED_TABLES: "",
+    });
+    expect(config.allowedDatasets).toEqual([]);
+    expect(config.allowedTables).toEqual({});
+  });
 });

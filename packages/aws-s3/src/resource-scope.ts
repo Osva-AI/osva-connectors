@@ -59,11 +59,29 @@ export function parseBucketScopeMap(
   return out;
 }
 
+/**
+ * Prefix matching follows S3 ListObjects string-prefix semantics.
+ * An empty authorized prefix (`""`) means the entire bucket is in scope.
+ * An empty prefix array is deny-all, not unrestricted.
+ */
 function keyMatchesPrefix(key: string, prefix: string): boolean {
   if (prefix.length === 0) {
     return true;
   }
   return key === prefix || key.startsWith(prefix);
+}
+
+function listPrefixIsAuthorized(
+  requestedPrefix: string,
+  allowedPrefix: string,
+): boolean {
+  if (allowedPrefix.length === 0) {
+    return true;
+  }
+  return (
+    requestedPrefix === allowedPrefix ||
+    requestedPrefix.startsWith(allowedPrefix)
+  );
 }
 
 export function assertBucketAllowed(
@@ -95,7 +113,10 @@ export function assertObjectKeyAllowed(
   }
   const prefixes = map[bucket] ?? [];
   if (prefixes.length === 0) {
-    return;
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "No object prefixes are allowed for this bucket.",
+    );
   }
   if (!prefixes.some((prefix) => keyMatchesPrefix(key, prefix))) {
     throw new ConnectorSdkError(
@@ -111,24 +132,35 @@ export function assertListPrefixAllowed(
   prefix: string,
 ): void {
   assertBucketAllowed(map, bucket);
-  if (map === undefined || prefix.length === 0) {
+  if (map === undefined) {
     return;
   }
   const prefixes = map[bucket] ?? [];
   if (prefixes.length === 0) {
-    return;
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "No object prefixes are allowed for this bucket.",
+    );
   }
-  if (
-    !prefixes.some(
-      (allowed) =>
-        prefix === allowed ||
-        prefix.startsWith(allowed) ||
-        allowed.startsWith(prefix),
-    )
-  ) {
+  if (!prefixes.some((allowed) => listPrefixIsAuthorized(prefix, allowed))) {
     throw new ConnectorSdkError(
       "FORBIDDEN",
       "List prefix is outside allowed prefixes for this bucket.",
     );
   }
+}
+
+export function filterKeysByAuthorizedPrefixes<
+  T extends { readonly key: string },
+>(map: BucketScopeMap | undefined, bucket: string, items: readonly T[]): T[] {
+  if (map === undefined) {
+    return [...items];
+  }
+  const prefixes = map[bucket] ?? [];
+  if (prefixes.length === 0) {
+    return [];
+  }
+  return items.filter((item) =>
+    prefixes.some((prefix) => keyMatchesPrefix(item.key, prefix)),
+  );
 }

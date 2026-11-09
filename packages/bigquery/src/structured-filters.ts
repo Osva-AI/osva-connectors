@@ -7,6 +7,7 @@ import {
   MAX_FILTER_DEPTH,
   MAX_IN_LIST_SIZE,
 } from "./constants.js";
+import { quoteBigQueryIdentifier } from "./identifier.js";
 import {
   assertColumnsPermitted,
   type TableColumnAllowlist,
@@ -104,7 +105,7 @@ export function createQueryParamBag(): QueryParamBag {
 }
 
 function quoteIdentifier(identifier: string): string {
-  return `\`${identifier.replaceAll("`", "")}\``;
+  return quoteBigQueryIdentifier(identifier, "column");
 }
 
 function assertFilterColumnsAllowed(

@@ -59,11 +59,29 @@ export function parseContainerScopeMap(
   return out;
 }
 
+/**
+ * Prefix matching follows Azure Blob listBlobsFlat string-prefix semantics.
+ * An empty authorized prefix (`""`) means the entire container is in scope.
+ * An empty prefix array is deny-all, not unrestricted.
+ */
 function keyMatchesPrefix(key: string, prefix: string): boolean {
   if (prefix.length === 0) {
     return true;
   }
   return key === prefix || key.startsWith(prefix);
+}
+
+function listPrefixIsAuthorized(
+  requestedPrefix: string,
+  allowedPrefix: string,
+): boolean {
+  if (allowedPrefix.length === 0) {
+    return true;
+  }
+  return (
+    requestedPrefix === allowedPrefix ||
+    requestedPrefix.startsWith(allowedPrefix)
+  );
 }
 
 export function assertContainerAllowed(
@@ -95,7 +113,10 @@ export function assertBlobKeyAllowed(
   }
   const prefixes = map[container] ?? [];
   if (prefixes.length === 0) {
-    return;
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "No object prefixes are allowed for this container.",
+    );
   }
   if (!prefixes.some((prefix) => keyMatchesPrefix(key, prefix))) {
     throw new ConnectorSdkError(
@@ -111,24 +132,39 @@ export function assertListPrefixAllowed(
   prefix: string,
 ): void {
   assertContainerAllowed(map, container);
-  if (map === undefined || prefix.length === 0) {
+  if (map === undefined) {
     return;
   }
   const prefixes = map[container] ?? [];
   if (prefixes.length === 0) {
-    return;
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "No object prefixes are allowed for this container.",
+    );
   }
-  if (
-    !prefixes.some(
-      (allowed) =>
-        prefix === allowed ||
-        prefix.startsWith(allowed) ||
-        allowed.startsWith(prefix),
-    )
-  ) {
+  if (!prefixes.some((allowed) => listPrefixIsAuthorized(prefix, allowed))) {
     throw new ConnectorSdkError(
       "FORBIDDEN",
       "List prefix is outside allowed prefixes for this container.",
     );
   }
+}
+
+export function filterKeysByAuthorizedPrefixes<
+  T extends { readonly key: string },
+>(
+  map: ContainerScopeMap | undefined,
+  container: string,
+  items: readonly T[],
+): T[] {
+  if (map === undefined) {
+    return [...items];
+  }
+  const prefixes = map[container] ?? [];
+  if (prefixes.length === 0) {
+    return [];
+  }
+  return items.filter((item) =>
+    prefixes.some((prefix) => keyMatchesPrefix(item.key, prefix)),
+  );
 }

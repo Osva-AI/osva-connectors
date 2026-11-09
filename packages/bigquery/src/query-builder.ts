@@ -2,11 +2,15 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 
 import {
   AGGREGATE_MAX_LIMIT,
-  IDENTIFIER_PATTERN,
   MAX_GROUP_BY_COLUMNS,
-  PROJECT_ID_PATTERN,
   ROWS_SAMPLE_MAX_LIMIT,
 } from "./constants.js";
+import {
+  assertBigQueryIdentifier,
+  quoteBigQueryColumns,
+  quoteBigQueryIdentifier,
+  quoteBigQueryTable,
+} from "./identifier.js";
 import type { TableColumnAllowlist } from "./resource-scope.js";
 import {
   assertColumnsPermitted,
@@ -21,36 +25,6 @@ import {
 export interface BuiltQuery {
   readonly sql: string;
   readonly params: Record<string, unknown>;
-}
-
-function quoteTable(
-  projectId: string,
-  datasetId: string,
-  tableId: string,
-): string {
-  if (!PROJECT_ID_PATTERN.test(projectId)) {
-    throw new ConnectorSdkError("INVALID_INPUT", "Invalid table reference.");
-  }
-  for (const part of [datasetId, tableId]) {
-    if (!IDENTIFIER_PATTERN.test(part)) {
-      throw new ConnectorSdkError("INVALID_INPUT", "Invalid table reference.");
-    }
-  }
-  return `\`${projectId}\`.\`${datasetId}\`.\`${tableId}\``;
-}
-
-function quoteColumns(columns: readonly string[]): string {
-  return columns
-    .map((column) => {
-      if (!IDENTIFIER_PATTERN.test(column)) {
-        throw new ConnectorSdkError(
-          "INVALID_INPUT",
-          "Invalid column identifier.",
-        );
-      }
-      return `\`${column}\``;
-    })
-    .join(", ");
 }
 
 export function resolveSelectColumns(
@@ -86,7 +60,7 @@ export function buildSampleQuery(options: {
   }
   const bag = createQueryParamBag();
   const bagLimit = bag.add(options.limit, "lim");
-  let sql = `SELECT ${quoteColumns(options.columns)} FROM ${quoteTable(options.projectId, options.datasetId, options.tableId)}`;
+  let sql = `SELECT ${quoteBigQueryColumns(options.columns)} FROM ${quoteBigQueryTable(options.projectId, options.datasetId, options.tableId)}`;
   if (options.filter !== undefined) {
     sql += ` WHERE ${renderStructuredFilterSql(options.filter, bag)}`;
   }
@@ -100,6 +74,38 @@ export interface AggregateMetric {
   readonly fn: AggregateFn;
   readonly column?: string;
   readonly alias?: string;
+}
+
+function aggregateFallbackAlias(fn: AggregateFn, column?: string): string {
+  if (column === undefined) {
+    return `${fn}_all`;
+  }
+  return `${fn}_${assertBigQueryIdentifier(column, "column")}`;
+}
+
+function quoteAggregateMetric(metric: AggregateMetric): string {
+  const aliasSource =
+    metric.alias !== undefined
+      ? metric.alias
+      : aggregateFallbackAlias(metric.fn, metric.column);
+  const alias = quoteBigQueryIdentifier(aliasSource, "alias");
+
+  if (metric.fn === "count") {
+    if (metric.column === undefined) {
+      return `COUNT(*) AS ${alias}`;
+    }
+    const column = quoteBigQueryIdentifier(metric.column, "column");
+    return `COUNT(${column}) AS ${alias}`;
+  }
+
+  if (metric.column === undefined) {
+    throw new ConnectorSdkError(
+      "INVALID_INPUT",
+      `${metric.fn} requires a column.`,
+    );
+  }
+  const column = quoteBigQueryIdentifier(metric.column, "column");
+  return `${metric.fn.toUpperCase()}(${column}) AS ${alias}`;
 }
 
 export function buildAggregateQuery(options: {
@@ -127,42 +133,21 @@ export function buildAggregateQuery(options: {
   const bag = createQueryParamBag();
   const selects: string[] = [];
   for (const metric of options.metrics) {
-    const alias =
-      metric.alias !== undefined && IDENTIFIER_PATTERN.test(metric.alias)
-        ? metric.alias
-        : `${metric.fn}_${metric.column ?? "all"}`;
-    if (metric.fn === "count") {
-      const expr =
-        metric.column === undefined
-          ? "COUNT(*)"
-          : `COUNT(\`${metric.column}\`)`;
-      selects.push(`${expr} AS \`${alias}\``);
-      continue;
-    }
-    if (
-      metric.column === undefined ||
-      !IDENTIFIER_PATTERN.test(metric.column)
-    ) {
-      throw new ConnectorSdkError(
-        "INVALID_INPUT",
-        `${metric.fn} requires a column.`,
-      );
-    }
-    selects.push(
-      `${metric.fn.toUpperCase()}(\`${metric.column}\`) AS \`${alias}\``,
-    );
+    selects.push(quoteAggregateMetric(metric));
   }
 
   if (options.groupBy !== undefined && options.groupBy.length > 0) {
-    selects.unshift(...options.groupBy.map((col) => `\`${col}\``));
+    selects.unshift(
+      ...options.groupBy.map((col) => quoteBigQueryIdentifier(col)),
+    );
   }
 
-  let sql = `SELECT ${selects.join(", ")} FROM ${quoteTable(options.projectId, options.datasetId, options.tableId)}`;
+  let sql = `SELECT ${selects.join(", ")} FROM ${quoteBigQueryTable(options.projectId, options.datasetId, options.tableId)}`;
   if (options.filter !== undefined) {
     sql += ` WHERE ${renderStructuredFilterSql(options.filter, bag)}`;
   }
   if (options.groupBy !== undefined && options.groupBy.length > 0) {
-    sql += ` GROUP BY ${quoteColumns(options.groupBy)}`;
+    sql += ` GROUP BY ${quoteBigQueryColumns(options.groupBy)}`;
   }
   const bagLimit = bag.add(options.limit, "lim");
   sql += ` LIMIT @${bagLimit}`;

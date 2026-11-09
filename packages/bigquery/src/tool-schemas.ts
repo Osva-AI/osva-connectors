@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import {
   AGGREGATE_MAX_LIMIT,
+  IDENTIFIER_PATTERN,
   LIST_MAX_PAGE_SIZE,
   MAX_CONTINUATION_TOKEN_LENGTH,
   MAX_DATASET_ID_LENGTH,
@@ -13,8 +14,18 @@ import {
 } from "./constants.js";
 import { structuredFilterSchema } from "./structured-filters.js";
 
-const datasetSchema = z.string().trim().min(1).max(MAX_DATASET_ID_LENGTH);
-const tableSchema = z.string().trim().min(1).max(MAX_TABLE_ID_LENGTH);
+const datasetSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(MAX_DATASET_ID_LENGTH)
+  .regex(IDENTIFIER_PATTERN);
+const tableSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(MAX_TABLE_ID_LENGTH)
+  .regex(IDENTIFIER_PATTERN);
 const limitSchema = z.number().int().min(1).max(LIST_MAX_PAGE_SIZE);
 const continuationSchema = z
   .string()
@@ -23,7 +34,12 @@ const continuationSchema = z
   .max(MAX_CONTINUATION_TOKEN_LENGTH);
 const sampleLimitSchema = z.number().int().min(1).max(ROWS_SAMPLE_MAX_LIMIT);
 const aggregateLimitSchema = z.number().int().min(1).max(AGGREGATE_MAX_LIMIT);
-const columnSchema = z.string().trim().min(1).max(128);
+const columnSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(128)
+  .regex(IDENTIFIER_PATTERN);
 
 const aggregateMetricSchema = z
   .object({
