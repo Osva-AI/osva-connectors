@@ -19,7 +19,10 @@ type SaveOptions = {
 };
 
 function createMockStorage() {
-  const save = vi.fn(async (_body: Buffer, _options: SaveOptions) => undefined);
+  const save = vi.fn(async (_body: Buffer, _options: SaveOptions) => {
+    void _body;
+    void _options;
+  });
   const getMetadata = vi.fn(async () => [metadataFixture("1000")] as const);
   const file = vi.fn(() => ({ save, getMetadata }));
   const bucket = vi.fn(() => ({ file }));

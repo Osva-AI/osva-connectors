@@ -18,9 +18,10 @@ function propertiesFixture() {
 }
 
 function createMockService() {
-  const uploadData = vi.fn(
-    async (_data: Buffer, _options: UploadOptions) => undefined,
-  );
+  const uploadData = vi.fn(async (_data: Buffer, _options: UploadOptions) => {
+    void _data;
+    void _options;
+  });
   const getProperties = vi.fn(async () => propertiesFixture());
   const blockBlobClient = vi.fn(() => ({ uploadData }));
   const blobClient = vi.fn(() => ({ getProperties }));
