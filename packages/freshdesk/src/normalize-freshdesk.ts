@@ -273,7 +273,8 @@ function normalizeComment(
     ...(includePii
       ? {
           authorEmail:
-            redactEmail(comment.from_email) ?? redactEmail(comment.author_email),
+            redactEmail(comment.from_email) ??
+            redactEmail(comment.author_email),
         }
       : {}),
   };

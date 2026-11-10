@@ -247,10 +247,11 @@ export function createOneDriveRestClient(
         Accept: init.accept,
       };
       if (init.includeAuthorization !== false) {
-        const authorization = await options.tokenProvider.getAuthorizationHeader({
-          signal: init.signal,
-          deadlineMs: attemptTimeoutMs,
-        });
+        const authorization =
+          await options.tokenProvider.getAuthorizationHeader({
+            signal: init.signal,
+            deadlineMs: attemptTimeoutMs,
+          });
         headers.Authorization = authorization;
       }
       if (init.method === "PUT" && init.body !== undefined) {
@@ -455,17 +456,15 @@ export function createOneDriveRestClient(
       let followContentRedirect = true;
 
       for (;;) {
-        const { bodyBytes, redirectLocation, response } = await requestWithRetry(
-          url,
-          {
+        const { bodyBytes, redirectLocation, response } =
+          await requestWithRetry(url, {
             method: "GET",
             signal: params.signal,
             accept: "*/*",
             maxResponseBytes: params.maxBytes,
             includeAuthorization,
             followContentRedirect,
-          },
-        );
+          });
         if (redirectLocation === undefined) {
           if (!response.ok) {
             const bodyText = new TextDecoder("utf-8", { fatal: false }).decode(
