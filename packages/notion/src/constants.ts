@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-notion";
 export const CONNECTOR_NAME = "OSVA Notion Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const NOTION_SEARCH_TOOL = "notion.search";
 export const NOTION_PAGE_GET_TOOL = "notion.page.get";

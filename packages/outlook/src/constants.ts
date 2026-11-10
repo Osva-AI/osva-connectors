@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-outlook";
 export const CONNECTOR_NAME = "OSVA Outlook Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const OUTLOOK_MAIL_FOLDER_LIST_TOOL = "outlook.mailFolder.list";
 export const OUTLOOK_MESSAGE_LIST_TOOL = "outlook.message.list";

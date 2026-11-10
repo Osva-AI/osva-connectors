@@ -15,6 +15,8 @@ import type {
   AzureBlobProviderClient,
   AzureBlobWriteResult,
 } from "./provider-client.js";
+import { createRequestAbortSignal } from "./request-abort-signal.js";
+import { runWithAbortSignal } from "./run-with-abort.js";
 
 export interface CreateAzureBlobSdkClientOptions {
   readonly accountName: string;
@@ -25,6 +27,7 @@ export interface CreateAzureBlobSdkClientOptions {
 export function createAzureBlobSdkProviderClient(
   options: CreateAzureBlobSdkClientOptions,
 ): AzureBlobProviderClient {
+  const requestTimeoutMs = options.requestTimeoutMs;
   const service =
     options.service ??
     new BlobServiceClient(
@@ -32,69 +35,81 @@ export function createAzureBlobSdkProviderClient(
       new DefaultAzureCredential(),
     );
 
+  function operationSignal(parent?: AbortSignal): AbortSignal {
+    return createRequestAbortSignal(requestTimeoutMs, parent);
+  }
+
   return {
     async listBuckets(params) {
-      const buckets: { name: string }[] = [];
-      let continuationToken = params.continuationToken;
-      for await (const page of service
-        .listContainers()
-        .byPage({ maxPageSize: params.maxResults, continuationToken })) {
-        for (const item of page.containerItems ?? []) {
-          buckets.push({ name: item.name });
+      return runWithAbortSignal(operationSignal(), async () => {
+        const buckets: { name: string }[] = [];
+        let continuationToken = params.continuationToken;
+        for await (const page of service
+          .listContainers()
+          .byPage({ maxPageSize: params.maxResults, continuationToken })) {
+          for (const item of page.containerItems ?? []) {
+            buckets.push({ name: item.name });
+          }
+          continuationToken = page.continuationToken;
+          break;
         }
-        continuationToken = page.continuationToken;
-        break;
-      }
-      return {
-        buckets,
-        ...(continuationToken ? { continuationToken } : {}),
-      } satisfies AzureBlobBucketListResult;
+        return {
+          buckets,
+          ...(continuationToken ? { continuationToken } : {}),
+        } satisfies AzureBlobBucketListResult;
+      });
     },
 
     async headBucket(bucket) {
-      await service.getContainerClient(bucket).getProperties();
+      await service
+        .getContainerClient(bucket)
+        .getProperties({ abortSignal: operationSignal() });
       return {};
     },
 
     async listObjects(params) {
-      const client = service.getContainerClient(params.bucket);
-      const objects: Array<{
-        key: string;
-        size?: number;
-        lastModified?: string;
-        etag?: string;
-      }> = [];
-      let continuationToken: string | undefined = params.continuationToken;
-      for await (const page of client
-        .listBlobsFlat({ prefix: params.prefix || undefined })
-        .byPage({ maxPageSize: params.maxKeys, continuationToken })) {
-        for (const blob of page.segment.blobItems) {
-          objects.push({
-            key: blob.name,
-            ...(blob.properties.contentLength !== undefined
-              ? { size: blob.properties.contentLength }
-              : {}),
-            ...(blob.properties.lastModified
-              ? { lastModified: blob.properties.lastModified.toISOString() }
-              : {}),
-            ...(blob.properties.etag
-              ? { etag: blob.properties.etag.replaceAll('"', "") }
-              : {}),
-          });
+      return runWithAbortSignal(operationSignal(), async () => {
+        const client = service.getContainerClient(params.bucket);
+        const objects: Array<{
+          key: string;
+          size?: number;
+          lastModified?: string;
+          etag?: string;
+        }> = [];
+        let continuationToken: string | undefined = params.continuationToken;
+        for await (const page of client
+          .listBlobsFlat({ prefix: params.prefix || undefined })
+          .byPage({ maxPageSize: params.maxKeys, continuationToken })) {
+          for (const blob of page.segment.blobItems) {
+            objects.push({
+              key: blob.name,
+              ...(blob.properties.contentLength !== undefined
+                ? { size: blob.properties.contentLength }
+                : {}),
+              ...(blob.properties.lastModified
+                ? { lastModified: blob.properties.lastModified.toISOString() }
+                : {}),
+              ...(blob.properties.etag
+                ? { etag: blob.properties.etag.replaceAll('"', "") }
+                : {}),
+            });
+          }
+          continuationToken = page.continuationToken;
+          break;
         }
-        continuationToken = page.continuationToken;
-        break;
-      }
-      return {
-        objects,
-        prefix: params.prefix,
-        ...(continuationToken ? { continuationToken } : {}),
-      };
+        return {
+          objects,
+          prefix: params.prefix,
+          ...(continuationToken ? { continuationToken } : {}),
+        };
+      });
     },
 
     async headObject(bucket, key) {
       const blob = service.getContainerClient(bucket).getBlobClient(key);
-      const props = await blob.getProperties();
+      const props = await blob.getProperties({
+        abortSignal: operationSignal(),
+      });
       return {
         bucket,
         key,
@@ -114,9 +129,11 @@ export function createAzureBlobSdkProviderClient(
 
     async getObject(bucket, key, options) {
       const maxBytes = Math.min(options.maxBytes, MAX_CONTENT_BYTES);
+      const abortSignal = operationSignal(options.signal);
+      abortSignal.throwIfAborted();
       const blob = service.getContainerClient(bucket).getBlobClient(key);
       const download = await blob.download(0, undefined, {
-        abortSignal: options.signal,
+        abortSignal,
       });
       assertAcceptableContentEncoding(download.contentEncoding);
       precheckDeclaredObjectSize(download.contentLength, maxBytes);
@@ -137,54 +154,56 @@ export function createAzureBlobSdkProviderClient(
       const { bytes } = await readBoundedByteStream(
         asChunks(),
         maxBytes,
-        options.signal,
+        abortSignal,
       );
       return { metadata, body: bytes } satisfies AzureBlobObjectReadResult;
     },
 
     async listObjectVersions(params) {
-      const client = service.getContainerClient(params.bucket);
-      const versions: Array<{
-        key: string;
-        versionId?: string;
-        isLatest?: boolean;
-        size?: number;
-        lastModified?: string;
-        etag?: string;
-      }> = [];
-      let continuationToken: string | undefined = params.continuationToken;
-      for await (const page of client
-        .listBlobsFlat({
-          prefix: params.prefix || undefined,
-          includeVersions: true,
-        })
-        .byPage({ maxPageSize: params.maxKeys, continuationToken })) {
-        for (const blob of page.segment.blobItems) {
-          versions.push({
-            key: blob.name,
-            ...(blob.versionId ? { versionId: blob.versionId } : {}),
-            ...(blob.isCurrentVersion !== undefined
-              ? { isLatest: blob.isCurrentVersion }
-              : {}),
-            ...(blob.properties.contentLength !== undefined
-              ? { size: blob.properties.contentLength }
-              : {}),
-            ...(blob.properties.lastModified
-              ? { lastModified: blob.properties.lastModified.toISOString() }
-              : {}),
-            ...(blob.properties.etag
-              ? { etag: blob.properties.etag.replaceAll('"', "") }
-              : {}),
-          });
+      return runWithAbortSignal(operationSignal(), async () => {
+        const client = service.getContainerClient(params.bucket);
+        const versions: Array<{
+          key: string;
+          versionId?: string;
+          isLatest?: boolean;
+          size?: number;
+          lastModified?: string;
+          etag?: string;
+        }> = [];
+        let continuationToken: string | undefined = params.continuationToken;
+        for await (const page of client
+          .listBlobsFlat({
+            prefix: params.prefix || undefined,
+            includeVersions: true,
+          })
+          .byPage({ maxPageSize: params.maxKeys, continuationToken })) {
+          for (const blob of page.segment.blobItems) {
+            versions.push({
+              key: blob.name,
+              ...(blob.versionId ? { versionId: blob.versionId } : {}),
+              ...(blob.isCurrentVersion !== undefined
+                ? { isLatest: blob.isCurrentVersion }
+                : {}),
+              ...(blob.properties.contentLength !== undefined
+                ? { size: blob.properties.contentLength }
+                : {}),
+              ...(blob.properties.lastModified
+                ? { lastModified: blob.properties.lastModified.toISOString() }
+                : {}),
+              ...(blob.properties.etag
+                ? { etag: blob.properties.etag.replaceAll('"', "") }
+                : {}),
+            });
+          }
+          continuationToken = page.continuationToken;
+          break;
         }
-        continuationToken = page.continuationToken;
-        break;
-      }
-      return {
-        versions,
-        prefix: params.prefix,
-        ...(continuationToken ? { continuationToken } : {}),
-      } satisfies AzureBlobObjectVersionsListResult;
+        return {
+          versions,
+          prefix: params.prefix,
+          ...(continuationToken ? { continuationToken } : {}),
+        } satisfies AzureBlobObjectVersionsListResult;
+      });
     },
 
     async createObject(params) {
@@ -194,6 +213,7 @@ export function createAzureBlobSdkProviderClient(
       await blob.uploadData(Buffer.from(params.body), {
         blobHTTPHeaders: { blobContentType: params.contentType },
         conditions: { ifNoneMatch: "*" },
+        abortSignal: operationSignal(),
       });
       const md = await this.headObject(params.bucket, params.key);
       return {
@@ -210,6 +230,7 @@ export function createAzureBlobSdkProviderClient(
       await blob.uploadData(Buffer.from(params.body), {
         blobHTTPHeaders: { blobContentType: params.contentType },
         conditions: { ifMatch: params.expectedETag },
+        abortSignal: operationSignal(),
       });
       const md = await this.headObject(params.bucket, params.key);
       return {

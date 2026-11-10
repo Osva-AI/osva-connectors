@@ -1,6 +1,6 @@
 {
   "name": "@osva-ai/connector-bigquery",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OSVA Connector Profile V1 Google BigQuery MCP connector (read-only discovery and bounded queries)",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Osva-AI/osva-connectors/tree/main/packages/bigquery",

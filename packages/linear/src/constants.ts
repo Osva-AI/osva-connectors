@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-linear";
 export const CONNECTOR_NAME = "OSVA Linear Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const LINEAR_VIEWER_GET_TOOL = "linear.viewer.get";
 export const LINEAR_TEAM_LIST_TOOL = "linear.team.list";

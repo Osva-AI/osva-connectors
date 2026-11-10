@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-azure-blob";
 export const CONNECTOR_NAME = "OSVA Azure Blob Storage Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const AZURE_BLOB_CONTAINER_LIST_TOOL = "azureblob.container.list";
 export const AZURE_BLOB_CONTAINER_GET_TOOL = "azureblob.container.get";

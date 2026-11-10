@@ -17,7 +17,7 @@ on:
       expected_version:
         description: Must match packages/aws-s3/package.json version
         required: true
-        default: "0.1.0"
+        default: "0.1.1"
       dry_run:
         description: When true, run npm publish --dry-run only (no registry upload)
         type: boolean

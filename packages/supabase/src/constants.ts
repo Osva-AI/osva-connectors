@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-supabase";
 export const CONNECTOR_NAME = "OSVA Supabase Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const SUPABASE_PROJECT_GET_TOOL = "supabase.project.get";
 export const SUPABASE_SCHEMA_LIST_TOOL = "supabase.schema.list";

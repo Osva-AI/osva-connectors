@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-aws-s3";
 export const CONNECTOR_NAME = "OSVA AWS S3 Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const S3_BUCKET_LIST_TOOL = "s3.bucket.list";
 export const S3_BUCKET_GET_TOOL = "s3.bucket.get";

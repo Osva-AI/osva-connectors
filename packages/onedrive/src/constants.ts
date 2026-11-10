@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-onedrive";
 export const CONNECTOR_NAME = "OSVA OneDrive Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const ONEDRIVE_DRIVE_GET_TOOL = "onedrive.drive.get";
 export const ONEDRIVE_ITEM_LIST_TOOL = "onedrive.item.list";

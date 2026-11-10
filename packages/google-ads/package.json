@@ -1,6 +1,6 @@
 {
   "name": "@osva-ai/connector-google-ads",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OSVA Connector Profile V1 Google Ads MCP connector (read-only customer discovery, campaign reporting, and constrained GAQL)",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Osva-AI/osva-connectors/tree/main/packages/google-ads",

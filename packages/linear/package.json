@@ -1,6 +1,6 @@
 {
   "name": "@osva-ai/connector-linear",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OSVA Connector Profile V1 Linear MCP connector (bounded workspace reads; controlled issue and comment mutations when explicitly enabled)",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Osva-AI/osva-connectors/tree/main/packages/linear",

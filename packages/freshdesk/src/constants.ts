@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-freshdesk";
 export const CONNECTOR_NAME = "OSVA Freshdesk Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const FRESHDESK_TICKET_LIST_TOOL = "freshdesk.ticket.list";
 export const FRESHDESK_TICKET_GET_TOOL = "freshdesk.ticket.get";
