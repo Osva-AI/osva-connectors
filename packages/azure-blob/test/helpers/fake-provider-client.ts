@@ -31,6 +31,10 @@ export type TrackedByteStream = AsyncIterable<Uint8Array> & {
 export class FakeAzureBlobProviderClient implements AzureBlobProviderClient {
   createCallCount = 0;
   replaceCallCount = 0;
+  listObjectsCallCount = 0;
+  listObjectVersionsCallCount = 0;
+  headObjectCallCount = 0;
+  lastListPrefix?: string;
   lastCreateIfNoneMatch?: string;
   lastReplaceIfMatch?: string;
   readonly buckets = new Set<string>(["fixtures-container"]);
@@ -84,6 +88,8 @@ export class FakeAzureBlobProviderClient implements AzureBlobProviderClient {
     maxKeys: number;
     continuationToken?: string;
   }): Promise<AzureBlobObjectListResult> {
+    this.listObjectsCallCount += 1;
+    this.lastListPrefix = params.prefix;
     const keys = [...this.objects.keys()]
       .filter(
         (key) =>
@@ -118,6 +124,7 @@ export class FakeAzureBlobProviderClient implements AzureBlobProviderClient {
     bucket: string,
     key: string,
   ): Promise<AzureBlobObjectMetadata> {
+    this.headObjectCallCount += 1;
     const stored = this.objects.get(`${bucket}/${key}`);
     if (stored === undefined) {
       const error = new Error("missing");
@@ -189,6 +196,8 @@ export class FakeAzureBlobProviderClient implements AzureBlobProviderClient {
     maxKeys: number;
     continuationToken?: string;
   }): Promise<AzureBlobObjectVersionsListResult> {
+    this.listObjectVersionsCallCount += 1;
+    this.lastListPrefix = params.prefix;
     const keys = [...this.objects.keys()]
       .filter(
         (key) =>

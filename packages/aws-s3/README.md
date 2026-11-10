@@ -17,15 +17,14 @@ OSVA Connector Profile V1 MCP connector for **AWS S3** object storage.
 
 ## Configuration
 
-| Variable                                          | Required | Description                                |
-| ------------------------------------------------- | -------- | ------------------------------------------ |
-| `OSVA_CONNECTOR_S3_REGION`                        | Yes      | AWS region for the S3 client               |
-| `OSVA_CONNECTOR_S3_ALLOWED_BUCKETS_READ`          | No       | JSON map `bucket → [prefixes]` for reads   |
-| `OSVA_CONNECTOR_S3_ALLOWED_BUCKETS_WRITE`         | No       | JSON map for writes                        |
-| `OSVA_CONNECTOR_S3_CREATE_ENABLED`                | No       | Default `false`                            |
-| `OSVA_CONNECTOR_S3_REPLACE_ENABLED`               | No       | Default `false`                            |
-| `OSVA_CONNECTOR_S3_HOST_WRITES_APPROVED`          | No       | Default `false`                            |
-| `OSVA_CONNECTOR_S3_ACCOUNT_WIDE_BUCKET_DISCOVERY` | No       | Default `false` (list uses allowlist only) |
+| Variable                                          | Required | Description                                                                                                                                                                                                                                                            |
+| ------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OSVA_CONNECTOR_S3_REGION`                        | Yes      | AWS region for the S3 client                                                                                                                                                                                                                                           |
+| `OSVA_CONNECTOR_S3_ALLOWED_BUCKETS_READ`          | No       | JSON map `bucket → [prefixes]` for reads. Unset = unrestricted buckets. `{}` = deny all. A bucket mapped to `[]` denies all keys; `[""]` allows the whole bucket. Listing may use an exact allowed prefix or a descendant; empty/ancestor/sibling prefixes are denied. |
+| `OSVA_CONNECTOR_S3_CREATE_ENABLED`                | No       | Default `false`                                                                                                                                                                                                                                                        |
+| `OSVA_CONNECTOR_S3_REPLACE_ENABLED`               | No       | Default `false`                                                                                                                                                                                                                                                        |
+| `OSVA_CONNECTOR_S3_HOST_WRITES_APPROVED`          | No       | Default `false`                                                                                                                                                                                                                                                        |
+| `OSVA_CONNECTOR_S3_ACCOUNT_WIDE_BUCKET_DISCOVERY` | No       | Default `false` (list uses allowlist only)                                                                                                                                                                                                                             |
 
 AWS credentials use the default SDK provider chain (environment, profile, IAM role).
 

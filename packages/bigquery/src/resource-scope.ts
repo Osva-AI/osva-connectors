@@ -15,6 +15,15 @@ function assertValidIdentifier(name: string, label: string): void {
   }
 }
 
+/**
+ * Dataset allowlist parse results:
+ * - env unset (`undefined`) → `undefined` (no dataset restriction on metadata)
+ * - env set to empty / whitespace → `[]` (deny all datasets)
+ * - env set to a CSV list → explicit allowlist
+ *
+ * Data-query tools require an explicit non-empty allowlist; they must not treat
+ * a missing restriction as unrestricted access.
+ */
 export function parseAllowedDatasets(
   raw: string | undefined,
 ): readonly string[] | undefined {
@@ -42,6 +51,15 @@ export function parseAllowedDatasets(
   return out;
 }
 
+/**
+ * Table/column allowlist parse results:
+ * - env unset (`undefined`) → `undefined` (no table restriction on metadata)
+ * - env set to empty / whitespace → `{}` (deny all tables)
+ * - env set to JSON → explicit dataset → table → columns[]
+ *
+ * An empty column array for a listed table is deny-all for those columns.
+ * Data-query tools require this map to be present with non-empty columns.
+ */
 export function parseAllowedTables(
   raw: string | undefined,
   label: string,
@@ -165,19 +183,47 @@ export function resolveAllowedColumns(
   return tables[tableId];
 }
 
+export function assertDataQueryAuthorized(
+  allowedDatasets: readonly string[] | undefined,
+  allowedTables: TableColumnAllowlist | undefined,
+  datasetId: string,
+  tableId: string,
+): void {
+  if (allowedDatasets === undefined) {
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "Data queries require OSVA_CONNECTOR_BIGQUERY_ALLOWED_DATASETS.",
+    );
+  }
+  assertDatasetAllowed(allowedDatasets, datasetId);
+  if (allowedTables === undefined) {
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "Data queries require OSVA_CONNECTOR_BIGQUERY_ALLOWED_TABLES with explicit columns.",
+    );
+  }
+  assertTableAllowed(allowedTables, datasetId, tableId);
+}
+
 export function assertColumnsPermitted(
   map: TableColumnAllowlist | undefined,
   datasetId: string,
   tableId: string,
   columns: readonly string[],
 ): void {
+  if (map === undefined) {
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "Data queries require OSVA_CONNECTOR_BIGQUERY_ALLOWED_TABLES with explicit columns.",
+    );
+  }
   assertTableAllowed(map, datasetId, tableId);
   const allowed = resolveAllowedColumns(map, datasetId, tableId);
-  if (allowed === undefined) {
-    return;
-  }
-  if (allowed.length === 0) {
-    return;
+  if (allowed === undefined || allowed.length === 0) {
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "No columns are permitted for this table.",
+    );
   }
   const allowSet = new Set(allowed);
   for (const column of columns) {

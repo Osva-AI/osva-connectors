@@ -32,6 +32,7 @@ export function createGcsSdkProviderClient(
       const [buckets, nextQuery] = await storage.getBuckets({
         maxResults: params.maxResults,
         pageToken: params.continuationToken,
+        autoPaginate: false,
       });
       const result: GcsBucketListResult = {
         buckets: buckets.map((bucket) => ({ name: bucket.name })),

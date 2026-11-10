@@ -40,6 +40,7 @@ import {
   assertContainerAllowed,
   assertListPrefixAllowed,
   assertBlobKeyAllowed,
+  filterKeysByAuthorizedPrefixes,
 } from "./resource-scope.js";
 import type { AzureBlobConfig } from "./schemas.js";
 import {
@@ -259,6 +260,11 @@ export function createAzureBlobConnector(
                 ? { continuationToken: providerToken }
                 : {}),
             });
+            const objects = filterKeysByAuthorizedPrefixes(
+              config.allowedContainersRead,
+              parsed.data.container,
+              result.objects,
+            );
             let continuationToken: string | undefined;
             if (result.continuationToken !== undefined) {
               continuationToken = continuations.issue(
@@ -272,7 +278,10 @@ export function createAzureBlobConnector(
                 result.continuationToken,
               );
             }
-            return mapObjectListResponse(result, continuationToken);
+            return mapObjectListResponse(
+              { ...result, objects },
+              continuationToken,
+            );
           } catch (error) {
             throw mapError(error);
           }
@@ -431,6 +440,11 @@ export function createAzureBlobConnector(
                 ? { continuationToken: providerToken }
                 : {}),
             });
+            const versions = filterKeysByAuthorizedPrefixes(
+              config.allowedContainersRead,
+              parsed.data.container,
+              result.versions,
+            );
             let continuationToken: string | undefined;
             if (result.continuationToken !== undefined) {
               continuationToken = continuations.issue(
@@ -444,7 +458,10 @@ export function createAzureBlobConnector(
                 result.continuationToken,
               );
             }
-            return mapObjectVersionsListResponse(result, continuationToken);
+            return mapObjectVersionsListResponse(
+              { ...result, versions },
+              continuationToken,
+            );
           } catch (error) {
             throw mapError(error);
           }

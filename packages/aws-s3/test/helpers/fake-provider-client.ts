@@ -32,6 +32,10 @@ export type TrackedByteStream = AsyncIterable<Uint8Array> & {
 export class FakeS3ProviderClient implements S3ProviderClient {
   createCallCount = 0;
   replaceCallCount = 0;
+  listObjectsCallCount = 0;
+  listObjectVersionsCallCount = 0;
+  headObjectCallCount = 0;
+  lastListPrefix?: string;
   lastCreateIfNoneMatch?: string;
   lastReplaceIfMatch?: string;
   readonly buckets = new Set<string>(["fixtures-bucket"]);
@@ -85,6 +89,8 @@ export class FakeS3ProviderClient implements S3ProviderClient {
     maxKeys: number;
     continuationToken?: string;
   }): Promise<S3ObjectListResult> {
+    this.listObjectsCallCount += 1;
+    this.lastListPrefix = params.prefix;
     const keys = [...this.objects.keys()]
       .filter(
         (key) =>
@@ -116,6 +122,7 @@ export class FakeS3ProviderClient implements S3ProviderClient {
   }
 
   async headObject(bucket: string, key: string): Promise<S3ObjectMetadata> {
+    this.headObjectCallCount += 1;
     const stored = this.objects.get(`${bucket}/${key}`);
     if (stored === undefined) {
       const error = new Error("missing");
@@ -189,6 +196,8 @@ export class FakeS3ProviderClient implements S3ProviderClient {
     maxKeys: number;
     continuationToken?: string;
   }): Promise<S3ObjectVersionsListResult> {
+    this.listObjectVersionsCallCount += 1;
+    this.lastListPrefix = params.prefix;
     const keys = [...this.objects.keys()]
       .filter(
         (key) =>
