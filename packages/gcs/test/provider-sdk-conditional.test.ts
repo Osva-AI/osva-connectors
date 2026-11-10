@@ -30,16 +30,17 @@ function createMockStorage() {
   return { storage, save, getMetadata, file, bucket };
 }
 
-describe("GCS bucket listing pagination", () => {
-  it("disables auto-pagination on getBuckets", async () => {
+describe("GCS SDK listing calls", () => {
+  it("getBuckets uses bounded pagination without unsupported timeout", async () => {
     const getBuckets = vi.fn(
       async (_opts?: {
         maxResults?: number;
         pageToken?: string;
         autoPaginate?: boolean;
+        timeout?: number;
       }) => {
         void _opts;
-        return [[], undefined];
+        return [[], { pageToken: "next-buckets" }] as const;
       },
     );
     const storage = { getBuckets } as unknown as Storage;
@@ -48,14 +49,110 @@ describe("GCS bucket listing pagination", () => {
       requestTimeoutMs: 5_000,
       storage,
     });
-    await client.listBuckets({ maxResults: 10 });
+    const page = await client.listBuckets({
+      maxResults: 10,
+      continuationToken: "tok-1",
+    });
     expect(getBuckets).toHaveBeenCalledTimes(1);
-    expect(getBuckets).toHaveBeenCalledWith(
-      expect.objectContaining({
-        maxResults: 10,
-        autoPaginate: false,
-      }),
+    expect(getBuckets).toHaveBeenCalledWith({
+      maxResults: 10,
+      pageToken: "tok-1",
+      autoPaginate: false,
+    });
+    expect(page.continuationToken).toBe("next-buckets");
+  });
+
+  it("getFiles for listObjects maps prefix, limits, and continuation", async () => {
+    const getFiles = vi.fn(
+      async (_opts?: {
+        prefix?: string;
+        maxResults?: number;
+        pageToken?: string;
+        autoPaginate?: boolean;
+        versions?: boolean;
+        timeout?: number;
+      }) => {
+        void _opts;
+        const file = {
+          name: "team/docs/a.txt",
+          metadata: {
+            size: "3",
+            updated: "2020-01-01T00:00:00.000Z",
+            etag: '"etag-1"',
+          },
+        };
+        return [[file], {}, { nextPageToken: "obj-next" }] as const;
+      },
     );
+    const bucket = vi.fn(() => ({ getFiles }));
+    const storage = { bucket } as unknown as Storage;
+    const client = createGcsSdkProviderClient({
+      projectId: "fixture-project",
+      requestTimeoutMs: 5_000,
+      storage,
+    });
+    const result = await client.listObjects({
+      bucket: "fixtures-bucket",
+      prefix: "team/docs/",
+      maxKeys: 5,
+      continuationToken: "obj-tok",
+    });
+    expect(bucket).toHaveBeenCalledWith("fixtures-bucket");
+    expect(getFiles).toHaveBeenCalledWith({
+      prefix: "team/docs/",
+      maxResults: 5,
+      pageToken: "obj-tok",
+      autoPaginate: false,
+    });
+    expect(result.objects).toHaveLength(1);
+    expect(result.objects[0]?.etag).toBe("etag-1");
+    expect(result.continuationToken).toBe("obj-next");
+  });
+
+  it("getFiles for listObjectVersions sets versions and omits timeout", async () => {
+    const getFiles = vi.fn(
+      async (_opts?: {
+        prefix?: string;
+        maxResults?: number;
+        pageToken?: string;
+        autoPaginate?: boolean;
+        versions?: boolean;
+        timeout?: number;
+      }) => {
+        void _opts;
+        const file = {
+          name: "k",
+          generation: 99,
+          metadata: {
+            size: "1",
+            updated: "2020-01-01T00:00:00.000Z",
+            etag: '"e"',
+          },
+        };
+        return [[file], {}, { nextPageToken: "ver-next" }] as const;
+      },
+    );
+    const bucket = vi.fn(() => ({ getFiles }));
+    const storage = { bucket } as unknown as Storage;
+    const client = createGcsSdkProviderClient({
+      projectId: "fixture-project",
+      requestTimeoutMs: 5_000,
+      storage,
+    });
+    const result = await client.listObjectVersions({
+      bucket: "b",
+      prefix: "p/",
+      maxKeys: 2,
+    });
+    expect(getFiles).toHaveBeenCalledWith({
+      prefix: "p/",
+      maxResults: 2,
+      pageToken: undefined,
+      autoPaginate: false,
+      versions: true,
+    });
+    expect(result.versions[0]?.generation).toBe("99");
+    expect(result.continuationToken).toBe("ver-next");
   });
 });
 

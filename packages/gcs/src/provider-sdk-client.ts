@@ -28,13 +28,16 @@ export function createGcsSdkProviderClient(
     options.storage ?? new Storage({ projectId: options.projectId });
   const requestTimeout = options.requestTimeoutMs;
 
+  // List APIs (`getBuckets`, `getFiles`) do not accept per-request `timeout` in
+  // @google-cloud/storage v7; listing deadline enforcement remains deferred to
+  // the SDK default transport timeout unless a client-level option is added later.
+
   return {
     async listBuckets(params) {
       const [buckets, nextQuery] = await storage.getBuckets({
         maxResults: params.maxResults,
         pageToken: params.continuationToken,
         autoPaginate: false,
-        timeout: requestTimeout,
       });
       const result: GcsBucketListResult = {
         buckets: buckets.map((bucket) => ({ name: bucket.name })),
@@ -60,7 +63,6 @@ export function createGcsSdkProviderClient(
         maxResults: params.maxKeys,
         pageToken: params.continuationToken,
         autoPaginate: false,
-        timeout: requestTimeout,
       });
       const token = (response as { nextPageToken?: string } | undefined)
         ?.nextPageToken;
@@ -130,7 +132,6 @@ export function createGcsSdkProviderClient(
         pageToken: params.continuationToken,
         autoPaginate: false,
         versions: true,
-        timeout: requestTimeout,
       });
       const token = (response as { nextPageToken?: string } | undefined)
         ?.nextPageToken;
