@@ -2,8 +2,8 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 
 import { MAX_GRAPH_ID_LENGTH, MAX_SEARCH_QUERY_LENGTH } from "./constants.js";
 
-/** Microsoft Graph resource IDs: base64url-style opaque strings. */
-const GRAPH_ID_PATTERN = /^[A-Za-z0-9_-]+$/;
+/** Microsoft Graph resource IDs: base64url-style opaque strings (may include padding). */
+const GRAPH_ID_PATTERN = /^[A-Za-z0-9_-]+=*$/;
 
 export function parseGraphResourceId(value: string, label: string): string {
   const trimmed = value.trim();

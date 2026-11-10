@@ -46,17 +46,26 @@ export function assertSupabaseCredentialNotPrivileged(
     );
   }
   const lower = trimmed.toLowerCase();
-  if (lower.includes("service_role") && !trimmed.startsWith("ey")) {
+  if (trimmed.startsWith("ey")) {
+    const role = readJwtRole(trimmed);
+    if (role === undefined) {
+      throw new ConnectorSdkError(
+        "CONFIGURATION_ERROR",
+        `${label} is not a valid JWT and cannot be verified as a low-privilege credential.`,
+      );
+    }
+    if (role === "service_role") {
+      throw new ConnectorSdkError(
+        "CONFIGURATION_ERROR",
+        `${label} must not be a service_role JWT.`,
+      );
+    }
+    return;
+  }
+  if (lower.includes("service_role")) {
     throw new ConnectorSdkError(
       "CONFIGURATION_ERROR",
       `${label} must not be a service_role key.`,
-    );
-  }
-  const role = readJwtRole(trimmed);
-  if (role === "service_role") {
-    throw new ConnectorSdkError(
-      "CONFIGURATION_ERROR",
-      `${label} must not be a service_role JWT.`,
     );
   }
 }

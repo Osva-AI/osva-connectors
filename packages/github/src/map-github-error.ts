@@ -70,7 +70,11 @@ export function mapGithubError(
   }
 
   if (isAbortError(error)) {
-    return new ConnectorSdkError("CANCELLED", "Request was cancelled.");
+    return new ConnectorSdkError(
+      "CANCELLED",
+      "Request was cancelled.",
+      ambiguousWrite ? { retryable: false } : undefined,
+    );
   }
 
   if (isTimeoutError(error)) {

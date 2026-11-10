@@ -282,6 +282,7 @@ function normalizeCrawlDataItem(item: unknown): NormalizedCrawlPage {
 
 export interface MapCrawlStatusOptions {
   readonly apiHost?: string;
+  readonly crawlId?: string;
 }
 
 export function mapCrawlStatusResponse(
@@ -317,7 +318,11 @@ export function mapCrawlStatusResponse(
     envelope.creditsUsed = record.creditsUsed;
   }
 
-  const next = assertCrawlStatusNextUrl(record.next, options?.apiHost);
+  const next = assertCrawlStatusNextUrl(
+    record.next,
+    options?.apiHost,
+    options?.crawlId,
+  );
   if (next !== undefined) {
     envelope.next = next;
   }

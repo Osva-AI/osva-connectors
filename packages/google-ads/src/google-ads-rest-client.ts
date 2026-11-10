@@ -384,9 +384,6 @@ export function createGoogleAdsRestClient(
       const body: Record<string, unknown> = {
         query: params.query,
       };
-      if (params.pageSize !== undefined) {
-        body.pageSize = params.pageSize;
-      }
       if (params.pageToken !== undefined) {
         body.pageToken = params.pageToken;
       }

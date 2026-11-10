@@ -3,6 +3,28 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 const PROJECT_EQ = /\bproject\s*=\s*["']?([A-Za-z][A-Za-z0-9_]*)["']?/gi;
 const PROJECT_IN = /\bproject\s+in\s*\(\s*([^)]+)\)/gi;
 const PROJECT_NOT_IN = /\bproject\s+not\s+in\s*\(\s*([^)]+)\)/gi;
+const ORDER_BY = /\border\s+by\b/i;
+const UNSUPPORTED_JQL =
+  /\b(?:issueFunction|membersOf|openSprints|closedSprints|linkedIssues|subtaskIssues|portfolioChildIssuesOf)\s*\(/i;
+
+export function splitJqlOrderBy(jql: string): {
+  readonly predicate: string;
+  readonly orderBy?: string;
+} {
+  const match = jql.match(ORDER_BY);
+  if (match === null || match.index === undefined) {
+    return { predicate: jql.trim() };
+  }
+  const predicate = jql.slice(0, match.index).trim();
+  const orderBy = jql.slice(match.index).trim();
+  if (predicate.length === 0) {
+    throw new ConnectorSdkError(
+      "INVALID_INPUT",
+      "JQL ORDER BY must follow a search predicate.",
+    );
+  }
+  return { predicate, orderBy };
+}
 
 function parseKeyList(inner: string): string[] {
   const keys: string[] = [];
@@ -24,15 +46,23 @@ export function assertJqlRespectsProjectAllowlist(
     return;
   }
 
+  const { predicate } = splitJqlOrderBy(jql);
+  if (UNSUPPORTED_JQL.test(predicate)) {
+    throw new ConnectorSdkError(
+      "FORBIDDEN",
+      "This JQL form is not permitted when a project allowlist is configured.",
+    );
+  }
+
   const referenced = new Set<string>();
 
-  for (const match of jql.matchAll(PROJECT_EQ)) {
+  for (const match of predicate.matchAll(PROJECT_EQ)) {
     const key = match[1];
     if (key !== undefined) {
       referenced.add(key.toUpperCase());
     }
   }
-  for (const match of jql.matchAll(PROJECT_IN)) {
+  for (const match of predicate.matchAll(PROJECT_IN)) {
     const inner = match[1];
     if (inner !== undefined) {
       for (const key of parseKeyList(inner)) {
@@ -40,7 +70,7 @@ export function assertJqlRespectsProjectAllowlist(
       }
     }
   }
-  if (PROJECT_NOT_IN.test(jql)) {
+  if (PROJECT_NOT_IN.test(predicate)) {
     PROJECT_NOT_IN.lastIndex = 0;
     throw new ConnectorSdkError(
       "FORBIDDEN",
@@ -70,9 +100,12 @@ export function wrapJqlWithProjectAllowlist(
   }
   assertJqlRespectsProjectAllowlist(jql, allowedKeys);
   const list = [...allowedKeys].sort().join(", ");
-  const trimmed = jql.trim();
-  if (trimmed.length === 0) {
-    return `project in (${list})`;
+  const { predicate, orderBy } = splitJqlOrderBy(jql);
+  if (predicate.length === 0) {
+    return orderBy !== undefined
+      ? `project in (${list}) ${orderBy}`
+      : `project in (${list})`;
   }
-  return `(${trimmed}) AND project in (${list})`;
+  const scoped = `(${predicate}) AND project in (${list})`;
+  return orderBy !== undefined ? `${scoped} ${orderBy}` : scoped;
 }

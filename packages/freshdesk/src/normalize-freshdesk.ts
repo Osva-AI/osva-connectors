@@ -197,6 +197,63 @@ function normalizeTicketDetail(
   };
 }
 
+const REDACTED_CUSTOMER_BODY = "[REDACTED_CUSTOMER_CONTENT]";
+const REDACTED_PUBLIC_AGENT_REPLY = "[REDACTED_PUBLIC_REPLY]";
+
+function readBoolean(value: unknown): boolean | undefined {
+  if (value === true) {
+    return true;
+  }
+  if (value === false) {
+    return false;
+  }
+  return undefined;
+}
+
+/**
+ * Freshdesk conversations use `private` and `incoming` (not Zendesk `public`).
+ * Missing visibility metadata is treated as customer-facing (fail closed).
+ */
+function conversationBodyForOutput(
+  record: Record<string, unknown>,
+  includePii: boolean,
+): { body: string; privateNote: boolean; incoming?: boolean } {
+  const privateFlag = readBoolean(record.private);
+  const incoming = readBoolean(record.incoming);
+  const rawBody = readString(record, "body") ?? readString(record, "body_text");
+
+  if (privateFlag === true) {
+    return {
+      privateNote: true,
+      body: truncate(rawBody ?? "", 2_048),
+      ...(incoming !== undefined ? { incoming } : {}),
+    };
+  }
+
+  const customerFacing =
+    incoming === true ||
+    privateFlag === false ||
+    (privateFlag === undefined && incoming === undefined);
+
+  if (customerFacing && !includePii) {
+    const isIncomingCustomer = incoming === true || incoming === undefined;
+    const redacted = isIncomingCustomer
+      ? REDACTED_CUSTOMER_BODY
+      : REDACTED_PUBLIC_AGENT_REPLY;
+    return {
+      privateNote: false,
+      body: redacted,
+      ...(incoming !== undefined ? { incoming } : {}),
+    };
+  }
+
+  return {
+    privateNote: false,
+    body: truncate(rawBody ?? "", 2_048),
+    ...(incoming !== undefined ? { incoming } : {}),
+  };
+}
+
 function normalizeComment(
   raw: unknown,
   includePii: boolean,
@@ -205,16 +262,20 @@ function normalizeComment(
     typeof raw === "object" && raw !== null
       ? (raw as Record<string, unknown>)
       : {};
-  const isPublic = comment.public === true;
+  const mapped = conversationBodyForOutput(comment, includePii);
   return {
     id: readId(comment, "id"),
-    public: isPublic,
+    private: mapped.privateNote,
     createdAt: readString(comment, "created_at"),
-    authorId: readId(comment, "author_id"),
-    body: isPublic
-      ? "[REDACTED_PUBLIC_COMMENT]"
-      : truncate(readString(comment, "body") ?? "", 2_048),
-    ...(includePii ? { authorEmail: redactEmail(comment.author_email) } : {}),
+    authorId: readId(comment, "user_id") ?? readId(comment, "author_id"),
+    body: mapped.body,
+    ...(mapped.incoming !== undefined ? { incoming: mapped.incoming } : {}),
+    ...(includePii
+      ? {
+          authorEmail:
+            redactEmail(comment.from_email) ?? redactEmail(comment.author_email),
+        }
+      : {}),
   };
 }
 

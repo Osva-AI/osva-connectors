@@ -33,6 +33,15 @@ describe("loadSupabaseConfig", () => {
     ).toThrow(ConnectorSdkError);
   });
 
+  it("rejects undecodable JWT-shaped credentials", () => {
+    const env = {
+      [SUPABASE_PROJECT_URL_ENV]: "https://abc123.supabase.co",
+      [SUPABASE_PUBLISHABLE_KEY_ENV]: "ey.not-a-valid-jwt",
+      [SUPABASE_USER_ACCESS_TOKEN_ENV]: makeSupabaseJwt("anon"),
+    };
+    expect(() => loadSupabaseConfig(env)).toThrow(ConnectorSdkError);
+  });
+
   it("rejects sb_secret publishable keys", () => {
     const anon = makeSupabaseJwt("anon");
     expect(() =>

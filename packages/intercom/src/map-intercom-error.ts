@@ -20,7 +20,11 @@ export function mapIntercomError(
 ): ConnectorSdkError {
   if (error instanceof ConnectorSdkError) return error;
   if (isAbortError(error)) {
-    return new ConnectorSdkError("CANCELLED", "Request was cancelled.");
+    return new ConnectorSdkError(
+      "CANCELLED",
+      "Request was cancelled.",
+      options.ambiguousWrite === true ? { retryable: false } : undefined,
+    );
   }
   if (
     typeof error === "object" &&

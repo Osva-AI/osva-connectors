@@ -27,6 +27,7 @@ import {
 import { mapPineconeError } from "./map-pinecone-error.js";
 import {
   normalizeDataPlaneResponse,
+  normalizeIndexStatsResponse,
   normalizeDescribeIndexResponse,
   normalizeIndexListResponse,
 } from "./normalize-pinecone.js";
@@ -108,7 +109,7 @@ export function createPineconeConnector(
     name: CONNECTOR_NAME,
     version: CONNECTOR_VERSION,
     description:
-      "Pinecone MCP connector for OSVA Connector Profile V1: list and describe indexes; dense-vector query, fetch, list, and stats on provider data-plane hosts resolved from describe (never from tool input); gated vector upsert. Pinecone API key and allowlists are environment-only. Control plane uses https://api.pinecone.io with Api-Key and X-Pinecone-Api-Version 2025-04.",
+      "Pinecone MCP connector for OSVA Connector Profile V1: list and describe indexes; dense-vector query, fetch, list, and stats on provider data-plane hosts resolved from describe (never from tool input); gated vector upsert. Pinecone API key and allowlists are environment-only. Control plane uses https://api.pinecone.io with Api-Key and X-Pinecone-Api-Version 2025-10.",
     tools: [
       defineTool({
         name: PINECONE_INDEX_LIST_TOOL,
@@ -183,7 +184,10 @@ export function createPineconeConnector(
                 : {}),
               signal: context.signal,
             });
-            const stats = normalizeDataPlaneResponse(raw);
+            const stats = normalizeIndexStatsResponse(
+              raw,
+              parsed.data.namespace,
+            );
             const output = { stats };
             assertStructuredOutputWithinBudget(output);
             return output;

@@ -7,6 +7,10 @@ import {
   READ_ONLY_RETRY_DELAY_MS,
 } from "./constants.js";
 import { buildIntercomAuthHeader } from "./intercom-auth.js";
+import {
+  buildIntercomContactSearchBody,
+  buildIntercomConversationSearchBody,
+} from "./mutation-allowlist.js";
 import type { IntercomClient } from "./intercom-client.js";
 
 export interface IntercomHttpError {
@@ -24,7 +28,7 @@ const PATH_PATTERNS = [
   { method: "POST", pattern: /^\/contacts\/search$/ },
   { method: "GET", pattern: /^\/admins$/ },
   { method: "POST", pattern: /^\/conversations\/[^/]+\/reply$/ },
-  { method: "PUT", pattern: /^\/conversations\/[^/]+$/ },
+  { method: "POST", pattern: /^\/conversations\/[^/]+\/parts$/ },
 ];
 
 function assertAllowedRelativePath(method: string, pathname: string): void {
@@ -279,10 +283,12 @@ export function createIntercomRestClient(
         signal,
       ),
     searchConversations: (queryText, page, signal) =>
-      requestJson("POST", "/conversations/search", signal, {
-        query: { value: queryText },
-        pagination: { page },
-      }),
+      requestJson(
+        "POST",
+        "/conversations/search",
+        signal,
+        buildIntercomConversationSearchBody(queryText, page),
+      ),
     listContacts: async (params, signal) => {
       const query = new URLSearchParams();
       query.set("page", String(params.page));
@@ -292,10 +298,12 @@ export function createIntercomRestClient(
     getContact: (contactId, signal) =>
       requestJson("GET", `/contacts/${encodeURIComponent(contactId)}`, signal),
     searchContacts: (queryText, page, signal) =>
-      requestJson("POST", "/contacts/search", signal, {
-        query: { value: queryText },
-        pagination: { page },
-      }),
+      requestJson(
+        "POST",
+        "/contacts/search",
+        signal,
+        buildIntercomContactSearchBody(queryText, page),
+      ),
     listAdmins: (signal) => requestJson("GET", "/admins", signal),
     addAdminNote: (conversationId, body, signal) =>
       requestJson(
@@ -306,8 +314,8 @@ export function createIntercomRestClient(
       ),
     setConversationState: (conversationId, body, signal) =>
       requestJson(
-        "PUT",
-        `/conversations/${encodeURIComponent(conversationId)}`,
+        "POST",
+        `/conversations/${encodeURIComponent(conversationId)}/parts`,
         signal,
         body,
       ),

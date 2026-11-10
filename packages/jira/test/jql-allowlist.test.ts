@@ -26,4 +26,13 @@ describe("JQL project allowlist", () => {
       assertJqlRespectsProjectAllowlist("project not in (DEMO)", allowed),
     ).toThrow(ConnectorSdkError);
   });
+
+  it("preserves ORDER BY outside the scoped predicate", () => {
+    const wrapped = wrapJqlWithProjectAllowlist(
+      "status = Open ORDER BY created DESC",
+      allowed,
+    );
+    expect(wrapped).toContain("(status = Open) AND project in (DEMO, OPS)");
+    expect(wrapped).toContain("ORDER BY created DESC");
+  });
 });

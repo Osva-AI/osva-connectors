@@ -12,6 +12,7 @@ const STATE_ALIASES: Record<string, string> = {
 
 export function buildIntercomStateBody(
   state: string,
+  adminId: string,
   allowedTargets: string[] | undefined,
 ): Record<string, unknown> {
   const permitted =
@@ -36,7 +37,56 @@ export function buildIntercomStateBody(
       "Conversation state must be open or closed.",
     );
   }
-  return { open: resolved === INTERCOM_STATE_OPEN };
+  const messageType = resolved === INTERCOM_STATE_OPEN ? "open" : "close";
+  return {
+    message_type: messageType,
+    type: "admin",
+    admin_id: adminId,
+  };
+}
+
+export function buildIntercomConversationSearchBody(
+  queryText: string,
+  page: number,
+): Record<string, unknown> {
+  if (page > 1) {
+    throw new ConnectorSdkError(
+      "INVALID_INPUT",
+      "Intercom search pagination beyond the first page requires starting_after from a prior response.",
+    );
+  }
+  return {
+    query: {
+      field: "source.body",
+      operator: "~",
+      value: queryText,
+    },
+    pagination: {
+      per_page: 20,
+    },
+  };
+}
+
+export function buildIntercomContactSearchBody(
+  queryText: string,
+  page: number,
+): Record<string, unknown> {
+  if (page > 1) {
+    throw new ConnectorSdkError(
+      "INVALID_INPUT",
+      "Intercom search pagination beyond the first page requires starting_after from a prior response.",
+    );
+  }
+  return {
+    query: {
+      field: "name",
+      operator: "~",
+      value: queryText,
+    },
+    pagination: {
+      per_page: 20,
+    },
+  };
 }
 
 export function buildIntercomAdminNoteBody(

@@ -25,6 +25,7 @@ import type { LinearClient } from "./linear-client.js";
 import { mapLinearError } from "./map-linear-error.js";
 import {
   extractIssueTeamId,
+  projectPassesTeamAllowlist,
   normalizeCommentRecord,
   normalizeIssueRecord,
   normalizeProjectRecord,
@@ -351,6 +352,11 @@ export function createLinearConnector(
             throw invalidInputError();
           }
           try {
+            assertTeamFilterWhenRestricted(
+              config,
+              parsed.data.teamId,
+              LINEAR_PROJECT_LIST_TOOL,
+            );
             const first = Math.min(parsed.data.first, LIST_MAX_FIRST);
             const result = await options.client.listProjects({
               first,
@@ -362,9 +368,9 @@ export function createLinearConnector(
                 : {}),
               signal: context.signal,
             });
-            const projects = result.nodes.map((node) =>
-              normalizeProjectRecord(node),
-            );
+            const projects = result.nodes
+              .filter((node) => projectPassesTeamAllowlist(config, node))
+              .map((node) => normalizeProjectRecord(node));
             const packed = packListWithinOutputBudget(
               listEnvelope(result.pageInfo),
               "projects",
@@ -391,6 +397,12 @@ export function createLinearConnector(
               projectId: parsed.data.projectId,
               signal: context.signal,
             });
+            if (!projectPassesTeamAllowlist(config, raw)) {
+              throw new ConnectorSdkError(
+                "FORBIDDEN",
+                "Linear project is not in OSVA_CONNECTOR_LINEAR_ALLOWED_TEAM_IDS.",
+              );
+            }
             const output = normalizeProjectRecord(raw);
             assertStructuredOutputWithinBudget(output);
             return output;
@@ -449,9 +461,13 @@ export function createLinearConnector(
                 signal: context.signal,
               });
               const teamId = extractIssueTeamId(existing);
-              if (teamId !== undefined) {
-                assertTeamAllowed(config, teamId);
+              if (teamId === undefined) {
+                throw new ConnectorSdkError(
+                  "FORBIDDEN",
+                  "Linear issue team could not be verified against OSVA_CONNECTOR_LINEAR_ALLOWED_TEAM_IDS.",
+                );
               }
+              assertTeamAllowed(config, teamId);
             }
             const raw = await options.client.updateIssue({
               issueId: parsed.data.issueId,
@@ -492,9 +508,13 @@ export function createLinearConnector(
                 signal: context.signal,
               });
               const teamId = extractIssueTeamId(issue);
-              if (teamId !== undefined) {
-                assertTeamAllowed(config, teamId);
+              if (teamId === undefined) {
+                throw new ConnectorSdkError(
+                  "FORBIDDEN",
+                  "Linear issue team could not be verified against OSVA_CONNECTOR_LINEAR_ALLOWED_TEAM_IDS.",
+                );
               }
+              assertTeamAllowed(config, teamId);
             }
             const raw = await options.client.createComment({
               issueId: parsed.data.issueId,

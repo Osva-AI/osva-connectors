@@ -79,6 +79,30 @@ export function normalizeTeamRecord(raw: unknown): Record<string, unknown> {
   };
 }
 
+export function extractProjectTeamId(raw: unknown): string | undefined {
+  if (raw === null || typeof raw !== "object") {
+    return undefined;
+  }
+  const record = raw as Record<string, unknown>;
+  const team = normalizeTeamRef(record.team);
+  return team?.id;
+}
+
+export function projectPassesTeamAllowlist(
+  config: { readonly allowedTeamIds: readonly string[] },
+  raw: unknown,
+): boolean {
+  if (config.allowedTeamIds.length === 0) {
+    return true;
+  }
+  const teamId = extractProjectTeamId(raw);
+  if (teamId === undefined) {
+    return false;
+  }
+  const normalized = teamId.toLowerCase();
+  return config.allowedTeamIds.some((id) => id.toLowerCase() === normalized);
+}
+
 export function normalizeProjectRecord(raw: unknown): Record<string, unknown> {
   const record = requireRecord(raw, "project");
   const name = normalizeOptionalString(record.name, 256);

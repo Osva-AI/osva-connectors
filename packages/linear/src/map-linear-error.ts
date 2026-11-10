@@ -101,7 +101,11 @@ export function mapLinearError(
     return error;
   }
   if (isAbortError(error)) {
-    return new ConnectorSdkError("CANCELLED", "Linear request was cancelled.");
+    return new ConnectorSdkError(
+      "CANCELLED",
+      "Linear request was cancelled.",
+      options?.ambiguousWrite === true ? { retryable: false } : undefined,
+    );
   }
   if (isTimeoutError(error)) {
     return new ConnectorSdkError(

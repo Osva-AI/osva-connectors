@@ -66,7 +66,7 @@ describe("Pinecone connector (fake provider)", () => {
       arguments: { indexName: "docs", vector: [0.1, 0.2, 0.3] },
     });
     expect(result.isError).not.toBe(true);
-    expect(server?.getLastApiVersion()).toBe("2025-04");
+    expect(server?.getLastApiVersion()).toBe("2025-10");
   });
 
   it("rejects sparse index query", async () => {
