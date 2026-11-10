@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-jira";
 export const CONNECTOR_NAME = "OSVA Jira Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const JIRA_PROJECT_LIST_TOOL = "jira.project.list";
 export const JIRA_PROJECT_GET_TOOL = "jira.project.get";

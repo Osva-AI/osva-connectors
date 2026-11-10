@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-qdrant";
 export const CONNECTOR_NAME = "OSVA Qdrant Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const QDRANT_COLLECTION_LIST_TOOL = "qdrant.collection.list";
 export const QDRANT_COLLECTION_GET_TOOL = "qdrant.collection.get";

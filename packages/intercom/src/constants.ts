@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-intercom";
 export const CONNECTOR_NAME = "OSVA Intercom Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const INTERCOM_CONVERSATION_LIST_TOOL = "intercom.conversation.list";
 export const INTERCOM_CONVERSATION_GET_TOOL = "intercom.conversation.get";

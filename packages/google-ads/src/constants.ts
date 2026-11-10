@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-google-ads";
 export const CONNECTOR_NAME = "OSVA Google Ads Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const ADS_CUSTOMER_LIST_TOOL = "ads.customer.list";
 export const ADS_CUSTOMER_GET_TOOL = "ads.customer.get";

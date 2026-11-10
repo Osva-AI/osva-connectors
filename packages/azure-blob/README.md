@@ -17,9 +17,10 @@ OSVA Connector Profile V1 MCP connector for **Azure Blob Storage**.
 
 ## Configuration
 
-| Variable                                 | Required | Description          |
-| ---------------------------------------- | -------- | -------------------- |
-| `OSVA_CONNECTOR_AZURE_BLOB_ACCOUNT_NAME` | Yes      | Storage account name |
+| Variable                                 | Required | Description                                                                                                                                                                               |
+| ---------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OSVA_CONNECTOR_AZURE_BLOB_ACCOUNT_NAME` | Yes      | Storage account name                                                                                                                                                                      |
+| `OSVA_CONNECTOR_AZURE_BLOB_TIMEOUT_MS`   | No       | Per-request client timeout budget via `AbortSignal.timeout` on Azure SDK calls (default 30s, max 120s). Cancels the in-flight HTTP request locally; does not roll back completed uploads. |
 
 Container/prefix allowlists and write gates use `OSVA_CONNECTOR_AZURE_BLOB_*` variables.
 

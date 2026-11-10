@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-gcs";
 export const CONNECTOR_NAME = "OSVA Google Cloud Storage Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const GCS_BUCKET_LIST_TOOL = "gcs.bucket.list";
 export const GCS_BUCKET_GET_TOOL = "gcs.bucket.get";

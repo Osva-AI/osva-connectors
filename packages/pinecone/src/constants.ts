@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-pinecone";
 export const CONNECTOR_NAME = "OSVA Pinecone Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const PINECONE_INDEX_LIST_TOOL = "pinecone.index.list";
 export const PINECONE_INDEX_DESCRIBE_TOOL = "pinecone.index.describe";

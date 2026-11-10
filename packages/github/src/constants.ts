@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-github";
 export const CONNECTOR_NAME = "OSVA GitHub Connector";
-export const CONNECTOR_VERSION = "0.3.1";
+export const CONNECTOR_VERSION = "0.4.0";
 
 /** MCP tool name (dot-separated, stable for Connector Profile V1). */
 export const GITHUB_REPOSITORY_GET_TOOL = "github.repository.get";

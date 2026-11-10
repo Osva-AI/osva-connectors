@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T11:13:05.675Z",
+  "generatedAt": "2026-11-10T15:04:25.457Z",
   "connectors": [
     {
       "connectorKey": "osva-connector-amplitude",
@@ -13,7 +13,7 @@
       "connectorKey": "osva-connector-aws-s3",
       "npmPackage": "@osva-ai/connector-aws-s3",
       "directory": "packages/aws-s3",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-aws-s3.mjs",
       "ciCoverage": "test:package-acceptance:aws-s3"
     },
@@ -21,7 +21,7 @@
       "connectorKey": "osva-connector-azure-blob",
       "npmPackage": "@osva-ai/connector-azure-blob",
       "directory": "packages/azure-blob",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-azure-blob.mjs",
       "ciCoverage": "test:package-acceptance:azure-blob"
     },
@@ -37,7 +37,7 @@
       "connectorKey": "osva-connector-bigquery",
       "npmPackage": "@osva-ai/connector-bigquery",
       "directory": "packages/bigquery",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-bigquery.mjs",
       "ciCoverage": "test:package-acceptance:bigquery"
     },
@@ -61,7 +61,7 @@
       "connectorKey": "osva-connector-firecrawl",
       "npmPackage": "@osva-ai/connector-firecrawl",
       "directory": "packages/firecrawl",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-firecrawl.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -69,7 +69,7 @@
       "connectorKey": "osva-connector-freshdesk",
       "npmPackage": "@osva-ai/connector-freshdesk",
       "directory": "packages/freshdesk",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-freshdesk.mjs",
       "ciCoverage": "test:package-acceptance:freshdesk"
     },
@@ -85,7 +85,7 @@
       "connectorKey": "osva-connector-gcs",
       "npmPackage": "@osva-ai/connector-gcs",
       "directory": "packages/gcs",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-gcs.mjs",
       "ciCoverage": "test:package-acceptance:gcs"
     },
@@ -93,7 +93,7 @@
       "connectorKey": "osva-connector-github",
       "npmPackage": "@osva-ai/connector-github",
       "directory": "packages/github",
-      "repositoryVersion": "0.3.1",
+      "repositoryVersion": "0.4.0",
       "packagedAcceptanceScript": "scripts/package-acceptance.mjs",
       "ciCoverage": "test:package-acceptance"
     },
@@ -109,7 +109,7 @@
       "connectorKey": "osva-connector-google-ads",
       "npmPackage": "@osva-ai/connector-google-ads",
       "directory": "packages/google-ads",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-google-ads.mjs",
       "ciCoverage": "test:package-acceptance:google-ads"
     },
@@ -157,7 +157,7 @@
       "connectorKey": "osva-connector-intercom",
       "npmPackage": "@osva-ai/connector-intercom",
       "directory": "packages/intercom",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-intercom.mjs",
       "ciCoverage": "test:package-acceptance:intercom"
     },
@@ -165,7 +165,7 @@
       "connectorKey": "osva-connector-jira",
       "npmPackage": "@osva-ai/connector-jira",
       "directory": "packages/jira",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-jira.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -181,7 +181,7 @@
       "connectorKey": "osva-connector-linear",
       "npmPackage": "@osva-ai/connector-linear",
       "directory": "packages/linear",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-linear.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -205,7 +205,7 @@
       "connectorKey": "osva-connector-notion",
       "npmPackage": "@osva-ai/connector-notion",
       "directory": "packages/notion",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-notion.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -221,7 +221,7 @@
       "connectorKey": "osva-connector-onedrive",
       "npmPackage": "@osva-ai/connector-onedrive",
       "directory": "packages/onedrive",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-onedrive.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -229,7 +229,7 @@
       "connectorKey": "osva-connector-outlook",
       "npmPackage": "@osva-ai/connector-outlook",
       "directory": "packages/outlook",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-outlook.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -237,7 +237,7 @@
       "connectorKey": "osva-connector-pinecone",
       "npmPackage": "@osva-ai/connector-pinecone",
       "directory": "packages/pinecone",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-pinecone.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -261,7 +261,7 @@
       "connectorKey": "osva-connector-qdrant",
       "npmPackage": "@osva-ai/connector-qdrant",
       "directory": "packages/qdrant",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-qdrant.mjs",
       "ciCoverage": "test:package-acceptance:ci-shard-b"
     },
@@ -293,7 +293,7 @@
       "connectorKey": "osva-connector-snowflake",
       "npmPackage": "@osva-ai/connector-snowflake",
       "directory": "packages/snowflake",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-snowflake.mjs",
       "ciCoverage": "test:package-acceptance:snowflake"
     },
@@ -309,7 +309,7 @@
       "connectorKey": "osva-connector-supabase",
       "npmPackage": "@osva-ai/connector-supabase",
       "directory": "packages/supabase",
-      "repositoryVersion": "0.1.0",
+      "repositoryVersion": "0.1.1",
       "packagedAcceptanceScript": "scripts/package-acceptance-supabase.mjs",
       "ciCoverage": "test:package-acceptance:supabase"
     },

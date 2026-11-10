@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-firecrawl";
 export const CONNECTOR_NAME = "OSVA Firecrawl Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const FIRECRAWL_SCRAPE_TOOL = "firecrawl.scrape";
 export const FIRECRAWL_SEARCH_TOOL = "firecrawl.search";

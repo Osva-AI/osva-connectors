@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-bigquery";
 export const CONNECTOR_NAME = "OSVA Google BigQuery Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const BIGQUERY_PROJECT_GET_TOOL = "bigquery.project.get";
 export const BIGQUERY_DATASET_LIST_TOOL = "bigquery.dataset.list";

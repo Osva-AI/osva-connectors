@@ -1,6 +1,6 @@
 export const CONNECTOR_KEY = "osva-connector-snowflake";
 export const CONNECTOR_NAME = "OSVA Snowflake Connector";
-export const CONNECTOR_VERSION = "0.1.0";
+export const CONNECTOR_VERSION = "0.1.1";
 
 export const SNOWFLAKE_DATABASE_GET_TOOL = "snowflake.database.get";
 export const SNOWFLAKE_SCHEMA_LIST_TOOL = "snowflake.schema.list";
