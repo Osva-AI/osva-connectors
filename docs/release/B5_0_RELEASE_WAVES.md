@@ -4,9 +4,9 @@ Controlled publication sequence for **18** packages requiring new versions. No m
 
 ## Wave 0 — OIDC canary
 
-| Package | Version | Workflow | Trusted publisher | Preconditions |
-| --- | --- | --- | --- | --- |
-| `@osva-ai/connector-github` | 0.4.0 | `npm-release.yml` | CONFIGURED | B5.1 version bump; env reviewers; OIDC canary doc |
+| Package                     | Version | Workflow          | Trusted publisher | Preconditions                                     |
+| --------------------------- | ------- | ----------------- | ----------------- | ------------------------------------------------- |
+| `@osva-ai/connector-github` | 0.4.0   | `npm-release.yml` | CONFIGURED        | B5.1 version bump; env reviewers; OIDC canary doc |
 
 **Success:** `@0.4.0` on registry with attestations; published-artifact acceptance for GitHub.
 
@@ -18,15 +18,15 @@ Controlled publication sequence for **18** packages requiring new versions. No m
 
 High-value R1 security + storage correctness. Register trusted publisher **per package** before each dispatch.
 
-| Package | Proposed | Workflow | R wave | Blockers |
-| --- | --- | --- | --- | --- |
-| `@osva-ai/connector-bigquery` | 0.1.1 | `npm-release-bigquery.yml` | R1 | Document/fix dead `requestTimeoutMs` before publish |
-| `@osva-ai/connector-snowflake` | 0.1.1 | `npm-release-snowflake.yml` | R1 | None |
-| `@osva-ai/connector-aws-s3` | 0.1.1 | `npm-release-aws-s3.yml` | R1+R3 | None |
-| `@osva-ai/connector-gcs` | 0.1.1 | `npm-release-gcs.yml` | R1+R3 | List timeout limitation documented |
-| `@osva-ai/connector-azure-blob` | 0.1.1 | `npm-release-azure-blob.yml` | R1 | Wire or document `requestTimeoutMs` |
-| `@osva-ai/connector-supabase` | 0.1.1 | `npm-release-supabase.yml` | R2 | None |
-| `@osva-ai/connector-qdrant` | 0.1.1 | `npm-release-qdrant.yml` | R2 | None |
+| Package                         | Proposed | Workflow                     | R wave | Blockers                                            |
+| ------------------------------- | -------- | ---------------------------- | ------ | --------------------------------------------------- |
+| `@osva-ai/connector-bigquery`   | 0.1.1    | `npm-release-bigquery.yml`   | R1     | Document/fix dead `requestTimeoutMs` before publish |
+| `@osva-ai/connector-snowflake`  | 0.1.1    | `npm-release-snowflake.yml`  | R1     | None                                                |
+| `@osva-ai/connector-aws-s3`     | 0.1.1    | `npm-release-aws-s3.yml`     | R1+R3  | None                                                |
+| `@osva-ai/connector-gcs`        | 0.1.1    | `npm-release-gcs.yml`        | R1+R3  | List timeout limitation documented                  |
+| `@osva-ai/connector-azure-blob` | 0.1.1    | `npm-release-azure-blob.yml` | R1     | Wire or document `requestTimeoutMs`                 |
+| `@osva-ai/connector-supabase`   | 0.1.1    | `npm-release-supabase.yml`   | R2     | None                                                |
+| `@osva-ai/connector-qdrant`     | 0.1.1    | `npm-release-qdrant.yml`     | R2     | None                                                |
 
 **Acceptance:** Per-package `pnpm test:package-acceptance:<slug>` + published install smoke.
 
@@ -36,18 +36,18 @@ High-value R1 security + storage correctness. Register trusted publisher **per p
 
 ## Wave 2 — Provider correctness (R2 + R3)
 
-| Package | Proposed | Workflow | Notes |
-| --- | --- | --- | --- |
-| `@osva-ai/connector-intercom` | 0.1.1 | `npm-release-intercom.yml` | Pagination + R2 parts |
-| `@osva-ai/connector-notion` | 0.1.1 | `npm-release-notion.yml` | Block append |
-| `@osva-ai/connector-linear` | 0.1.1 | `npm-release-linear.yml` | R2 fixes |
-| `@osva-ai/connector-jira` | 0.1.1 | `npm-release-jira.yml` | JQL |
-| `@osva-ai/connector-freshdesk` | 0.1.1 | `npm-release-freshdesk.yml` | Normalization |
-| `@osva-ai/connector-firecrawl` | 0.1.1 | `npm-release-firecrawl.yml` | Crawl path |
-| `@osva-ai/connector-google-ads` | 0.1.1 | `npm-release-google-ads.yml` | Search body |
-| `@osva-ai/connector-onedrive` | 0.1.1 | `npm-release-onedrive.yml` | Redirect guard |
-| `@osva-ai/connector-outlook` | 0.1.1 | `npm-release-outlook.yml` | nextLink |
-| `@osva-ai/connector-pinecone` | 0.1.1 | `npm-release-pinecone.yml` | API version |
+| Package                         | Proposed | Workflow                     | Notes                 |
+| ------------------------------- | -------- | ---------------------------- | --------------------- |
+| `@osva-ai/connector-intercom`   | 0.1.1    | `npm-release-intercom.yml`   | Pagination + R2 parts |
+| `@osva-ai/connector-notion`     | 0.1.1    | `npm-release-notion.yml`     | Block append          |
+| `@osva-ai/connector-linear`     | 0.1.1    | `npm-release-linear.yml`     | R2 fixes              |
+| `@osva-ai/connector-jira`       | 0.1.1    | `npm-release-jira.yml`       | JQL                   |
+| `@osva-ai/connector-freshdesk`  | 0.1.1    | `npm-release-freshdesk.yml`  | Normalization         |
+| `@osva-ai/connector-firecrawl`  | 0.1.1    | `npm-release-firecrawl.yml`  | Crawl path            |
+| `@osva-ai/connector-google-ads` | 0.1.1    | `npm-release-google-ads.yml` | Search body           |
+| `@osva-ai/connector-onedrive`   | 0.1.1    | `npm-release-onedrive.yml`   | Redirect guard        |
+| `@osva-ai/connector-outlook`    | 0.1.1    | `npm-release-outlook.yml`    | nextLink              |
+| `@osva-ai/connector-pinecone`   | 0.1.1    | `npm-release-pinecone.yml`   | API version           |
 
 **Precondition:** Wave 0 OIDC path proven (workflow auth scripts unchanged).
 

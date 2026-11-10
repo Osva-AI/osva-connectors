@@ -6,46 +6,46 @@
 
 ## F-P2-15 / OIDC token parity (re-reviewed)
 
-| Topic | Verdict |
-| --- | --- |
-| Workflows inject `NODE_AUTH_TOKEN: secrets.NPM_TOKEN` globally | **Resolved** in R0 — no workflow-level `NODE_AUTH_TOKEN:` assignment remains |
-| Default auth path | **OIDC** via `scripts/release/configure-npm-publish-auth.mjs` + `run-npm-publish.mjs` |
-| `use_npm_token` default | `false` — empty token does **not** fall through to OIDC |
-| Dry-run proves OIDC | **No** — dry-run exercises pack/lint only; real publish required |
-| Static tests | `pnpm test:release-workflows` — **29/29 PASSED** (2026-11-10) |
+| Topic                                                          | Verdict                                                                               |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Workflows inject `NODE_AUTH_TOKEN: secrets.NPM_TOKEN` globally | **Resolved** in R0 — no workflow-level `NODE_AUTH_TOKEN:` assignment remains          |
+| Default auth path                                              | **OIDC** via `scripts/release/configure-npm-publish-auth.mjs` + `run-npm-publish.mjs` |
+| `use_npm_token` default                                        | `false` — empty token does **not** fall through to OIDC                               |
+| Dry-run proves OIDC                                            | **No** — dry-run exercises pack/lint only; real publish required                      |
+| Static tests                                                   | `pnpm test:release-workflows` — **29/29 PASSED** (2026-11-10)                         |
 
 ## Trusted publisher baseline
 
 Source: `npm-trusted-publishers-audit.csv` (local; **UNVERIFIED** against npm admin UI in B5.0).
 
-| Package | Workflow | Trust (CSV) |
-| --- | --- | --- |
-| `@osva-ai/connector-github` | `.github/workflows/npm-release.yml` | CONFIGURED |
-| `@osva-ai/connector-ga4` | `npm-release-ga4.yml` | CONFIGURED |
-| `@osva-ai/connector-npm` | `npm-release-npm.yml` | CONFIGURED |
-| `@osva-ai/connector-postgres` | `npm-release-postgres.yml` | CONFIGURED |
-| `@osva-ai/connector-shopify` | `npm-release-shopify.yml` | CONFIGURED |
+| Package                       | Workflow                            | Trust (CSV) |
+| ----------------------------- | ----------------------------------- | ----------- |
+| `@osva-ai/connector-github`   | `.github/workflows/npm-release.yml` | CONFIGURED  |
+| `@osva-ai/connector-ga4`      | `npm-release-ga4.yml`               | CONFIGURED  |
+| `@osva-ai/connector-npm`      | `npm-release-npm.yml`               | CONFIGURED  |
+| `@osva-ai/connector-postgres` | `npm-release-postgres.yml`          | CONFIGURED  |
+| `@osva-ai/connector-shopify`  | `npm-release-shopify.yml`           | CONFIGURED  |
 
 All other 40 packages: **MISSING** — create publisher only when that package’s new version is ready (see `docs/R0-NPM-TRUSTED-PUBLISHING.md`).
 
 ## Five-way canary comparison
 
-| Criterion | github | ga4 | npm | postgres | shopify |
-| --- | --- | --- | --- | --- | --- |
-| Trusted publisher | Yes | Yes | Yes | Yes | Yes |
-| Unpublished R1–R3 code on `main` | **Yes** (allowlist) | No | No | No | No |
-| Operational risk | Medium (mutations, PAT) | Medium (Google ADC) | Low | Low | Medium (shop token) |
-| Acceptance strength | Strong | Strong | Strong | **Strong + Docker job** | Strong |
-| Live provider for smoke | Optional | Yes | Low | **Docker Postgres** | Yes |
-| Security blocker | None | GA4 scope = credential | None | None | None |
-| Version delta | **0.4.0 minor** | — | — | optional 0.1.2 infra | — |
+| Criterion                        | github                  | ga4                    | npm    | postgres                | shopify             |
+| -------------------------------- | ----------------------- | ---------------------- | ------ | ----------------------- | ------------------- |
+| Trusted publisher                | Yes                     | Yes                    | Yes    | Yes                     | Yes                 |
+| Unpublished R1–R3 code on `main` | **Yes** (allowlist)     | No                     | No     | No                      | No                  |
+| Operational risk                 | Medium (mutations, PAT) | Medium (Google ADC)    | Low    | Low                     | Medium (shop token) |
+| Acceptance strength              | Strong                  | Strong                 | Strong | **Strong + Docker job** | Strong              |
+| Live provider for smoke          | Optional                | Yes                    | Low    | **Docker Postgres**     | Yes                 |
+| Security blocker                 | None                    | GA4 scope = credential | None   | None                    | None                |
+| Version delta                    | **0.4.0 minor**         | —                      | —      | optional 0.1.2 infra    | —                   |
 
 ## Recommendation
 
-| Role | Package | Proposed version | Rationale |
-| --- | --- | --- | --- |
-| **Primary** | `@osva-ai/connector-github` | **0.4.0** | Only CONFIGURED trusted publisher with substantive unpublished security delta (R3 repo allowlist); proves OIDC **and** ships meaningful fix |
-| **Backup** | `@osva-ai/connector-postgres` | **0.1.2** (infra-only patch) | Lowest external risk; CONFIGURED publisher; use if GitHub canary blocked—requires explicit decision to bump without functional delta |
+| Role        | Package                       | Proposed version             | Rationale                                                                                                                                   |
+| ----------- | ----------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primary** | `@osva-ai/connector-github`   | **0.4.0**                    | Only CONFIGURED trusted publisher with substantive unpublished security delta (R3 repo allowlist); proves OIDC **and** ships meaningful fix |
+| **Backup**  | `@osva-ai/connector-postgres` | **0.1.2** (infra-only patch) | Lowest external risk; CONFIGURED publisher; use if GitHub canary blocked—requires explicit decision to bump without functional delta        |
 
 R0 suggested GitHub; B5.0 selects GitHub on **intersection of trusted publisher + unpublished change**, not R0 inertia alone.
 
@@ -87,11 +87,11 @@ npm view @osva-ai/connector-github@0.4.0 dist.attestations
 
 ### Failure handling
 
-| Symptom | Action |
-| --- | --- |
-| OIDC / trusted publisher auth error | Fix publisher mapping; **do not** enable `use_npm_token` without human risk acceptance |
-| Version already exists | Bump to next patch; never republish |
-| Partial upload / interrupted publish | Inspect npm UI; bump version if immutability conflict |
+| Symptom                              | Action                                                                                 |
+| ------------------------------------ | -------------------------------------------------------------------------------------- |
+| OIDC / trusted publisher auth error  | Fix publisher mapping; **do not** enable `use_npm_token` without human risk acceptance |
+| Version already exists               | Bump to next patch; never republish                                                    |
+| Partial upload / interrupted publish | Inspect npm UI; bump version if immutability conflict                                  |
 
 ### Post-publish verification
 

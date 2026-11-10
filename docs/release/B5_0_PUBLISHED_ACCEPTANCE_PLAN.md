@@ -26,6 +26,7 @@ Add under `scripts/release/` (B5.1 implementation — **not created in B5.0**):
    - Abort if version missing.
 
 2. **Clean install**
+
    ```bash
    mkdir -p "$tmpdir/accept"
    cd "$tmpdir/accept"
@@ -56,6 +57,7 @@ Add under `scripts/release/` (B5.1 implementation — **not created in B5.0**):
    - Grep install tree for `AKIA`, `sk_live`, `ghp_`, `Bearer ey` patterns — fail if found.
 
 8. **Provenance** (when available)
+
    ```bash
    npm view "<name>@<version>" dist.attestations
    ```
@@ -98,16 +100,16 @@ npx "${PKG}"  # if bin resolves; else node node_modules/.../dist/stdio.js with M
 
 ## Success criteria (per published version)
 
-| # | Check |
-| --- | --- |
-| 1 | Version exists on registry |
-| 2 | Tarball integrity matches lockfile |
-| 3 | Dependencies resolve on Node 24 |
-| 4 | `dist/stdio.js` present |
-| 5 | MCP initialize OK |
-| 6 | tools/list OK |
-| 7 | Representative tools/call OK (fake) |
-| 8 | No secret leak patterns |
-| 9 | Clean shutdown |
-| 10 | Attestations when OIDC publish used |
-| 11 | Correct `latest` tag |
+| #   | Check                               |
+| --- | ----------------------------------- |
+| 1   | Version exists on registry          |
+| 2   | Tarball integrity matches lockfile  |
+| 3   | Dependencies resolve on Node 24     |
+| 4   | `dist/stdio.js` present             |
+| 5   | MCP initialize OK                   |
+| 6   | tools/list OK                       |
+| 7   | Representative tools/call OK (fake) |
+| 8   | No secret leak patterns             |
+| 9   | Clean shutdown                      |
+| 10  | Attestations when OIDC publish used |
+| 11  | Correct `latest` tag                |
