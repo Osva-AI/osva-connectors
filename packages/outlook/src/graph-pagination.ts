@@ -67,6 +67,58 @@ export function assertAllowedGraphUrl(url: string, graphApiHost: string): void {
   }
 }
 
+function graphPathSegmentMatches(
+  path: string,
+  segmentPattern: RegExp,
+  expectedRaw: string,
+): boolean {
+  const match = path.match(segmentPattern);
+  if (match === null || match[1] === undefined) {
+    return false;
+  }
+  try {
+    return decodeURIComponent(match[1]) === expectedRaw;
+  } catch {
+    return false;
+  }
+}
+
+export type OutlookNextLinkResourceBinding =
+  | { readonly kind: "mailFolder"; readonly resourceId: string }
+  | { readonly kind: "calendar"; readonly resourceId: string };
+
+export function assertNextLinkResourceBinding(
+  nextLink: string,
+  binding: OutlookNextLinkResourceBinding,
+): void {
+  const path = decodeURIComponent(new URL(nextLink.trim()).pathname);
+  if (binding.kind === "mailFolder") {
+    const ok = graphPathSegmentMatches(
+      path,
+      /\/mailFolders\/([^/]+)\/messages(?:\/|$)/,
+      binding.resourceId,
+    );
+    if (!ok) {
+      throw new ConnectorSdkError(
+        "INVALID_INPUT",
+        "nextLink is not bound to the requested mail folder.",
+      );
+    }
+    return;
+  }
+  const ok = graphPathSegmentMatches(
+    path,
+    /\/calendars\/([^/]+)\/events(?:\/|$)/,
+    binding.resourceId,
+  );
+  if (!ok) {
+    throw new ConnectorSdkError(
+      "INVALID_INPUT",
+      "nextLink is not bound to the requested calendar.",
+    );
+  }
+}
+
 export function assertNextLinkResourceScope(
   nextLink: string,
   pathPatterns: readonly RegExp[],
@@ -97,6 +149,7 @@ export function validateNextLinkInput(
   nextLink: string | undefined,
   graphApiHost: string,
   resourceScope?: readonly RegExp[],
+  resourceBinding?: OutlookNextLinkResourceBinding,
 ): string | undefined {
   if (nextLink === undefined) {
     return undefined;
@@ -111,6 +164,9 @@ export function validateNextLinkInput(
   assertAllowedGraphUrl(trimmed, graphApiHost);
   if (resourceScope !== undefined && resourceScope.length > 0) {
     assertNextLinkResourceScope(trimmed, resourceScope);
+  }
+  if (resourceBinding !== undefined) {
+    assertNextLinkResourceBinding(trimmed, resourceBinding);
   }
   return trimmed;
 }

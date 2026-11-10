@@ -4,6 +4,31 @@ import { MAX_BASE_URL_LENGTH } from "./constants.js";
 
 const LOCAL_HTTP_HOSTS = new Set(["localhost", "127.0.0.1"]);
 
+function expandHostnameForIpCheck(hostname: string): string {
+  const trimmed = hostname.replace(/^\[/, "").replace(/\]$/, "");
+  return trimmed.toLowerCase();
+}
+
+function isPrivateOrLoopbackIpv6(hostname: string): boolean {
+  const host = expandHostnameForIpCheck(hostname);
+  if (host === "::1") {
+    return true;
+  }
+  if (host.startsWith("fe80:")) {
+    return true;
+  }
+  if (host.startsWith("fc") || host.startsWith("fd")) {
+    return true;
+  }
+  if (host.startsWith("::ffff:")) {
+    const mapped = host.slice("::ffff:".length);
+    if (mapped.includes(".")) {
+      return isPrivateOrLoopbackIpv4(mapped);
+    }
+  }
+  return false;
+}
+
 function isPrivateOrLoopbackIpv4(hostname: string): boolean {
   const parts = hostname.split(".");
   if (parts.length !== 4) {
@@ -39,6 +64,9 @@ function isBlockedProductionHostname(hostname: string): boolean {
     return true;
   }
   if (lower.endsWith(".local") || lower.endsWith(".localhost")) {
+    return true;
+  }
+  if (isPrivateOrLoopbackIpv6(lower)) {
     return true;
   }
   return isPrivateOrLoopbackIpv4(lower);

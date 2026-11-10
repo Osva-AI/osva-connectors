@@ -106,8 +106,8 @@ export async function startMockIntercomHttpServer(): Promise<MockIntercomHttpSer
       return;
     }
     if (
-      req.method === "PUT" &&
-      url.pathname === `/conversations/${CONVERSATION_ID}`
+      req.method === "POST" &&
+      url.pathname === `/conversations/${CONVERSATION_ID}/parts`
     ) {
       statePutCount += 1;
       const raw = await readRequestBody(req);

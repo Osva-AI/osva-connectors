@@ -24,6 +24,7 @@ export interface MockGoogleAdsHttpServer {
   getLastAuthorization(): string | undefined;
   getLastLoginCustomerId(): string | undefined;
   getLastDeveloperToken(): string | undefined;
+  getLastSearchRequestBody(): Record<string, unknown> | undefined;
   getRequestCount(): number;
   setMode(mode: MockGoogleAdsMode): void;
   close(): Promise<void>;
@@ -192,6 +193,7 @@ export async function startMockGoogleAdsHttpServer(
   let lastLoginCustomerId: string | undefined;
   let lastDeveloperToken: string | undefined;
   let rateLimitConsumed = false;
+  let lastSearchRequestBody: Record<string, unknown> | undefined;
 
   const server = http.createServer(async (req, res) => {
     requestCount += 1;
@@ -309,6 +311,7 @@ export async function startMockGoogleAdsHttpServer(
         return;
       }
 
+      lastSearchRequestBody = body as Record<string, unknown>;
       const query = body.query ?? "";
       if (mode === "injection_query" && query.includes("DROP")) {
         jsonResponse(
@@ -346,6 +349,7 @@ export async function startMockGoogleAdsHttpServer(
     getLastAuthorization: () => lastAuthorization,
     getLastLoginCustomerId: () => lastLoginCustomerId,
     getLastDeveloperToken: () => lastDeveloperToken,
+    getLastSearchRequestBody: () => lastSearchRequestBody,
     getRequestCount: () => requestCount,
     setMode: (next) => {
       mode = next;

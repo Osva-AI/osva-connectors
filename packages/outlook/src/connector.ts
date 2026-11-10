@@ -189,6 +189,10 @@ export function createOutlookConnector(
               parsed.data.nextLink,
               graphHost,
               OUTLOOK_NEXT_LINK_SCOPES.messages,
+              {
+                kind: "mailFolder",
+                resourceId: parsed.data.mailFolderId,
+              },
             );
             const top = Math.min(parsed.data.pageSize, LIST_MAX_PAGE_SIZE);
             const raw = await options.client.listMessages({
@@ -326,6 +330,10 @@ export function createOutlookConnector(
               parsed.data.nextLink,
               graphHost,
               OUTLOOK_NEXT_LINK_SCOPES.events,
+              {
+                kind: "calendar",
+                resourceId: parsed.data.calendarId,
+              },
             );
             const top = Math.min(parsed.data.pageSize, LIST_MAX_PAGE_SIZE);
             const raw = await options.client.listEvents({

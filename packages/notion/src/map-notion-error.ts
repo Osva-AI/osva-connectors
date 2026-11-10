@@ -92,7 +92,11 @@ export function mapNotionError(
     return error;
   }
   if (isAbortError(error)) {
-    return new ConnectorSdkError("CANCELLED", "Notion request was cancelled.");
+    return new ConnectorSdkError(
+      "CANCELLED",
+      "Notion request was cancelled.",
+      options?.ambiguousWrite === true ? { retryable: false } : undefined,
+    );
   }
   if (isTimeoutError(error)) {
     return new ConnectorSdkError(

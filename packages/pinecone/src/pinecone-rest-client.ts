@@ -328,16 +328,12 @@ export function createPineconeRestClient(
         params.signal,
         false,
       );
-      const body: Record<string, unknown> = {};
-      if (params.namespace !== undefined) {
-        body.filter = { namespace: params.namespace };
-      }
       const url = `${resolved.dataOrigin}/describe_index_stats`;
       return requestJsonAttempt(
         url,
         resolved.dataOrigin,
         "POST",
-        body,
+        {},
         params.signal,
         true,
       );

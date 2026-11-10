@@ -33,4 +33,13 @@ describe("parseQdrantBaseUrl", () => {
       parseQdrantBaseUrl("https://192.168.1.10:6333", false),
     ).toThrow(ConnectorSdkError);
   });
+
+  it("rejects IPv6 loopback and unique-local hosts over HTTPS", () => {
+    expect(() => parseQdrantBaseUrl("https://[::1]:6333", false)).toThrow(
+      ConnectorSdkError,
+    );
+    expect(() => parseQdrantBaseUrl("https://[fd12::1]:6333", false)).toThrow(
+      ConnectorSdkError,
+    );
+  });
 });

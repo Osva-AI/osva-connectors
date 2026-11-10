@@ -8,6 +8,11 @@ import {
 } from "./constants.js";
 import type { OneDriveTokenProvider } from "./onedrive-auth.js";
 import {
+  assertAllowedGraphContentDownloadUrl,
+  GRAPH_CONTENT_MAX_REDIRECTS,
+  parseGraphContentRedirectLocation,
+} from "./graph-download-url.js";
+import {
   assertAllowedGraphRequestUrl,
   assertSafeUploadFilename,
   validateGraphNextLink,
@@ -206,10 +211,20 @@ export function createOneDriveRestClient(
       readonly accept: string;
       readonly maxResponseBytes: number;
       readonly body?: Uint8Array;
+      readonly includeAuthorization?: boolean;
+      readonly followContentRedirect?: boolean;
     },
     attemptTimeoutMs: number,
-  ): Promise<{ response: Response; bodyBytes: Uint8Array }> {
-    assertAllowedGraphRequestUrl(url, graphApiHost);
+  ): Promise<{
+    response: Response;
+    bodyBytes: Uint8Array;
+    redirectLocation?: string;
+  }> {
+    if (init.includeAuthorization === false) {
+      assertAllowedGraphContentDownloadUrl(url);
+    } else {
+      assertAllowedGraphRequestUrl(url, graphApiHost);
+    }
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
@@ -228,15 +243,17 @@ export function createOneDriveRestClient(
     }
 
     try {
-      const authorization = await options.tokenProvider.getAuthorizationHeader({
-        signal: init.signal,
-        deadlineMs: attemptTimeoutMs,
-      });
-
       const headers: Record<string, string> = {
-        Authorization: authorization,
         Accept: init.accept,
       };
+      if (init.includeAuthorization !== false) {
+        const authorization =
+          await options.tokenProvider.getAuthorizationHeader({
+            signal: init.signal,
+            deadlineMs: attemptTimeoutMs,
+          });
+        headers.Authorization = authorization;
+      }
       if (init.method === "PUT" && init.body !== undefined) {
         headers["Content-Type"] = "application/octet-stream";
       }
@@ -250,6 +267,14 @@ export function createOneDriveRestClient(
       });
 
       if (response.status >= 300 && response.status < 400) {
+        if (init.followContentRedirect === true) {
+          const location = response.headers.get("Location");
+          return {
+            response,
+            bodyBytes: new Uint8Array(0),
+            redirectLocation: parseGraphContentRedirectLocation(location),
+          };
+        }
         throw new ConnectorSdkError(
           "PROVIDER_ERROR",
           "OneDrive redirect responses are not followed by this connector.",
@@ -284,8 +309,14 @@ export function createOneDriveRestClient(
       readonly accept: string;
       readonly maxResponseBytes: number;
       readonly body?: Uint8Array;
+      readonly includeAuthorization?: boolean;
+      readonly followContentRedirect?: boolean;
     },
-  ): Promise<{ response: Response; bodyBytes: Uint8Array }> {
+  ): Promise<{
+    response: Response;
+    bodyBytes: Uint8Array;
+    redirectLocation?: string;
+  }> {
     const deadlineMs = Date.now() + requestTimeoutMs;
     let attempt = 0;
 
@@ -419,14 +450,41 @@ export function createOneDriveRestClient(
 
     async readItemContent(params: OneDriveReadContentParams) {
       const prefix = driveItemPrefix(graphApiHost, params.driveId);
-      const url = `${prefix}/items/${encodeURIComponent(params.itemId)}/content`;
-      const { bodyBytes } = await requestWithRetry(url, {
-        method: "GET",
-        signal: params.signal,
-        accept: "*/*",
-        maxResponseBytes: params.maxBytes,
-      });
-      return bodyBytes;
+      let url = `${prefix}/items/${encodeURIComponent(params.itemId)}/content`;
+      let redirects = 0;
+      let includeAuthorization = true;
+      let followContentRedirect = true;
+
+      for (;;) {
+        const { bodyBytes, redirectLocation, response } =
+          await requestWithRetry(url, {
+            method: "GET",
+            signal: params.signal,
+            accept: "*/*",
+            maxResponseBytes: params.maxBytes,
+            includeAuthorization,
+            followContentRedirect,
+          });
+        if (redirectLocation === undefined) {
+          if (!response.ok) {
+            const bodyText = new TextDecoder("utf-8", { fatal: false }).decode(
+              bodyBytes,
+            );
+            throwHttpError(response, bodyText);
+          }
+          return bodyBytes;
+        }
+        redirects += 1;
+        if (redirects > GRAPH_CONTENT_MAX_REDIRECTS) {
+          throw new ConnectorSdkError(
+            "PROVIDER_ERROR",
+            "OneDrive content redirect chain is too long.",
+          );
+        }
+        url = redirectLocation;
+        includeAuthorization = false;
+        followContentRedirect = false;
+      }
     },
 
     searchItems(params: OneDriveSearchParams) {

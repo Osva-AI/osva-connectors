@@ -7,6 +7,26 @@ import {
 
 const PRODUCTION_HOSTNAME = "api.firecrawl.dev";
 
+const CRAWL_PATH_PREFIXES = ["/crawl/", "/v2/crawl/", "/v1/crawl/"] as const;
+
+function isSupportedCrawlPath(pathname: string): boolean {
+  return CRAWL_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
+function crawlIdFromPath(pathname: string): string | undefined {
+  for (const prefix of CRAWL_PATH_PREFIXES) {
+    if (!pathname.startsWith(prefix)) {
+      continue;
+    }
+    const remainder = pathname.slice(prefix.length);
+    const id = remainder.split("/")[0]?.trim();
+    if (id !== undefined && id.length > 0) {
+      return id.toLowerCase();
+    }
+  }
+  return undefined;
+}
+
 export function validateCrawlNextInput(nextUrl: string): string {
   const trimmed = nextUrl.trim();
   if (trimmed.length === 0 || trimmed.length > MAX_PAGINATION_NEXT_URL_LENGTH) {
@@ -33,7 +53,7 @@ export function validateCrawlNextInput(nextUrl: string): string {
     );
   }
 
-  if (!parsed.pathname.startsWith("/crawl/")) {
+  if (!isSupportedCrawlPath(parsed.pathname)) {
     throw new ConnectorSdkError(
       "INVALID_INPUT",
       "Crawl pagination URL path is not supported.",
@@ -46,6 +66,7 @@ export function validateCrawlNextInput(nextUrl: string): string {
 export function assertCrawlPaginationUrl(
   nextUrl: string,
   apiHost: string = FIRECRAWL_API_HOST,
+  crawlId?: string,
 ): string {
   const trimmed = nextUrl.trim();
   if (trimmed.length === 0 || trimmed.length > MAX_PAGINATION_NEXT_URL_LENGTH) {
@@ -94,11 +115,20 @@ export function assertCrawlPaginationUrl(
     );
   }
 
-  if (!parsed.pathname.startsWith("/crawl/")) {
+  if (!isSupportedCrawlPath(parsed.pathname)) {
     throw new ConnectorSdkError(
       "INVALID_INPUT",
       "Crawl pagination URL path is not supported.",
     );
+  }
+  if (crawlId !== undefined) {
+    const linkedId = crawlIdFromPath(parsed.pathname);
+    if (linkedId === undefined || linkedId !== crawlId.trim().toLowerCase()) {
+      throw new ConnectorSdkError(
+        "INVALID_INPUT",
+        "Crawl pagination URL does not match the requested crawl job.",
+      );
+    }
   }
 
   return parsed.toString();
@@ -107,6 +137,7 @@ export function assertCrawlPaginationUrl(
 export function assertCrawlStatusNextUrl(
   nextUrl: unknown,
   apiHost: string = FIRECRAWL_API_HOST,
+  crawlId?: string,
 ): string | undefined {
   if (nextUrl === undefined) {
     return undefined;
@@ -120,5 +151,5 @@ export function assertCrawlStatusNextUrl(
   if (nextUrl.trim().length === 0) {
     return undefined;
   }
-  return assertCrawlPaginationUrl(nextUrl, apiHost);
+  return assertCrawlPaginationUrl(nextUrl, apiHost, crawlId);
 }

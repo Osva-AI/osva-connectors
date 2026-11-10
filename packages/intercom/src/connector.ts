@@ -375,6 +375,7 @@ export function createIntercomConnector(
           );
           const body = buildIntercomStateBody(
             parsed.data.state,
+            config.adminId,
             config.allowedTargetStatuses,
           );
           try {

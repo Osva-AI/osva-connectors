@@ -31,6 +31,27 @@ describe("Google Ads REST client", () => {
     );
   });
 
+  it("does not send deprecated pageSize on Search", async () => {
+    server = await startMockGoogleAdsHttpServer();
+    const client = createGoogleAdsRestClient({
+      tokenProvider: createStaticBearerTokenProvider(
+        FAKE_GOOGLE_ADS_ACCESS_TOKEN,
+      ),
+      requestTimeoutMs: 5_000,
+      apiHost: server.apiOrigin,
+    });
+    await client.search({
+      customerId: "1234567890",
+      query: "SELECT campaign.id FROM campaign",
+      pageSize: 50,
+      signal: undefined,
+    });
+    const body = server.getLastSearchRequestBody();
+    expect(body).toBeDefined();
+    expect(body).not.toHaveProperty("pageSize");
+    expect(body?.query).toContain("campaign");
+  });
+
   it("times out slow responses", async () => {
     server = await startMockGoogleAdsHttpServer({
       mode: "slow",

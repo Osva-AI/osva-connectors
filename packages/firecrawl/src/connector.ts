@@ -203,6 +203,7 @@ export function createFirecrawlConnector(
               signal: context.signal,
             });
             const mapped = mapCrawlStatusResponse(raw, {
+              crawlId: parsed.data.crawlId,
               ...(options.apiHost !== undefined
                 ? { apiHost: options.apiHost }
                 : {}),

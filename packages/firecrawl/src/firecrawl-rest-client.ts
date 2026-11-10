@@ -422,7 +422,7 @@ export function createFirecrawlRestClient(
       const crawlId = parseCrawlId(params.crawlId);
       let url: string;
       if (params.next !== undefined) {
-        url = assertCrawlPaginationUrl(params.next, apiHost);
+        url = assertCrawlPaginationUrl(params.next, apiHost, crawlId);
       } else {
         const statusUrl = new URL(apiUrl(`/crawl/${crawlId}`));
         if (params.skip !== undefined && params.skip > 0) {
