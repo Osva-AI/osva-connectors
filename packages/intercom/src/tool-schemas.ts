@@ -4,6 +4,7 @@ import {
   MAX_NOTE_BODY_LENGTH,
   MAX_PAGE_NUMBER,
   MAX_SEARCH_QUERY_LENGTH,
+  MAX_SEARCH_STARTING_AFTER_LENGTH,
 } from "./constants.js";
 import {
   parseIntercomContactId,
@@ -41,10 +42,17 @@ export const conversationGetInputJsonSchema = {
   properties: { conversationId: { type: ["string", "integer"] } },
 };
 
+const startingAfterSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(MAX_SEARCH_STARTING_AFTER_LENGTH);
+
 export const conversationSearchInputSchema = z
   .object({
     query: z.string().trim().min(1).max(MAX_SEARCH_QUERY_LENGTH),
     page: pageSchema.optional(),
+    startingAfter: startingAfterSchema.optional(),
   })
   .strict();
 export const conversationSearchInputJsonSchema = {
@@ -54,6 +62,13 @@ export const conversationSearchInputJsonSchema = {
   properties: {
     query: { type: "string", minLength: 1, maxLength: MAX_SEARCH_QUERY_LENGTH },
     page: { type: "integer", minimum: 1, maximum: MAX_PAGE_NUMBER },
+    startingAfter: {
+      type: "string",
+      minLength: 1,
+      maxLength: MAX_SEARCH_STARTING_AFTER_LENGTH,
+      description:
+        "Intercom search cursor (starting_after) from a prior search response. Required for pages after the first.",
+    },
   },
 };
 

@@ -8,6 +8,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
+import { NodeHttpHandler } from "@smithy/node-http-handler";
 
 import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 
@@ -54,7 +55,15 @@ function bodyAsAsyncIterable(
 export function createS3SdkProviderClient(
   options: CreateS3SdkClientOptions,
 ): S3ProviderClient {
-  const client = options.client ?? new S3Client({ region: options.region });
+  const client =
+    options.client ??
+    new S3Client({
+      region: options.region,
+      requestHandler: new NodeHttpHandler({
+        connectionTimeout: options.requestTimeoutMs,
+        requestTimeout: options.requestTimeoutMs,
+      }),
+    });
 
   return {
     async listBuckets(params) {

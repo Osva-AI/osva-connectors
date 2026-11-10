@@ -46,8 +46,19 @@ export const repositoryGetInputJsonSchema = {
   },
 } satisfies DefineToolOptions["inputSchema"];
 
+const repositoryAllowlistEntrySchema = z
+  .string()
+  .trim()
+  .min(3)
+  .max(201)
+  .regex(
+    /^[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?\/[a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?$/,
+    "Allowlist entries must be owner/repo.",
+  );
+
 export const githubConfigSchema = z.object({
   token: z.string().trim().min(1, "GitHub token must not be empty."),
+  allowedRepositories: z.array(repositoryAllowlistEntrySchema).optional(),
 });
 
 export type GithubConfig = z.infer<typeof githubConfigSchema>;

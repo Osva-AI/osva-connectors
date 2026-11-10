@@ -26,7 +26,7 @@ function npmBinShim() {
     return {
       command: path.join(binDir, "osva-connector-intercom.cmd"),
       args: [],
-      shell: false,
+      shell: true,
     };
   }
   return {

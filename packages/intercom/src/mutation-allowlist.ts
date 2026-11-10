@@ -2,8 +2,15 @@ import { ConnectorSdkError } from "@osva-ai/connector-sdk";
 import {
   INTERCOM_STATE_CLOSED,
   INTERCOM_STATE_OPEN,
+  LIST_DEFAULT_PAGE,
   MAX_NOTE_BODY_LENGTH,
+  MAX_SEARCH_STARTING_AFTER_LENGTH,
 } from "./constants.js";
+
+export interface IntercomSearchPaginationInput {
+  readonly page?: number;
+  readonly startingAfter?: string;
+}
 
 const STATE_ALIASES: Record<string, string> = {
   open: INTERCOM_STATE_OPEN,
@@ -45,16 +52,51 @@ export function buildIntercomStateBody(
   };
 }
 
-export function buildIntercomConversationSearchBody(
-  queryText: string,
-  page: number,
-): Record<string, unknown> {
-  if (page > 1) {
+function resolveIntercomSearchPagination(
+  pagination: IntercomSearchPaginationInput,
+): { page: number; startingAfter?: string } {
+  const page = pagination.page ?? LIST_DEFAULT_PAGE;
+  const startingAfter = pagination.startingAfter?.trim();
+
+  if (startingAfter !== undefined && startingAfter.length === 0) {
+    throw new ConnectorSdkError("INVALID_INPUT", "startingAfter is invalid.");
+  }
+  if (
+    startingAfter !== undefined &&
+    startingAfter.length > MAX_SEARCH_STARTING_AFTER_LENGTH
+  ) {
+    throw new ConnectorSdkError("INVALID_INPUT", "startingAfter is invalid.");
+  }
+  if (page > 1 && (startingAfter === undefined || startingAfter.length === 0)) {
     throw new ConnectorSdkError(
       "INVALID_INPUT",
-      "Intercom search pagination beyond the first page requires starting_after from a prior response.",
+      "Intercom search pagination beyond the first page requires startingAfter from a prior response.",
     );
   }
+  if (
+    startingAfter !== undefined &&
+    startingAfter.length > 0 &&
+    page !== LIST_DEFAULT_PAGE
+  ) {
+    throw new ConnectorSdkError(
+      "INVALID_INPUT",
+      "startingAfter cannot be combined with page greater than 1.",
+    );
+  }
+
+  return {
+    page,
+    ...(startingAfter !== undefined && startingAfter.length > 0
+      ? { startingAfter }
+      : {}),
+  };
+}
+
+export function buildIntercomConversationSearchBody(
+  queryText: string,
+  pagination: IntercomSearchPaginationInput,
+): Record<string, unknown> {
+  const resolved = resolveIntercomSearchPagination(pagination);
   return {
     query: {
       field: "source.body",
@@ -63,20 +105,18 @@ export function buildIntercomConversationSearchBody(
     },
     pagination: {
       per_page: 20,
+      ...(resolved.startingAfter !== undefined
+        ? { starting_after: resolved.startingAfter }
+        : {}),
     },
   };
 }
 
 export function buildIntercomContactSearchBody(
   queryText: string,
-  page: number,
+  pagination: IntercomSearchPaginationInput,
 ): Record<string, unknown> {
-  if (page > 1) {
-    throw new ConnectorSdkError(
-      "INVALID_INPUT",
-      "Intercom search pagination beyond the first page requires starting_after from a prior response.",
-    );
-  }
+  const resolved = resolveIntercomSearchPagination(pagination);
   return {
     query: {
       field: "name",
@@ -85,6 +125,9 @@ export function buildIntercomContactSearchBody(
     },
     pagination: {
       per_page: 20,
+      ...(resolved.startingAfter !== undefined
+        ? { starting_after: resolved.startingAfter }
+        : {}),
     },
   };
 }

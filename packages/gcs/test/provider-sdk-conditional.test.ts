@@ -78,6 +78,7 @@ describe("GCS SDK conditional writes", () => {
     expect(options).toEqual({
       contentType: "text/plain; charset=utf-8",
       preconditionOpts: { ifGenerationMatch: 0 },
+      timeout: 5_000,
     });
   });
 

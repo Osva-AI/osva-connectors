@@ -577,7 +577,16 @@ export function createNotionRestClient(
         children: params.children,
       };
       if (params.position !== undefined) {
-        if (params.position.type === "after_block") {
+        if (apiVersion === "2025-09-03") {
+          if (params.position.type === "after_block") {
+            body.after = formatNotionIdForApi(
+              parseNotionId(
+                params.position.afterBlockId,
+                "after_block block ID",
+              ),
+            );
+          }
+        } else if (params.position.type === "after_block") {
           body.position = {
             type: "after_block",
             after_block: {

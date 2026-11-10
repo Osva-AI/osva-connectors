@@ -27,7 +27,7 @@ function npmBinShim() {
     return {
       command: path.join(binDir, "osva-connector-zoho-crm.cmd"),
       args: [],
-      shell: false,
+      shell: true,
     };
   }
   return {

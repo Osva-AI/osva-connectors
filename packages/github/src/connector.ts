@@ -44,9 +44,11 @@ import {
   repositoryGetInputJsonSchema,
   repositoryGetInputSchema,
 } from "./schemas.js";
+import { assertGithubRepositoryAllowed } from "./repository-allowlist.js";
 
 export interface CreateGithubConnectorOptions {
   readonly client: GithubClient;
+  readonly allowedRepositories?: readonly string[];
 }
 
 function invalidInputError(): ConnectorSdkError {
@@ -76,6 +78,11 @@ export function createGithubConnector(
               "Invalid owner or repository name.",
             );
           }
+          assertGithubRepositoryAllowed(
+            parsed.data.owner,
+            parsed.data.repo,
+            options.allowedRepositories,
+          );
 
           try {
             const record = await options.client.getRepository({
@@ -101,6 +108,11 @@ export function createGithubConnector(
           if (!parsed.success) {
             throw invalidInputError();
           }
+          assertGithubRepositoryAllowed(
+            parsed.data.owner,
+            parsed.data.repo,
+            options.allowedRepositories,
+          );
 
           try {
             const result = await options.client.listIssues({
@@ -138,6 +150,11 @@ export function createGithubConnector(
           if (!parsed.success) {
             throw invalidInputError();
           }
+          assertGithubRepositoryAllowed(
+            parsed.data.owner,
+            parsed.data.repo,
+            options.allowedRepositories,
+          );
 
           try {
             const record = await options.client.getIssue({
@@ -164,6 +181,11 @@ export function createGithubConnector(
           if (!parsed.success) {
             throw invalidInputError();
           }
+          assertGithubRepositoryAllowed(
+            parsed.data.owner,
+            parsed.data.repo,
+            options.allowedRepositories,
+          );
 
           try {
             const record = await options.client.createIssue({
@@ -193,6 +215,11 @@ export function createGithubConnector(
           if (!parsed.success) {
             throw invalidInputError();
           }
+          assertGithubRepositoryAllowed(
+            parsed.data.owner,
+            parsed.data.repo,
+            options.allowedRepositories,
+          );
 
           let issueRecord;
           try {

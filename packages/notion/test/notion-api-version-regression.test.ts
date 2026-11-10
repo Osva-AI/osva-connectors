@@ -73,6 +73,39 @@ describe("Notion API 2026-03-11 regressions", () => {
     expect(lastBody).toEqual({ in_trash: true });
   });
 
+  it("sends legacy after on block append for 2025-09-03", async () => {
+    const server = await startMockNotionHttpServer();
+    let lastBody: unknown;
+    const nativeFetch = globalThis.fetch;
+    const fetchImpl: typeof fetch = async (input, init) => {
+      if (
+        typeof input === "string" &&
+        input.includes("/children") &&
+        init?.method === "PATCH" &&
+        typeof init.body === "string"
+      ) {
+        lastBody = JSON.parse(init.body);
+      }
+      return nativeFetch(input, init);
+    };
+    const client = createNotionRestClient({
+      accessToken: FAKE_NOTION_ACCESS_TOKEN,
+      requestTimeoutMs: 5_000,
+      apiVersion: "2025-09-03",
+      apiHost: server.apiOrigin,
+      fetchImpl,
+    });
+    const afterId = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+    await client.appendBlockChildren({
+      blockId: MOCK_BLOCK_ID,
+      children: [{ paragraph: { rich_text: [] } }],
+      position: { type: "after_block", afterBlockId: afterId },
+    });
+    await server.close();
+    expect(lastBody).toHaveProperty("after");
+    expect(lastBody).not.toHaveProperty("position");
+  });
+
   it("sends position object on block append (not legacy after)", async () => {
     const server = await startMockNotionHttpServer();
     let lastBody: unknown;

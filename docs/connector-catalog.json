@@ -1,0 +1,365 @@
+{
+  "generatedAt": "2026-11-10T11:13:05.675Z",
+  "connectors": [
+    {
+      "connectorKey": "osva-connector-amplitude",
+      "npmPackage": "@osva-ai/connector-amplitude",
+      "directory": "packages/amplitude",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-amplitude.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-aws-s3",
+      "npmPackage": "@osva-ai/connector-aws-s3",
+      "directory": "packages/aws-s3",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-aws-s3.mjs",
+      "ciCoverage": "test:package-acceptance:aws-s3"
+    },
+    {
+      "connectorKey": "osva-connector-azure-blob",
+      "npmPackage": "@osva-ai/connector-azure-blob",
+      "directory": "packages/azure-blob",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-azure-blob.mjs",
+      "ciCoverage": "test:package-acceptance:azure-blob"
+    },
+    {
+      "connectorKey": "osva-connector-bigcommerce",
+      "npmPackage": "@osva-ai/connector-bigcommerce",
+      "directory": "packages/bigcommerce",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-bigcommerce.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-bigquery",
+      "npmPackage": "@osva-ai/connector-bigquery",
+      "directory": "packages/bigquery",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-bigquery.mjs",
+      "ciCoverage": "test:package-acceptance:bigquery"
+    },
+    {
+      "connectorKey": "osva-connector-confluence",
+      "npmPackage": "@osva-ai/connector-confluence",
+      "directory": "packages/confluence",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-confluence.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-exa",
+      "npmPackage": "@osva-ai/connector-exa",
+      "directory": "packages/exa",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-exa.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-firecrawl",
+      "npmPackage": "@osva-ai/connector-firecrawl",
+      "directory": "packages/firecrawl",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-firecrawl.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-freshdesk",
+      "npmPackage": "@osva-ai/connector-freshdesk",
+      "directory": "packages/freshdesk",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-freshdesk.mjs",
+      "ciCoverage": "test:package-acceptance:freshdesk"
+    },
+    {
+      "connectorKey": "osva-connector-ga4",
+      "npmPackage": "@osva-ai/connector-ga4",
+      "directory": "packages/ga4",
+      "repositoryVersion": "0.1.1",
+      "packagedAcceptanceScript": "scripts/package-acceptance-ga4.mjs",
+      "ciCoverage": "test:package-acceptance:ga4"
+    },
+    {
+      "connectorKey": "osva-connector-gcs",
+      "npmPackage": "@osva-ai/connector-gcs",
+      "directory": "packages/gcs",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-gcs.mjs",
+      "ciCoverage": "test:package-acceptance:gcs"
+    },
+    {
+      "connectorKey": "osva-connector-github",
+      "npmPackage": "@osva-ai/connector-github",
+      "directory": "packages/github",
+      "repositoryVersion": "0.3.1",
+      "packagedAcceptanceScript": "scripts/package-acceptance.mjs",
+      "ciCoverage": "test:package-acceptance"
+    },
+    {
+      "connectorKey": "osva-connector-gmail",
+      "npmPackage": "@osva-ai/connector-gmail",
+      "directory": "packages/gmail",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-gmail.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-google-ads",
+      "npmPackage": "@osva-ai/connector-google-ads",
+      "directory": "packages/google-ads",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-google-ads.mjs",
+      "ciCoverage": "test:package-acceptance:google-ads"
+    },
+    {
+      "connectorKey": "osva-connector-google-calendar",
+      "npmPackage": "@osva-ai/connector-google-calendar",
+      "directory": "packages/google-calendar",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-google-calendar.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-google-drive",
+      "npmPackage": "@osva-ai/connector-google-drive",
+      "directory": "packages/google-drive",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-google-drive.mjs",
+      "ciCoverage": "test:package-acceptance:google-drive"
+    },
+    {
+      "connectorKey": "osva-connector-google-sheets",
+      "npmPackage": "@osva-ai/connector-google-sheets",
+      "directory": "packages/google-sheets",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-google-sheets.mjs",
+      "ciCoverage": "test:package-acceptance:google-sheets"
+    },
+    {
+      "connectorKey": "osva-connector-gsc",
+      "npmPackage": "@osva-ai/connector-gsc",
+      "directory": "packages/gsc",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-gsc.mjs",
+      "ciCoverage": "test:package-acceptance:gsc"
+    },
+    {
+      "connectorKey": "osva-connector-hubspot",
+      "npmPackage": "@osva-ai/connector-hubspot",
+      "directory": "packages/hubspot",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-hubspot.mjs",
+      "ciCoverage": "test:package-acceptance:hubspot"
+    },
+    {
+      "connectorKey": "osva-connector-intercom",
+      "npmPackage": "@osva-ai/connector-intercom",
+      "directory": "packages/intercom",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-intercom.mjs",
+      "ciCoverage": "test:package-acceptance:intercom"
+    },
+    {
+      "connectorKey": "osva-connector-jira",
+      "npmPackage": "@osva-ai/connector-jira",
+      "directory": "packages/jira",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-jira.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-klaviyo",
+      "npmPackage": "@osva-ai/connector-klaviyo",
+      "directory": "packages/klaviyo",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-klaviyo.mjs",
+      "ciCoverage": "test:package-acceptance:klaviyo"
+    },
+    {
+      "connectorKey": "osva-connector-linear",
+      "npmPackage": "@osva-ai/connector-linear",
+      "directory": "packages/linear",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-linear.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-meta-ads",
+      "npmPackage": "@osva-ai/connector-meta-ads",
+      "directory": "packages/meta-ads",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-meta-ads.mjs",
+      "ciCoverage": "test:package-acceptance:meta-ads"
+    },
+    {
+      "connectorKey": "osva-connector-mixpanel",
+      "npmPackage": "@osva-ai/connector-mixpanel",
+      "directory": "packages/mixpanel",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-mixpanel.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-notion",
+      "npmPackage": "@osva-ai/connector-notion",
+      "directory": "packages/notion",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-notion.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-npm",
+      "npmPackage": "@osva-ai/connector-npm",
+      "directory": "packages/npm",
+      "repositoryVersion": "0.1.1",
+      "packagedAcceptanceScript": "scripts/package-acceptance-npm.mjs",
+      "ciCoverage": "test:package-acceptance:npm"
+    },
+    {
+      "connectorKey": "osva-connector-onedrive",
+      "npmPackage": "@osva-ai/connector-onedrive",
+      "directory": "packages/onedrive",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-onedrive.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-outlook",
+      "npmPackage": "@osva-ai/connector-outlook",
+      "directory": "packages/outlook",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-outlook.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-pinecone",
+      "npmPackage": "@osva-ai/connector-pinecone",
+      "directory": "packages/pinecone",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-pinecone.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-pipedrive",
+      "npmPackage": "@osva-ai/connector-pipedrive",
+      "directory": "packages/pipedrive",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-pipedrive.mjs",
+      "ciCoverage": "test:package-acceptance:pipedrive"
+    },
+    {
+      "connectorKey": "osva-connector-postgres",
+      "npmPackage": "@osva-ai/connector-postgres",
+      "directory": "packages/postgres",
+      "repositoryVersion": "0.1.1",
+      "packagedAcceptanceScript": "scripts/package-acceptance-postgres.mjs",
+      "ciCoverage": "test:package-acceptance:postgres"
+    },
+    {
+      "connectorKey": "osva-connector-qdrant",
+      "npmPackage": "@osva-ai/connector-qdrant",
+      "directory": "packages/qdrant",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-qdrant.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-salesforce",
+      "npmPackage": "@osva-ai/connector-salesforce",
+      "directory": "packages/salesforce",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-salesforce.mjs",
+      "ciCoverage": "test:package-acceptance:salesforce"
+    },
+    {
+      "connectorKey": "osva-connector-shopify",
+      "npmPackage": "@osva-ai/connector-shopify",
+      "directory": "packages/shopify",
+      "repositoryVersion": "0.1.1",
+      "packagedAcceptanceScript": "scripts/package-acceptance-shopify.mjs",
+      "ciCoverage": "test:package-acceptance:shopify"
+    },
+    {
+      "connectorKey": "osva-connector-slack",
+      "npmPackage": "@osva-ai/connector-slack",
+      "directory": "packages/slack",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-slack.mjs",
+      "ciCoverage": "test:package-acceptance:slack"
+    },
+    {
+      "connectorKey": "osva-connector-snowflake",
+      "npmPackage": "@osva-ai/connector-snowflake",
+      "directory": "packages/snowflake",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-snowflake.mjs",
+      "ciCoverage": "test:package-acceptance:snowflake"
+    },
+    {
+      "connectorKey": "osva-connector-stripe",
+      "npmPackage": "@osva-ai/connector-stripe",
+      "directory": "packages/stripe",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-stripe.mjs",
+      "ciCoverage": "test:package-acceptance:stripe"
+    },
+    {
+      "connectorKey": "osva-connector-supabase",
+      "npmPackage": "@osva-ai/connector-supabase",
+      "directory": "packages/supabase",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-supabase.mjs",
+      "ciCoverage": "test:package-acceptance:supabase"
+    },
+    {
+      "connectorKey": "osva-connector-tavily",
+      "npmPackage": "@osva-ai/connector-tavily",
+      "directory": "packages/tavily",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-tavily.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-teams",
+      "npmPackage": "@osva-ai/connector-teams",
+      "directory": "packages/teams",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-teams.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-whatsapp",
+      "npmPackage": "@osva-ai/connector-whatsapp",
+      "directory": "packages/whatsapp",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-whatsapp.mjs",
+      "ciCoverage": "test:package-acceptance:whatsapp"
+    },
+    {
+      "connectorKey": "osva-connector-woocommerce",
+      "npmPackage": "@osva-ai/connector-woocommerce",
+      "directory": "packages/woocommerce",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-woocommerce.mjs",
+      "ciCoverage": "test:package-acceptance:ci-shard-b"
+    },
+    {
+      "connectorKey": "osva-connector-zendesk",
+      "npmPackage": "@osva-ai/connector-zendesk",
+      "directory": "packages/zendesk",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-zendesk.mjs",
+      "ciCoverage": "test:package-acceptance:zendesk"
+    },
+    {
+      "connectorKey": "osva-connector-zoho-crm",
+      "npmPackage": "@osva-ai/connector-zoho-crm",
+      "directory": "packages/zoho-crm",
+      "repositoryVersion": "0.1.0",
+      "packagedAcceptanceScript": "scripts/package-acceptance-zoho-crm.mjs",
+      "ciCoverage": "test:package-acceptance:zoho-crm"
+    }
+  ]
+}

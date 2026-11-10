@@ -24,7 +24,7 @@ function npmBinShim() {
     return {
       command: path.join(binDir, "osva-connector-zendesk.cmd"),
       args: [],
-      shell: false,
+      shell: true,
     };
   }
   return {
