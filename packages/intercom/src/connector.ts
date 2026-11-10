@@ -209,7 +209,12 @@ export function createIntercomConnector(
           try {
             const raw = await client.searchConversations(
               parsed.data.query,
-              page,
+              {
+                page: parsed.data.page,
+                ...(parsed.data.startingAfter !== undefined
+                  ? { startingAfter: parsed.data.startingAfter }
+                  : {}),
+              },
               context.signal,
             );
             const list =
@@ -290,7 +295,12 @@ export function createIntercomConnector(
           try {
             const raw = await client.searchContacts(
               parsed.data.query,
-              page,
+              {
+                page: parsed.data.page,
+                ...(parsed.data.startingAfter !== undefined
+                  ? { startingAfter: parsed.data.startingAfter }
+                  : {}),
+              },
               context.signal,
             );
             const contacts =

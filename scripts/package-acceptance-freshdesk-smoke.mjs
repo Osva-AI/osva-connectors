@@ -25,7 +25,7 @@ function npmBinShim() {
     return {
       command: path.join(binDir, "osva-connector-freshdesk.cmd"),
       args: [],
-      shell: false,
+      shell: true,
     };
   }
   return {

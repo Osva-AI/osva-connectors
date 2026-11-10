@@ -41,4 +41,8 @@ export {
 /** Environment variable for a GitHub fine-grained personal access token. */
 export const GITHUB_TOKEN_ENV = "OSVA_CONNECTOR_GITHUB_TOKEN";
 
+/** Comma-separated owner/repo allowlist (optional). */
+export const GITHUB_ALLOWED_REPOSITORIES_ENV =
+  "OSVA_CONNECTOR_GITHUB_ALLOWED_REPOSITORIES";
+
 export const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;

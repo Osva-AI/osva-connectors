@@ -282,12 +282,12 @@ export function createIntercomRestClient(
         `/conversations/${encodeURIComponent(conversationId)}`,
         signal,
       ),
-    searchConversations: (queryText, page, signal) =>
+    searchConversations: (queryText, pagination, signal) =>
       requestJson(
         "POST",
         "/conversations/search",
         signal,
-        buildIntercomConversationSearchBody(queryText, page),
+        buildIntercomConversationSearchBody(queryText, pagination),
       ),
     listContacts: async (params, signal) => {
       const query = new URLSearchParams();
@@ -297,12 +297,12 @@ export function createIntercomRestClient(
     },
     getContact: (contactId, signal) =>
       requestJson("GET", `/contacts/${encodeURIComponent(contactId)}`, signal),
-    searchContacts: (queryText, page, signal) =>
+    searchContacts: (queryText, pagination, signal) =>
       requestJson(
         "POST",
         "/contacts/search",
         signal,
-        buildIntercomContactSearchBody(queryText, page),
+        buildIntercomContactSearchBody(queryText, pagination),
       ),
     listAdmins: (signal) => requestJson("GET", "/admins", signal),
     addAdminNote: (conversationId, body, signal) =>

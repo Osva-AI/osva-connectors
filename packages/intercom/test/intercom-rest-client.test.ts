@@ -23,7 +23,7 @@ describe("Intercom rest client", () => {
       accessToken: FAKE_INTERCOM_ACCESS_TOKEN,
       requestTimeoutMs: 5_000,
     });
-    await client.searchConversations("billing issue", 1);
+    await client.searchConversations("billing issue", { page: 1 });
     expect(true).toBe(true);
   });
 

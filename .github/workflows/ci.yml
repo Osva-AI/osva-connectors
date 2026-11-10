@@ -47,6 +47,9 @@ jobs:
       - name: Package boundaries
         run: pnpm verify:boundaries
 
+      - name: Package acceptance coverage inventory
+        run: pnpm verify:package-acceptance-coverage
+
       - name: Release workflow regression
         run: pnpm test:release-workflows
 
@@ -124,6 +127,9 @@ jobs:
 
       - name: Supabase package acceptance (tarball install + MCP smoke)
         run: pnpm test:package-acceptance:supabase
+
+      - name: Packaged MCP acceptance shard B (18 connectors)
+        run: pnpm test:package-acceptance:ci-shard-b
 
   postgres-integration:
     name: PostgreSQL integration

@@ -7,6 +7,9 @@ import { createOctokitGithubClient } from "./octokit-client.js";
 
 const config = loadGithubConfig(process.env);
 const client = createOctokitGithubClient({ token: config.token });
-const connector = createGithubConnector({ client });
+const connector = createGithubConnector({
+  client,
+  allowedRepositories: config.allowedRepositories,
+});
 
 await serveStdio(connector);

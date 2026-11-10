@@ -26,6 +26,11 @@ export function createGcsSdkProviderClient(
 ): GcsProviderClient {
   const storage =
     options.storage ?? new Storage({ projectId: options.projectId });
+  const requestTimeout = options.requestTimeoutMs;
+
+  // List APIs (`getBuckets`, `getFiles`) do not accept per-request `timeout` in
+  // @google-cloud/storage v7; listing deadline enforcement remains deferred to
+  // the SDK default transport timeout unless a client-level option is added later.
 
   return {
     async listBuckets(params) {
@@ -46,7 +51,9 @@ export function createGcsSdkProviderClient(
     },
 
     async headBucket(bucket) {
-      const [metadata] = await storage.bucket(bucket).getMetadata();
+      const [metadata] = await storage
+        .bucket(bucket)
+        .getMetadata({ timeout: requestTimeout });
       return { region: metadata.location };
     },
 
@@ -77,7 +84,7 @@ export function createGcsSdkProviderClient(
 
     async headObject(bucket, key) {
       const file = storage.bucket(bucket).file(key);
-      const [metadata] = await file.getMetadata();
+      const [metadata] = await file.getMetadata({ timeout: requestTimeout });
       return {
         bucket,
         key,
@@ -99,7 +106,7 @@ export function createGcsSdkProviderClient(
     async getObject(bucket, key, options) {
       const maxBytes = Math.min(options.maxBytes, MAX_CONTENT_BYTES);
       const file = storage.bucket(bucket).file(key);
-      const [meta] = await file.getMetadata();
+      const [meta] = await file.getMetadata({ timeout: requestTimeout });
       assertAcceptableContentEncoding(
         meta.contentEncoding ? String(meta.contentEncoding) : undefined,
       );
@@ -156,6 +163,7 @@ export function createGcsSdkProviderClient(
       await file.save(Buffer.from(params.body), {
         contentType: params.contentType,
         preconditionOpts: { ifGenerationMatch: 0 },
+        timeout: requestTimeout,
       });
       const metadata = await this.headObject(params.bucket, params.key);
       return {
@@ -173,6 +181,7 @@ export function createGcsSdkProviderClient(
         preconditionOpts: {
           ifGenerationMatch: params.expectedGeneration,
         },
+        timeout: requestTimeout,
       });
       const metadata = await this.headObject(params.bucket, params.key);
       return {

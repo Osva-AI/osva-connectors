@@ -3,6 +3,11 @@ export interface IntercomListParams {
   readonly perPage: number;
 }
 
+export interface IntercomSearchPagination {
+  readonly page?: number;
+  readonly startingAfter?: string;
+}
+
 export interface IntercomClient {
   listConversations(
     params: IntercomListParams,
@@ -14,7 +19,7 @@ export interface IntercomClient {
   ): Promise<unknown>;
   searchConversations(
     query: string,
-    page: number,
+    pagination: IntercomSearchPagination,
     signal?: AbortSignal,
   ): Promise<unknown>;
   listContacts(
@@ -24,7 +29,7 @@ export interface IntercomClient {
   getContact(contactId: string, signal?: AbortSignal): Promise<unknown>;
   searchContacts(
     query: string,
-    page: number,
+    pagination: IntercomSearchPagination,
     signal?: AbortSignal,
   ): Promise<unknown>;
   listAdmins(signal?: AbortSignal): Promise<unknown>;
