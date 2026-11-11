@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-snowflake`
 
-**Node.js 24+** · `@osva-ai/connector-sdk@1.1.4`
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Source-only in B4.9** — not yet on npm. Validate with `pnpm test:package-acceptance:snowflake`.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-snowflake@0.1.1
+npx osva-connector-snowflake
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Purpose
 
@@ -45,7 +54,8 @@ Snowflake has no per-query dollar cap in the driver. Use warehouse resource moni
 {
   "mcpServers": {
     "osva-snowflake": {
-      "command": "osva-connector-snowflake",
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-snowflake@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_SNOWFLAKE_ACCOUNT": "xy12345.us-east-1",
         "OSVA_CONNECTOR_SNOWFLAKE_USER": "OSVA_READER",

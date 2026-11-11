@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-gcs`
 
-**Node.js 24+** · `@osva-ai/connector-sdk@1.1.4`
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-Validate locally with `pnpm test:package-acceptance:gcs`.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-gcs@0.1.1
+npx osva-connector-gcs
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Required configuration
 
@@ -24,7 +33,8 @@ Uses Application Default Credentials or `GOOGLE_APPLICATION_CREDENTIALS`.
 {
   "mcpServers": {
     "osva-gcs": {
-      "command": "osva-connector-gcs",
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-gcs@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_GCS_PROJECT_ID": "my-project"
       }

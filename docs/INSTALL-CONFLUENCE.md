@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-confluence`
 
-**Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Pre-publication:** `@osva-ai/connector-confluence@0.1.0` is source-only in this repository until npm bootstrap (see [RELEASE-CHECKLIST-CONFLUENCE.md](./RELEASE-CHECKLIST-CONFLUENCE.md)).
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-confluence@0.1.0
+npx osva-connector-confluence
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Confluence credentials
 

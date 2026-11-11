@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-teams`
 
-**Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Pre-publication:** `@osva-ai/connector-teams@0.1.0` is source-only in this repository until npm bootstrap (see [RELEASE-CHECKLIST-TEAMS.md](./RELEASE-CHECKLIST-TEAMS.md)).
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-teams@0.1.0
+npx osva-connector-teams
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Microsoft Graph (delegated only)
 

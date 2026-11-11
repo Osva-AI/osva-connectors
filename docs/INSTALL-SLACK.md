@@ -1,10 +1,8 @@
 # Install `@osva-ai/connector-slack`
 
-Quickstart for running the Slack connector as an MCP stdio server against a workspace you control.
-
 **Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0` (not published until bootstrap release).
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
 
 ## Create a Slack app and bot token
 

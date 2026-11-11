@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-onedrive`
 
-**Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Pre-publication:** `@osva-ai/connector-onedrive@0.1.0` is source-only in this repository until npm bootstrap (see [RELEASE-CHECKLIST-ONEDRIVE.md](./RELEASE-CHECKLIST-ONEDRIVE.md)).
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-onedrive@0.1.1
+npx osva-connector-onedrive
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Microsoft Graph (delegated)
 
@@ -38,7 +47,7 @@ The host supplies token lifecycle; no OAuth server in this package. Scope errors
   "mcpServers": {
     "osva-onedrive": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-onedrive@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-onedrive@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_ONEDRIVE_ACCESS_TOKEN": "${GRAPH_DELEGATED_TOKEN_FROM_HOST_VAULT}"
       }

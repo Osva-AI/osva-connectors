@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-zoho-crm`
 
-**Node.js 24+** · [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk)
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Source-only** until B4 publication. Validate with `pnpm test:package-acceptance:zoho-crm`.
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-zoho-crm@0.1.0
+npx osva-connector-zoho-crm
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Credentials
 
@@ -32,3 +41,20 @@ Record IDs are handled as strings end-to-end (never coerced to JavaScript `Numbe
 `zoho.deal.note.add` always sends `"$is_shared_to_client": false`; that flag cannot be set from MCP input.
 
 Tool reference: [packages/zoho-crm/README.md](../packages/zoho-crm/README.md). Release: [RELEASE-CHECKLIST-zoho-crm.md](./RELEASE-CHECKLIST-zoho-crm.md).
+
+## MCP host (stdio)
+
+```json
+{
+  "mcpServers": {
+    "osva-zoho-crm": {
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-zoho-crm@0.1.0"]
+    }
+  }
+}
+```
+
+On Windows, some hosts accept `"command": "npx.cmd"`.
+
+See [packages/zoho-crm/README.md](../packages/zoho-crm/README.md) for tools and environment variables.

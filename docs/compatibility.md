@@ -418,62 +418,22 @@ Node.js 24+ is required (aligned with `@osva-ai/connector-sdk` engines).
 
 ## Release status
 
-Verified on npm registry (`npm view <package> version`, **2026-11-08**). **Published** = installable from the public registry at the listed version. **Source-only** = implemented in this repo but not yet on npm.
+**B5.6A (2026-11-11):** All **45** workspace connector packages are **published** on the public npm registry. Workspace `package.json` versions match registry targets verified in [release/B5_6A_PUBLISHED_RELEASE_VERIFICATION.md](./release/B5_6A_PUBLISHED_RELEASE_VERIFICATION.md).
 
-M19 publication inventory: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md). B3 completion: [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
+**Machine-readable inventory:** [connector-catalog.json](./connector-catalog.json) (`pnpm generate:connector-catalog`). Each entry includes `publishedVersion`, install guide path, credential env names, and read-only vs mutation-capable tool lists derived from the mutation inventory generator.
 
-| Package                              | Repo version | npm latest (2026-11-08) | Status          | Notes                                                   |
-| ------------------------------------ | ------------ | ----------------------- | --------------- | ------------------------------------------------------- |
-| `@osva-ai/connector-github`          | `0.3.1`      | **`0.3.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-postgres`        | `0.1.1`      | **`0.1.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-shopify`         | `0.1.1`      | **`0.1.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-ga4`             | `0.1.1`      | **`0.1.1`**             | **Published**   | Tarball pins **`connector-sdk@1.1.4`**                  |
-| `@osva-ai/connector-npm`             | `0.1.1`      | **`0.1.1`**             | **Published**   | **`stable-candidate`** remains **`0.1.0`** (legacy tag) |
-| `@osva-ai/connector-slack`           | `0.1.0`      | **`0.1.0`**             | **Published**   | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-stripe`          | `0.1.0`      | **`0.1.0`**             | **Published**   | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-hubspot`         | `0.1.0`      | **`0.1.0`**             | **Published**   | M19 Wave 1 first publication                            |
-| `@osva-ai/connector-gsc`             | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-google-drive`    | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-gmail`           | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.1 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-google-calendar` | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.1 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-google-sheets`   | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-google-ads`      | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-meta-ads`        | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-klaviyo`         | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-whatsapp`        | `0.1.0`      | **`0.1.0`**             | **Published**   |                                                         |
-| `@osva-ai/connector-notion`          | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.2 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-linear`          | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.2 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-exa`             | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-tavily`          | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-firecrawl`       | `0.1.0`      | **`0.1.0`**             | **Published**   | B3.3 bootstrap; registry acceptance 2026-11-08          |
-| `@osva-ai/connector-jira`            | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
-| `@osva-ai/connector-confluence`      | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
-| `@osva-ai/connector-outlook`         | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
-| `@osva-ai/connector-onedrive`        | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
-| `@osva-ai/connector-teams`           | `0.1.0`      | —                       | **Source-only** | `@0.1.0` in repo; npm bootstrap pending                 |
-| `@osva-ai/connector-qdrant`          | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
-| `@osva-ai/connector-pinecone`        | `0.1.0`      | —                       | **Source-only** | B4.3 vector databases; npm bootstrap pending            |
-| `@osva-ai/connector-mixpanel`        | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
-| `@osva-ai/connector-amplitude`       | `0.1.0`      | —                       | **Source-only** | B4.4 product analytics; npm bootstrap pending           |
-| `@osva-ai/connector-woocommerce`     | `0.1.0`      | —                       | **Source-only** | B4.5 commerce platforms; npm bootstrap pending          |
-| `@osva-ai/connector-bigcommerce`     | `0.1.0`      | —                       | **Source-only** | B4.5 commerce platforms; npm bootstrap pending          |
-| `@osva-ai/connector-zendesk`         | `0.1.0`      | —                       | **Source-only** | B4.6 customer support; npm bootstrap pending            |
-| `@osva-ai/connector-intercom`        | `0.1.0`      | —                       | **Source-only** | B4.6 customer support; npm bootstrap pending            |
-| `@osva-ai/connector-freshdesk`       | `0.1.0`      | —                       | **Source-only** | B4.6 customer support; npm bootstrap pending            |
-| `@osva-ai/connector-salesforce`      | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
-| `@osva-ai/connector-pipedrive`       | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
-| `@osva-ai/connector-zoho-crm`        | `0.1.0`      | —                       | **Source-only** | B4.7 CRM & sales; npm bootstrap pending                 |
-| `@osva-ai/connector-aws-s3`          | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
-| `@osva-ai/connector-gcs`             | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
-| `@osva-ai/connector-azure-blob`      | `0.1.0`      | —                       | **Source-only** | B4.8 cloud object storage; npm bootstrap pending        |
-| `@osva-ai/connector-bigquery`        | `0.1.0`      | —                       | **Source-only** | B4.9 data warehouses; npm bootstrap pending             |
-| `@osva-ai/connector-snowflake`       | `0.1.0`      | —                       | **Source-only** | B4.9 data warehouses; npm bootstrap pending             |
-| `@osva-ai/connector-supabase`        | `0.1.0`      | —                       | **Source-only** | B4.9 application databases; npm bootstrap pending       |
+Historical publication waves: [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md), [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md).
 
-**Summary:** **22 / 45** connector packages are on the public npm registry. **Source-only** at `@0.1.0` in this repo until npm bootstrap includes **Jira**, **Confluence**, **Outlook**, **OneDrive**, **Teams**, **Qdrant**, **Pinecone**, **Mixpanel**, **Amplitude**, **WooCommerce**, **BigCommerce**, **Zendesk**, **Intercom**, **Freshdesk**, **Salesforce**, **Pipedrive**, and **Zoho CRM** (**SDK 1.1.4** on published tarballs at current `latest` lines). B4.6 customer support: [INSTALL-ZENDESK.md](./INSTALL-ZENDESK.md), [INSTALL-INTERCOM.md](./INSTALL-INTERCOM.md), [INSTALL-FRESHDESK.md](./INSTALL-FRESHDESK.md). B4.7 CRM & sales (source-only until publication): [INSTALL-SALESFORCE.md](./INSTALL-SALESFORCE.md), [INSTALL-PIPEDRIVE.md](./INSTALL-PIPEDRIVE.md), [INSTALL-ZOHO-CRM.md](./INSTALL-ZOHO-CRM.md).
+### Version matrix
+
+The full per-package version list is maintained in [connector-catalog.json](./connector-catalog.json) (`publishedVersion` on all **45** entries) and [release/B5_6A_PUBLISHED_RELEASE_VERIFICATION.md](./release/B5_6A_PUBLISHED_RELEASE_VERIFICATION.md) §4.
+
+**Summary:** **45 / 45** connector packages are on the public npm registry at workspace versions (B5.6 published-artifact verification). That gate validates isolated npm install, binary shims, and **mocked** MCP smoke — not live-provider sandbox coverage for every integration.
+
+Per-connector install: `docs/INSTALL*.md` and [CONNECTOR_QUICKSTART.md](./CONNECTOR_QUICKSTART.md).
 
 ### Immutable-version history (reference only)
 
-Older semver lines (**`0.3.0`**, **`0.1.0`** on realignment packages) remain on npm with legacy SDK pins (**`1.1.0-rc.2`** / **`1.1.3`**). Prefer **`latest`** coordinates in the table above for new installs.
+Older semver lines (**`0.3.x`** GitHub, **`0.1.0`** on realignment packages) remain on npm with legacy SDK pins (**`1.1.0-rc.2`** / **`1.1.3`**). Prefer catalog `publishedVersion` coordinates for new installs (GitHub **`0.4.0`**, npm connector **`0.1.1`**, etc.).
 
 See [INSTALL.md](./INSTALL.md), [INSTALL-NPM.md](./INSTALL-NPM.md), [RELEASE-CHECKLIST-NPM.md](./RELEASE-CHECKLIST-NPM.md), [INSTALL-POSTGRES.md](./INSTALL-POSTGRES.md), [INSTALL-SHOPIFY.md](./INSTALL-SHOPIFY.md), [INSTALL-GA4.md](./INSTALL-GA4.md), [INSTALL-GSC.md](./INSTALL-GSC.md), [INSTALL-SLACK.md](./INSTALL-SLACK.md), [INSTALL-GOOGLE-DRIVE.md](./INSTALL-GOOGLE-DRIVE.md), [INSTALL-GMAIL.md](./INSTALL-GMAIL.md), [INSTALL-GOOGLE-CALENDAR.md](./INSTALL-GOOGLE-CALENDAR.md), [INSTALL-GOOGLE-SHEETS.md](./INSTALL-GOOGLE-SHEETS.md), [INSTALL-GOOGLE-ADS.md](./INSTALL-GOOGLE-ADS.md), [INSTALL-META-ADS.md](./INSTALL-META-ADS.md), [INSTALL-KLAVIYO.md](./INSTALL-KLAVIYO.md), [INSTALL-WHATSAPP.md](./INSTALL-WHATSAPP.md), [INSTALL-HUBSPOT.md](./INSTALL-HUBSPOT.md), [B3_PUBLICATION_RECORD.md](./B3_PUBLICATION_RECORD.md), [RELEASE-CHECKLIST.md](./RELEASE-CHECKLIST.md), [RELEASE-CHECKLIST-POSTGRES.md](./RELEASE-CHECKLIST-POSTGRES.md), [RELEASE-CHECKLIST-SHOPIFY.md](./RELEASE-CHECKLIST-SHOPIFY.md), [RELEASE-CHECKLIST-GA4.md](./RELEASE-CHECKLIST-GA4.md), [RELEASE-CHECKLIST-GSC.md](./RELEASE-CHECKLIST-GSC.md), [RELEASE-CHECKLIST-SLACK.md](./RELEASE-CHECKLIST-SLACK.md), [RELEASE-CHECKLIST-GOOGLE-DRIVE.md](./RELEASE-CHECKLIST-GOOGLE-DRIVE.md), [RELEASE-CHECKLIST-GMAIL.md](./RELEASE-CHECKLIST-GMAIL.md), [RELEASE-CHECKLIST-GOOGLE-CALENDAR.md](./RELEASE-CHECKLIST-GOOGLE-CALENDAR.md), [RELEASE-CHECKLIST-GOOGLE-SHEETS.md](./RELEASE-CHECKLIST-GOOGLE-SHEETS.md), [RELEASE-CHECKLIST-GOOGLE-ADS.md](./RELEASE-CHECKLIST-GOOGLE-ADS.md), [RELEASE-CHECKLIST-META-ADS.md](./RELEASE-CHECKLIST-META-ADS.md), [RELEASE-CHECKLIST-KLAVIYO.md](./RELEASE-CHECKLIST-KLAVIYO.md), [RELEASE-CHECKLIST-WHATSAPP.md](./RELEASE-CHECKLIST-WHATSAPP.md), [RELEASE-CHECKLIST-HUBSPOT.md](./RELEASE-CHECKLIST-HUBSPOT.md), [INSTALL-STRIPE.md](./INSTALL-STRIPE.md), [RELEASE-CHECKLIST-STRIPE.md](./RELEASE-CHECKLIST-STRIPE.md), [INSTALL-MIXPANEL.md](./INSTALL-MIXPANEL.md), [INSTALL-AMPLITUDE.md](./INSTALL-AMPLITUDE.md), [RELEASE-CHECKLIST-MIXPANEL.md](./RELEASE-CHECKLIST-MIXPANEL.md), [RELEASE-CHECKLIST-AMPLITUDE.md](./RELEASE-CHECKLIST-AMPLITUDE.md), and [M19_PUBLICATION_RECORD.md](./M19_PUBLICATION_RECORD.md).

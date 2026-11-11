@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-salesforce`
 
-**Node.js 24+** · [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk)
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Source-only** until coordinated B4 npm publication. Validate locally with `pnpm test:package-acceptance:salesforce`.
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-salesforce@0.1.0
+npx osva-connector-salesforce
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Credentials
 

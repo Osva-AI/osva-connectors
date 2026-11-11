@@ -1,9 +1,41 @@
 # Install `@osva-ai/connector-zendesk`
 
-Source-only until npm bootstrap (see [RELEASE-CHECKLIST-zendesk.md](./RELEASE-CHECKLIST-zendesk.md)).
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
+
+## Install from npm
 
 ```bash
 npm install @osva-ai/connector-zendesk@0.1.0
+npx osva-connector-zendesk
 ```
 
-Required env: `OSVA_CONNECTOR_ZENDESK_SUBDOMAIN`, `OSVA_CONNECTOR_ZENDESK_EMAIL`, `OSVA_CONNECTOR_ZENDESK_API_TOKEN`. Mutations require `OSVA_CONNECTOR_ZENDESK_NOTES_ENABLED` / `OSVA_CONNECTOR_ZENDESK_STATUS_ENABLED` and `OSVA_CONNECTOR_ZENDESK_HOST_WRITES_APPROVED`, plus `OSVA_CONNECTOR_ZENDESK_ALLOWED_TICKET_IDS`.
+Inject secrets via your MCP host configuration — do not commit credentials.
+
+## Required environment
+
+| Variable                           | Required | Notes                          |
+| ---------------------------------- | -------- | ------------------------------ |
+| `OSVA_CONNECTOR_ZENDESK_SUBDOMAIN` | Yes      | Zendesk subdomain              |
+| `OSVA_CONNECTOR_ZENDESK_EMAIL`     | Yes      | Agent email for API token auth |
+| `OSVA_CONNECTOR_ZENDESK_API_TOKEN` | Yes      | API token                      |
+
+Mutations require `OSVA_CONNECTOR_ZENDESK_NOTES_ENABLED` / `OSVA_CONNECTOR_ZENDESK_STATUS_ENABLED`, `OSVA_CONNECTOR_ZENDESK_HOST_WRITES_APPROVED`, and `OSVA_CONNECTOR_ZENDESK_ALLOWED_TICKET_IDS`.
+
+## MCP host (stdio)
+
+```json
+{
+  "mcpServers": {
+    "osva-zendesk": {
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-zendesk@0.1.0"]
+    }
+  }
+}
+```
+
+On Windows, some hosts accept `"command": "npx.cmd"`.
+
+See [packages/zendesk/README.md](../packages/zendesk/README.md) for tools and environment variables.

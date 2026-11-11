@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-aws-s3`
 
-**Node.js 24+** · `@osva-ai/connector-sdk@1.1.4`
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-Source-only until B4.8 npm publication. Validate locally with `pnpm test:package-acceptance:aws-s3`.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-aws-s3@0.1.1
+npx osva-connector-aws-s3
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Required configuration
 
@@ -24,7 +33,8 @@ AWS credentials use the default SDK provider chain.
 {
   "mcpServers": {
     "osva-aws-s3": {
-      "command": "osva-connector-aws-s3",
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-aws-s3@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_S3_REGION": "us-east-1"
       }
