@@ -54,15 +54,33 @@ test("linux workflow uses Node 24 and published-package-acceptance against npm",
   assert.doesNotMatch(stepRun(runStep), /OSVA_LIVE_PROVIDER/);
 });
 
-test("linux workflow uploads JSON and MD artifacts even on failure", () => {
+test("linux workflow uploads report directory with error on missing evidence", () => {
   const upload = steps.find((step) =>
     String(step.name ?? "").includes("Upload acceptance reports"),
   );
   assert.ok(upload);
   assert.equal(upload.if, "always()");
-  const artifactPath = String(upload.with?.path ?? "");
-  assert.match(artifactPath, /json/);
-  assert.match(artifactPath, /md/);
+  assert.equal(String(upload.uses ?? ""), "actions/upload-artifact@v4");
+  assert.equal(
+    String(upload.with?.path ?? "").replace(/\\/g, "/"),
+    "audit-results/published-acceptance/",
+  );
+  assert.equal(upload.with?.["if-no-files-found"], "error");
+  assert.equal(upload.with?.name, "published-acceptance-linux");
+
+  const runStep = steps.find((step) =>
+    String(step.name ?? "").includes("Run published package acceptance"),
+  );
+  assert.ok(runStep);
+  const run = stepRun(runStep);
+  assert.match(
+    run,
+    /audit-results\/published-acceptance\/linux-published-acceptance-\$\{STAMP\}\.json/,
+  );
+  assert.match(
+    run,
+    /audit-results\/published-acceptance\/linux-published-acceptance-\$\{STAMP\}\.md/,
+  );
 });
 
 test("linux workflow targets all 45 workspace connector versions", () => {
