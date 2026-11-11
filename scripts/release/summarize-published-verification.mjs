@@ -15,6 +15,59 @@ const ROOT = path.dirname(
   path.dirname(path.dirname(fileURLToPath(import.meta.url))),
 );
 
+export function summarizePublishedReport(report) {
+  const byOverall = { PASSED: 0, FAILED: 0, SKIPPED: 0 };
+  const checkTotals = {};
+  for (const id of Object.values(CHECK)) {
+    checkTotals[id] = { PASSED: 0, FAILED: 0, SKIPPED: 0 };
+  }
+
+  const failures = [];
+  const provenance = { wave: [], legacy: [] };
+  const packages = Array.isArray(report?.packages) ? report.packages : [];
+
+  for (const pkg of packages) {
+    const overall = typeof pkg.overall === "string" ? pkg.overall : "UNKNOWN";
+    byOverall[overall] = (byOverall[overall] ?? 0) + 1;
+    for (const check of pkg.checks ?? []) {
+      const status =
+        typeof check.status === "string" ? check.status : "UNKNOWN";
+      const bucket = checkTotals[check.id] ?? {
+        PASSED: 0,
+        FAILED: 0,
+        SKIPPED: 0,
+        UNKNOWN: 0,
+      };
+      bucket[status] = (bucket[status] ?? 0) + 1;
+      checkTotals[check.id] = bucket;
+      if (status === STATUS.FAILED) {
+        failures.push({
+          package: `${pkg.name}@${pkg.version}`,
+          check: check.id,
+          evidence: check.evidence,
+        });
+      }
+      if (check.id === CHECK.PROVENANCE) {
+        const row = `${pkg.name}@${pkg.version}: ${status} (${check.evidence})`;
+        if (pkg.wave) {
+          provenance.wave.push(row);
+        } else {
+          provenance.legacy.push(row);
+        }
+      }
+    }
+  }
+
+  return {
+    byOverall,
+    checkTotals,
+    failures,
+    provenance,
+    packageCount: packages.length,
+    checksSkipped: Number(report?.summary?.checksSkipped ?? 0),
+  };
+}
+
 async function main() {
   const arg = process.argv[2];
   const reportPath = arg
@@ -34,43 +87,8 @@ async function main() {
     throw error;
   }
   const report = JSON.parse(raw);
-
-  const byOverall = { PASSED: 0, FAILED: 0, SKIPPED: 0 };
-  const checkTotals = {};
-  for (const id of Object.values(CHECK)) {
-    checkTotals[id] = { PASSED: 0, FAILED: 0, SKIPPED: 0 };
-  }
-
-  const failures = [];
-  const provenance = { wave: [], legacy: [] };
-
-  for (const pkg of report.packages ?? []) {
-    byOverall[pkg.overall] = (byOverall[pkg.overall] ?? 0) + 1;
-    for (const check of pkg.checks ?? []) {
-      const bucket = checkTotals[check.id] ?? {
-        PASSED: 0,
-        FAILED: 0,
-        SKIPPED: 0,
-      };
-      bucket[check.status] = (bucket[check.status] ?? 0) + 1;
-      checkTotals[check.id] = bucket;
-      if (check.status === STATUS.FAILED) {
-        failures.push({
-          package: `${pkg.name}@${pkg.version}`,
-          check: check.id,
-          evidence: check.evidence,
-        });
-      }
-      if (check.id === CHECK.PROVENANCE) {
-        const row = `${pkg.name}@${pkg.version}: ${check.status} (${check.evidence})`;
-        if (pkg.wave) {
-          provenance.wave.push(row);
-        } else {
-          provenance.legacy.push(row);
-        }
-      }
-    }
-  }
+  const { byOverall, checkTotals, failures, provenance } =
+    summarizePublishedReport(report);
 
   const lines = [
     "# Published verification summary (generated)",
