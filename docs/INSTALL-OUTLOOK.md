@@ -2,7 +2,7 @@
 
 **Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
 
-**Pre-publication:** `@osva-ai/connector-outlook@0.1.0` is source-only in this repository until npm bootstrap (see [RELEASE-CHECKLIST-OUTLOOK.md](./RELEASE-CHECKLIST-OUTLOOK.md)).
+**Published npm version:** `@osva-ai/connector-outlook@0.1.1` (install from registry; see [RELEASE-CHECKLIST-OUTLOOK.md](./RELEASE-CHECKLIST-OUTLOOK.md)).
 
 ## Microsoft Graph (delegated)
 

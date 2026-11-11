@@ -2,7 +2,7 @@
 
 **Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
 
-**Pre-publication:** `@osva-ai/connector-jira@0.1.0` is source-only in this repository until npm bootstrap (see [RELEASE-CHECKLIST-JIRA.md](./RELEASE-CHECKLIST-JIRA.md)).
+**Published npm version:** `@osva-ai/connector-jira@0.1.1` (install from registry; see [RELEASE-CHECKLIST-JIRA.md](./RELEASE-CHECKLIST-JIRA.md)).
 
 ## Jira credentials
 
@@ -37,7 +37,7 @@ When `OSVA_CONNECTOR_JIRA_ALLOWED_PROJECT_KEYS` is set, JQL is wrapped with `AND
   "mcpServers": {
     "osva-jira": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-jira@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-jira@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_JIRA_SITE_URL": "https://your-site.atlassian.net",
         "OSVA_CONNECTOR_JIRA_EMAIL": "${JIRA_EMAIL_FROM_HOST_VAULT}",

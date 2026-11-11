@@ -2,7 +2,7 @@
 
 **Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
 
-**Pre-publication:** `@osva-ai/connector-teams@0.1.0` is source-only in this repository until npm bootstrap (see [RELEASE-CHECKLIST-TEAMS.md](./RELEASE-CHECKLIST-TEAMS.md)).
+**Published npm version:** `@osva-ai/connector-teams@0.1.0` (install from registry; see [RELEASE-CHECKLIST-TEAMS.md](./RELEASE-CHECKLIST-TEAMS.md)).
 
 ## Microsoft Graph (delegated only)
 

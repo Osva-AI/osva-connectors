@@ -45,6 +45,8 @@
     "test:package-acceptance:slack": "node scripts/package-acceptance-slack.mjs",
     "verify:boundaries": "node scripts/check-package-boundaries.mjs",
     "generate:connector-catalog": "node scripts/generate-connector-catalog.mjs",
+    "test:connector-catalog": "node --test scripts/generate-connector-catalog.test.mjs",
+    "test:onboarding": "node --test scripts/generate-connector-catalog.test.mjs scripts/onboarding-docs-verify.test.mjs",
     "verify:package-acceptance-coverage": "node scripts/check-package-acceptance-coverage.mjs",
     "test:package-acceptance-coverage": "node --test scripts/check-package-acceptance-coverage.test.mjs",
     "test:package-acceptance:ci-shard-b": "node scripts/ci-package-acceptance-shard-b.mjs",
