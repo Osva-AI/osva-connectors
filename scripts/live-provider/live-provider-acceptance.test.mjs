@@ -16,7 +16,12 @@ import {
   runConnectorLiveAcceptance,
   summarizeScenarioStatuses,
 } from "./live-provider-acceptance-core.mjs";
-import { evaluateMutationPolicy } from "./live-provider-gates.mjs";
+import {
+  evaluateMutationPolicy,
+  isLiveExecutionEnabled,
+} from "./live-provider-gates.mjs";
+import { INFRASTRUCTURE_DIRECTORIES } from "./live-provider-matrix-meta.mjs";
+import { liveReadGate } from "./scenarios/common.mjs";
 import { redactLiveProviderSecrets } from "./live-provider-redact.mjs";
 
 const ROOT = path.dirname(
@@ -128,6 +133,67 @@ test("formatLiveProviderMatrixDoc matches Prettier check and is idempotent", asy
   );
   assert.equal(matrix.length, 45);
   assert.match(once, /@osva-ai\/connector-aws-s3/);
+});
+
+test("B5.5B infrastructure matrix metadata lists eight connectors", () => {
+  assert.equal(INFRASTRUCTURE_DIRECTORIES.length, 8);
+  assert.deepEqual(
+    [...INFRASTRUCTURE_DIRECTORIES].sort(),
+    [
+      "aws-s3",
+      "azure-blob",
+      "bigquery",
+      "gcs",
+      "pinecone",
+      "postgres",
+      "qdrant",
+      "snowflake",
+    ].sort(),
+  );
+});
+
+test("live execution gate cannot be bypassed at scenario boundary", () => {
+  const prev = process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  delete process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  assert.equal(isLiveExecutionEnabled(), false);
+  const gate = liveReadGate({
+    requiredEnv: ["OSVA_CONNECTOR_S3_REGION"],
+    credentialSignals: ["AWS_ACCESS_KEY_ID"],
+    liveHarnessEnv: ["OSVA_LIVE_PROVIDER_S3_TEST_BUCKET"],
+  });
+  assert.ok(gate);
+  assert.equal(gate.status, ACCEPTANCE_STATUS.BLOCKED);
+  if (prev !== undefined) {
+    process.env.OSVA_LIVE_PROVIDER_EXECUTE = prev;
+  }
+});
+
+test("infrastructure preflight without credentials keeps live_read BLOCKED", async () => {
+  const prevExecute = process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  delete process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  for (const directory of INFRASTRUCTURE_DIRECTORIES) {
+    const result = await runConnectorLiveAcceptance(directory, {
+      repoRoot: ROOT,
+      timeoutMs: 5_000,
+      includeMock: false,
+      spawnImpl: async () => ({
+        timedOut: false,
+        code: 0,
+        stdout: "",
+        stderr: "",
+      }),
+    });
+    const live = result.scenarios.find((s) => s.id === "live_read");
+    assert.ok(live, `${directory} missing live_read scenario`);
+    assert.equal(
+      live.status,
+      ACCEPTANCE_STATUS.BLOCKED,
+      `${directory} live_read should be BLOCKED`,
+    );
+  }
+  if (prevExecute !== undefined) {
+    process.env.OSVA_LIVE_PROVIDER_EXECUTE = prevExecute;
+  }
 });
 
 test("matrix-only CLI regeneration is stable under prettier --check", async () => {

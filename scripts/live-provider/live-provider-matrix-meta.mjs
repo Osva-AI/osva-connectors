@@ -18,6 +18,17 @@ export const RISK = Object.freeze({
   LOW: "low",
 });
 
+export const INFRASTRUCTURE_DIRECTORIES = Object.freeze([
+  "aws-s3",
+  "gcs",
+  "azure-blob",
+  "bigquery",
+  "snowflake",
+  "postgres",
+  "qdrant",
+  "pinecone",
+]);
+
 export const PILOT_DIRECTORIES = Object.freeze([
   "aws-s3",
   "bigquery",
@@ -38,7 +49,10 @@ export const CONNECTOR_LIVE_META = {
     authMethod: "AWS credential chain (env / profile / IMDS)",
     priorityGroup: "storage",
     riskLevel: RISK.CRITICAL,
-    requiredEnv: ["OSVA_CONNECTOR_S3_REGION"],
+    requiredEnv: [
+      "OSVA_CONNECTOR_S3_REGION",
+      "OSVA_CONNECTOR_S3_ALLOWED_BUCKETS_READ",
+    ],
     policyEnv: [
       "OSVA_CONNECTOR_S3_ALLOWED_BUCKETS_READ",
       "OSVA_CONNECTOR_S3_ALLOWED_BUCKETS_WRITE",
@@ -65,6 +79,7 @@ export const CONNECTOR_LIVE_META = {
     mockVitest: [
       "test/config.test.ts",
       "test/provider-sdk-conditional.test.ts",
+      "test/resource-scope.test.ts",
     ],
     securityBoundaries: [
       "bucket/prefix allowlists",
@@ -83,7 +98,10 @@ export const CONNECTOR_LIVE_META = {
     authMethod: "ADC (GOOGLE_APPLICATION_CREDENTIALS or gcloud)",
     priorityGroup: "storage",
     riskLevel: RISK.CRITICAL,
-    requiredEnv: ["OSVA_CONNECTOR_GCS_PROJECT_ID"],
+    requiredEnv: [
+      "OSVA_CONNECTOR_GCS_PROJECT_ID",
+      "OSVA_CONNECTOR_GCS_ALLOWED_BUCKETS_READ",
+    ],
     policyEnv: [
       "OSVA_CONNECTOR_GCS_ALLOWED_BUCKETS_READ",
       "OSVA_CONNECTOR_GCS_CREATE_ENABLED",
@@ -107,14 +125,17 @@ export const CONNECTOR_LIVE_META = {
     rateLimitNotes: "GCS JSON API quotas per project.",
     cleanup: "Prefix-scoped object cleanup after mutation runs.",
     costNotes: "Low for list/metadata.",
-    pilot: false,
+    pilot: true,
   },
   "azure-blob": {
     provider: "Azure Blob Storage",
     authMethod: "DefaultAzureCredential / account key via env",
     priorityGroup: "storage",
     riskLevel: RISK.CRITICAL,
-    requiredEnv: ["OSVA_CONNECTOR_AZURE_BLOB_ACCOUNT_NAME"],
+    requiredEnv: [
+      "OSVA_CONNECTOR_AZURE_BLOB_ACCOUNT_NAME",
+      "OSVA_CONNECTOR_AZURE_BLOB_ALLOWED_CONTAINERS_READ",
+    ],
     policyEnv: [
       "OSVA_CONNECTOR_AZURE_BLOB_ALLOWED_CONTAINERS_READ",
       "OSVA_CONNECTOR_AZURE_BLOB_CREATE_ENABLED",
@@ -141,14 +162,17 @@ export const CONNECTOR_LIVE_META = {
     rateLimitNotes: "Azure Storage throttling per account.",
     cleanup: "Prefix-scoped blobs only.",
     costNotes: "Low for metadata.",
-    pilot: false,
+    pilot: true,
   },
   bigquery: {
     provider: "Google BigQuery",
     authMethod: "ADC",
     priorityGroup: "database",
     riskLevel: RISK.CRITICAL,
-    requiredEnv: ["OSVA_CONNECTOR_BIGQUERY_PROJECT_ID"],
+    requiredEnv: [
+      "OSVA_CONNECTOR_BIGQUERY_PROJECT_ID",
+      "OSVA_CONNECTOR_BIGQUERY_ALLOWED_DATASETS",
+    ],
     policyEnv: [
       "OSVA_CONNECTOR_BIGQUERY_ALLOWED_DATASETS",
       "OSVA_CONNECTOR_BIGQUERY_ALLOWED_TABLES",
@@ -167,6 +191,8 @@ export const CONNECTOR_LIVE_META = {
     mockVitest: [
       "test/config.test.ts",
       "test/provider-sdk-request-budget.test.ts",
+      "test/resource-scope.test.ts",
+      "test/query-security.test.ts",
     ],
     securityBoundaries: ["dataset/table/column allowlists", "max bytes billed"],
     rateLimitNotes: "BigQuery slot and query quotas.",
@@ -183,6 +209,10 @@ export const CONNECTOR_LIVE_META = {
       "OSVA_CONNECTOR_SNOWFLAKE_ACCOUNT",
       "OSVA_CONNECTOR_SNOWFLAKE_USER",
       "OSVA_CONNECTOR_SNOWFLAKE_PASSWORD",
+      "OSVA_CONNECTOR_SNOWFLAKE_ROLE",
+      "OSVA_CONNECTOR_SNOWFLAKE_WAREHOUSE",
+      "OSVA_CONNECTOR_SNOWFLAKE_DATABASE",
+      "OSVA_CONNECTOR_SNOWFLAKE_ALLOWED_SCHEMAS",
     ],
     policyEnv: [
       "OSVA_CONNECTOR_SNOWFLAKE_ALLOWED_SCHEMAS",
@@ -196,36 +226,42 @@ export const CONNECTOR_LIVE_META = {
     destructiveOps: [],
     sandboxNotes: "Snowflake trial / dedicated warehouse with spend cap.",
     mockSmoke: "scripts/package-acceptance-snowflake-smoke.mjs",
-    mockVitest: ["test/config.test.ts", "test/provider-sdk-client.test.ts"],
+    mockVitest: [
+      "test/config.test.ts",
+      "test/provider-sdk-client.test.ts",
+      "test/resource-scope.test.ts",
+      "test/query-security.test.ts",
+    ],
     securityBoundaries: ["schema/table/column scope"],
     rateLimitNotes: "Warehouse concurrency.",
     cleanup: "N/A for read-only acceptance.",
     costNotes: "Warehouse credits.",
-    pilot: false,
+    pilot: true,
   },
   postgres: {
     provider: "PostgreSQL",
     authMethod: "Connection URL",
     priorityGroup: "database",
     riskLevel: RISK.HIGH,
-    requiredEnv: [],
-    policyEnv: [],
-    credentialSignals: [
-      "OSVA_CONNECTOR_POSTGRES_INTEGRATION_URL",
-      "OSVA_CONNECTOR_POSTGRES_ACCEPTANCE_URL",
-    ],
+    requiredEnv: ["OSVA_CONNECTOR_POSTGRES_ALLOWED_SCHEMAS"],
+    policyEnv: ["OSVA_CONNECTOR_POSTGRES_ALLOWED_SCHEMAS"],
+    credentialSignals: ["OSVA_CONNECTOR_POSTGRES_URL"],
     liveHarnessEnv: ["OSVA_LIVE_PROVIDER_POSTGRES_ALLOWLIST_SCHEMA"],
     readOnlyOps: ["SELECT", "metadata"],
     mutationOps: [],
     destructiveOps: [],
     sandboxNotes: "Docker or CI ephemeral Postgres (see package-acceptance).",
     mockSmoke: "scripts/package-acceptance-postgres-smoke.mjs",
-    mockVitest: ["test/config.test.ts"],
+    mockVitest: [
+      "test/config.test.ts",
+      "test/allowed-schemas.test.ts",
+      "test/sql-admission.test.ts",
+    ],
     securityBoundaries: ["SQL injection params", "statement timeouts"],
     rateLimitNotes: "Single test DB.",
     cleanup: "Drop ephemeral schemas.",
     costNotes: "Minimal for local docker.",
-    pilot: false,
+    pilot: true,
   },
   supabase: {
     provider: "Supabase (PostgREST)",
@@ -259,7 +295,10 @@ export const CONNECTOR_LIVE_META = {
     authMethod: "API key + cluster URL",
     priorityGroup: "vector",
     riskLevel: RISK.HIGH,
-    requiredEnv: ["OSVA_CONNECTOR_QDRANT_URL"],
+    requiredEnv: [
+      "OSVA_CONNECTOR_QDRANT_URL",
+      "OSVA_CONNECTOR_QDRANT_ALLOWED_COLLECTIONS",
+    ],
     policyEnv: [
       "OSVA_CONNECTOR_QDRANT_ALLOWED_COLLECTIONS",
       "OSVA_CONNECTOR_QDRANT_WRITE_ENABLED",
@@ -271,19 +310,26 @@ export const CONNECTOR_LIVE_META = {
     destructiveOps: [],
     sandboxNotes: "Qdrant Cloud free cluster or local docker.",
     mockSmoke: "scripts/package-acceptance-qdrant-smoke.mjs",
-    mockVitest: ["test/config.test.ts"],
+    mockVitest: [
+      "test/config.test.ts",
+      "test/allowlist.test.ts",
+      "test/qdrant-base-url.test.ts",
+    ],
     securityBoundaries: ["URL validation", "collection allowlist", "SSRF"],
     rateLimitNotes: "Cloud tier QPS.",
     cleanup: "Drop test collection.",
     costNotes: "Cloud cluster cost.",
-    pilot: false,
+    pilot: true,
   },
   pinecone: {
     provider: "Pinecone",
     authMethod: "API key",
     priorityGroup: "vector",
     riskLevel: RISK.HIGH,
-    requiredEnv: ["OSVA_CONNECTOR_PINECONE_API_KEY"],
+    requiredEnv: [
+      "OSVA_CONNECTOR_PINECONE_API_KEY",
+      "OSVA_CONNECTOR_PINECONE_ALLOWED_INDEXES",
+    ],
     policyEnv: [
       "OSVA_CONNECTOR_PINECONE_ALLOWED_INDEXES",
       "OSVA_CONNECTOR_PINECONE_WRITE_ENABLED",
@@ -295,12 +341,16 @@ export const CONNECTOR_LIVE_META = {
     destructiveOps: [],
     sandboxNotes: "Dedicated serverless index.",
     mockSmoke: "scripts/package-acceptance-pinecone-smoke.mjs",
-    mockVitest: ["test/config.test.ts"],
+    mockVitest: [
+      "test/config.test.ts",
+      "test/allowlist.test.ts",
+      "test/pinecone-host.test.ts",
+    ],
     securityBoundaries: ["index/namespace allowlists"],
     rateLimitNotes: "Pinecone plan limits.",
     cleanup: "Delete test vectors.",
     costNotes: "Index hourly cost.",
-    pilot: false,
+    pilot: true,
   },
   github: {
     provider: "GitHub",

@@ -35,6 +35,7 @@ function parseArgs(argv) {
     help: false,
     matrixOnly: false,
     pilot: false,
+    infrastructure: false,
     mock: false,
     failOnBlocked: false,
     jsonOut: "",
@@ -51,6 +52,8 @@ function parseArgs(argv) {
       flags.matrixOnly = true;
     } else if (arg === "--pilot") {
       flags.pilot = true;
+    } else if (arg === "--infrastructure") {
+      flags.infrastructure = true;
     } else if (arg === "--mock") {
       flags.mock = true;
     } else if (arg === "--fail-on-blocked") {
@@ -83,26 +86,28 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`live-provider-acceptance — B5.5A foundation
+  console.log(`live-provider-acceptance — B5.5B infrastructure + B5.5A pilots
 
 Defaults to preflight (no provider network calls).
 
 Gates:
   OSVA_LIVE_PROVIDER_EXECUTE=1              allow live read scenarios
-  OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED=1   allow mutation scenarios (pilot: still deferred)
-  OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED=1 destructive (not used in B5.5A)
+  OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED=1   allow mutation scenarios (still deferred)
+  OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED=1 destructive (not used)
   OSVA_LIVE_PROVIDER_RUN_MOCK_FIXTURES=1    run vitest fixture paths (or --mock)
 
 Usage:
   node scripts/live-provider/live-provider-acceptance.mjs --matrix-only
+  node scripts/live-provider/live-provider-acceptance.mjs --infrastructure
+  node scripts/live-provider/live-provider-acceptance.mjs --infrastructure --mock
   node scripts/live-provider/live-provider-acceptance.mjs --pilot [--mock]
-  node scripts/live-provider/live-provider-acceptance.mjs --connector aws-s3
-  node scripts/live-provider/live-provider-acceptance.mjs --connector bigquery --connector github
+  node scripts/live-provider/live-provider-acceptance.mjs --connector gcs
 
 Options:
   --matrix-only       Emit 45-connector matrix only (no scenarios)
-  --pilot             Run aws-s3, bigquery, github pilots
-  --connector <dir>   Run one connector directory (pilot runners only)
+  --infrastructure    Run 8 B5.5B infrastructure connectors
+  --pilot             Run aws-s3, bigquery, github (B5.5A slice)
+  --connector <dir>   Run one connector directory with a runner
   --mock              Include in-repo vitest fixture paths (can be slow)
   --fail-on-blocked   Exit nonzero when overall status is BLOCKED
   --json-out=PATH     JSON evidence (secrets redacted)
@@ -149,14 +154,17 @@ async function main() {
     return;
   }
 
-  if (!flags.pilot && flags.connectors.length === 0) {
-    throw new Error("Specify --pilot, --connector <dir>, or --matrix-only");
+  if (!flags.pilot && !flags.infrastructure && flags.connectors.length === 0) {
+    throw new Error(
+      "Specify --infrastructure, --pilot, --connector <dir>, or --matrix-only",
+    );
   }
 
   const report = await runLiveProviderMatrix({
     repoRoot: ROOT,
     directories: flags.connectors,
     pilotOnly: flags.pilot,
+    infrastructureOnly: flags.infrastructure,
     includeMock: flags.mock,
   });
 

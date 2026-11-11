@@ -13,18 +13,35 @@ import {
   ACCEPTANCE_STATUS,
   CONNECTOR_LIVE_META,
   HIGH_PRIORITY_GROUPS,
+  INFRASTRUCTURE_DIRECTORIES,
   metaForDirectory,
   PILOT_DIRECTORIES,
   RISK,
 } from "./live-provider-matrix-meta.mjs";
 import { redactReportObject } from "./live-provider-redact.mjs";
 import { runAwsS3Scenarios } from "./scenarios/aws-s3.mjs";
+import { runAzureBlobScenarios } from "./scenarios/azure-blob.mjs";
 import { runBigqueryScenarios } from "./scenarios/bigquery.mjs";
+import { runGcsScenarios } from "./scenarios/gcs.mjs";
 import { runGithubScenarios } from "./scenarios/github.mjs";
+import { runPineconeScenarios } from "./scenarios/pinecone.mjs";
+import { runPostgresScenarios } from "./scenarios/postgres.mjs";
+import { runQdrantScenarios } from "./scenarios/qdrant.mjs";
+import { runSnowflakeScenarios } from "./scenarios/snowflake.mjs";
+
+const INFRASTRUCTURE_RUNNERS = Object.freeze({
+  "aws-s3": runAwsS3Scenarios,
+  gcs: runGcsScenarios,
+  "azure-blob": runAzureBlobScenarios,
+  bigquery: runBigqueryScenarios,
+  snowflake: runSnowflakeScenarios,
+  postgres: runPostgresScenarios,
+  qdrant: runQdrantScenarios,
+  pinecone: runPineconeScenarios,
+});
 
 const PILOT_RUNNERS = Object.freeze({
-  "aws-s3": runAwsS3Scenarios,
-  bigquery: runBigqueryScenarios,
+  ...INFRASTRUCTURE_RUNNERS,
   github: runGithubScenarios,
 });
 
@@ -60,14 +77,16 @@ export async function buildLiveProviderMatrix(repoRoot) {
       sandboxNotes: meta.sandboxNotes ?? "",
       mockAcceptanceCoverage: meta.mockSmoke ?? "none",
       mockVitest: meta.mockVitest ?? [],
-      liveProviderCoverage: PILOT_RUNNERS[connector.directory]
-        ? "B5.5A pilot scenarios"
-        : "matrix only (deferred)",
+      liveProviderCoverage: INFRASTRUCTURE_RUNNERS[connector.directory]
+        ? "B5.5B infrastructure scenarios"
+        : connector.directory === "github"
+          ? "B5.5A pilot scenarios"
+          : "matrix only (deferred)",
       securityBoundaries: meta.securityBoundaries ?? [],
       rateLimitNotes: meta.rateLimitNotes ?? "",
       cleanup: meta.cleanup ?? "",
       costNotes: meta.costNotes ?? "",
-      pilot: Boolean(meta.pilot),
+      pilot: Boolean(meta.pilot || INFRASTRUCTURE_RUNNERS[connector.directory]),
       acceptanceStatus: ACCEPTANCE_STATUS.NOT_RUN,
     };
   });
@@ -141,7 +160,7 @@ export async function runConnectorLiveAcceptance(directory, options) {
         {
           id: "deferred",
           status: ACCEPTANCE_STATUS.NOT_RUN,
-          evidence: "No B5.5A pilot runner — matrix entry only",
+          evidence: "No live-provider runner — matrix entry only",
         },
       ],
     };
@@ -157,7 +176,7 @@ export async function runConnectorLiveAcceptance(directory, options) {
   const summary = summarizeScenarioStatuses(scenarios);
   return {
     directory,
-    pilot: true,
+    pilot: Boolean(INFRASTRUCTURE_RUNNERS[directory] || directory === "github"),
     acceptanceStatus: summary.acceptanceStatus,
     scenarios,
     summary,
@@ -169,6 +188,7 @@ export async function runLiveProviderMatrix(options) {
     repoRoot,
     directories = [],
     pilotOnly = false,
+    infrastructureOnly = false,
     includeMock = false,
     timeoutMs = Number(process.env.OSVA_LIVE_PROVIDER_TIMEOUT_MS ?? "120000"),
     delayMs = Number(process.env.OSVA_LIVE_PROVIDER_DELAY_MS ?? "250"),
@@ -177,7 +197,9 @@ export async function runLiveProviderMatrix(options) {
 
   const matrix = await buildLiveProviderMatrix(repoRoot);
   let targets = matrix.map((row) => row.directory);
-  if (pilotOnly) {
+  if (infrastructureOnly) {
+    targets = INFRASTRUCTURE_DIRECTORIES.filter((d) => targets.includes(d));
+  } else if (pilotOnly) {
     targets = PILOT_DIRECTORIES.filter((d) => targets.includes(d));
   } else if (directories.length > 0) {
     targets = directories.filter(
@@ -246,7 +268,7 @@ export async function runLiveProviderMatrix(options) {
 
 export function renderLiveProviderMarkdown(report) {
   const lines = [
-    "# Live provider acceptance report (B5.5A)",
+    "# Live provider acceptance report (B5.5B)",
     "",
     `- Generated: ${report.generatedAt}`,
     `- Platform: ${report.platform}`,
@@ -297,18 +319,18 @@ export function renderLiveProviderMarkdown(report) {
 
 export function renderLiveProviderMatrixDoc(matrix) {
   const lines = [
-    "# OSVA Connectors — live provider acceptance matrix (B5.5A)",
+    "# OSVA Connectors — live provider acceptance matrix (B5.5B)",
     "",
     "Statuses: `PASSED`, `FAILED`, `SKIPPED`, `BLOCKED`, `NOT_RUN`.",
     "Unexecuted live tests remain `NOT_RUN` — never `PASSED`.",
     "",
-    "| Package | Version | Provider | Auth | Risk | Group | Required env | Pilot | Status |",
-    "| --- | --- | --- | --- | --- | --- | --- | :---: | --- |",
+    "| Package | Version | Provider | Auth | Risk | Group | Required env | Pilot | Coverage | Status |",
+    "| --- | --- | --- | --- | --- | --- | --- | :---: | --- | --- |",
   ];
   for (const row of matrix) {
     const env = (row.requiredEnv ?? []).join(", ") || "(see README)";
     lines.push(
-      `| ${row.name} | ${row.version} | ${row.provider} | ${row.authMethod} | ${row.riskLevel} | ${row.priorityGroup} | ${env} | ${row.pilot ? "yes" : ""} | ${row.acceptanceStatus} |`,
+      `| ${row.name} | ${row.version} | ${row.provider} | ${row.authMethod} | ${row.riskLevel} | ${row.priorityGroup} | ${env} | ${row.pilot ? "yes" : ""} | ${row.liveProviderCoverage ?? ""} | ${row.acceptanceStatus} |`,
     );
   }
   lines.push("");

@@ -76,9 +76,13 @@ node --test scripts/live-provider/live-provider-acceptance.test.mjs
 - Live scenarios require explicit bucket/repo/dataset harness variables in addition to connector allowlists.
 - Report objects pass through `redactLiveProviderSecrets()` before write.
 
+## B5.5B
+
+Infrastructure acceptance (8 connectors) is documented in [B5_5B_INFRASTRUCTURE_PROVIDER_ACCEPTANCE.md](./B5_5B_INFRASTRUCTURE_PROVIDER_ACCEPTANCE.md).
+
 ## Deferred (post B5.5A)
 
-- Live scenarios for remaining 42 connectors (matrix metadata present; runners not implemented).
+- Live scenarios for remaining 37 connectors (matrix metadata present; runners not implemented).
 - Mutation and destructive scenario implementations (GitHub issue create, S3 create, etc.).
 - CI scheduling (manual operator runs only).
 - `audit-results/full-connector-audit/LIVE_PROVIDER_ACCEPTANCE_PLAN.md` (not present locally; L4 still referenced from B5.0 docs).

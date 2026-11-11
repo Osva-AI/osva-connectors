@@ -17,12 +17,15 @@ const CONNECTOR_SECRET_PATTERNS = [
 const ENV_VALUE_PATTERN =
   /((?:OSVA_CONNECTOR_[A-Z0-9_]+|AWS_SECRET_ACCESS_KEY|AWS_SESSION_TOKEN|GOOGLE_APPLICATION_CREDENTIALS)=)([^\s\r\n]+)/g;
 
+const POSTGRES_URL_PATTERN = /\bpostgres(?:ql)?:\/\/[^@\s]+@[^\s]+/gi;
+
 export function redactLiveProviderSecrets(text) {
   let out = redactNpmSecrets(String(text ?? ""));
   for (const pattern of CONNECTOR_SECRET_PATTERNS) {
     out = out.replace(pattern, "[redacted]");
   }
   out = out.replace(ENV_VALUE_PATTERN, (_, prefix) => `${prefix}[redacted]`);
+  out = out.replace(POSTGRES_URL_PATTERN, "postgresql://[redacted]");
   return out;
 }
 
