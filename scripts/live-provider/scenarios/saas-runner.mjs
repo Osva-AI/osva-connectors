@@ -1,4 +1,4 @@
-import { verifyMutationInventory } from "../mutation-inventory.mjs";
+import { verifyMutationInventoryPreflight } from "../mutation-inventory-audit.mjs";
 import { evaluateMutationPolicy } from "../live-provider-gates.mjs";
 import {
   areDestructiveApproved,
@@ -57,12 +57,17 @@ export async function runSaasScenarios(ctx, spec) {
     ),
   );
 
-  const inventory = verifyMutationInventory(spec.directory);
+  const inventory = await verifyMutationInventoryPreflight(
+    repoRoot,
+    spec.directory,
+  );
   results.push(
     makeScenarioResult(
       SCENARIO.PREFLIGHT_MUTATION_INVENTORY,
       inventory.ok ? ACCEPTANCE_STATUS.PASSED : ACCEPTANCE_STATUS.FAILED,
-      inventory.detail,
+      inventory.coverage
+        ? `${inventory.coverage}: ${inventory.detail}`
+        : inventory.detail,
       "preflight",
     ),
   );

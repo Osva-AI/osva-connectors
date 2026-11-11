@@ -1,6 +1,7 @@
 import { pathToFileURL } from "node:url";
 import path from "node:path";
 
+import { verifyMutationInventoryPreflight } from "../mutation-inventory-audit.mjs";
 import { evaluateMutationPolicy } from "../live-provider-gates.mjs";
 import { ACCEPTANCE_STATUS } from "../live-provider-matrix-meta.mjs";
 import {
@@ -62,6 +63,21 @@ export async function runInfrastructureScenarios(ctx, spec) {
           ]
             .filter(Boolean)
             .join("; "),
+    ),
+  );
+
+  const inventory = await verifyMutationInventoryPreflight(
+    repoRoot,
+    spec.directory,
+  );
+  results.push(
+    makeScenarioResult(
+      SCENARIO.PREFLIGHT_MUTATION_INVENTORY,
+      inventory.ok ? ACCEPTANCE_STATUS.PASSED : ACCEPTANCE_STATUS.FAILED,
+      inventory.coverage
+        ? `${inventory.coverage}: ${inventory.detail}`
+        : inventory.detail,
+      "preflight",
     ),
   );
 

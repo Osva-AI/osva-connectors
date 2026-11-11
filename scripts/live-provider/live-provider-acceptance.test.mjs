@@ -29,6 +29,12 @@ import {
   liveMutationGate,
 } from "./scenarios/common.mjs";
 import {
+  auditAllConnectorMutationInventories,
+  assertToolAuthorizedForLiveMutation,
+  classifyToolMutation,
+} from "./mutation-inventory-audit.mjs";
+import { loadConnectorPackages } from "../release/load-connector-packages.mjs";
+import {
   MUTATION_CLASS,
   MUTATION_INVENTORY,
   verifyMutationInventory,
@@ -287,6 +293,112 @@ test("infrastructure preflight without credentials keeps live_read BLOCKED", asy
   if (prevExecute !== undefined) {
     process.env.OSVA_LIVE_PROVIDER_EXECUTE = prevExecute;
   }
+});
+
+test("B5.5D registry: every package has metadata and unique directory id", async () => {
+  const packages = await loadConnectorPackages(ROOT);
+  assert.equal(packages.length, 45);
+  const dirs = packages.map((p) => p.directory);
+  assert.equal(new Set(dirs).size, 45);
+  const matrix = await buildLiveProviderMatrix(ROOT);
+  for (const pkg of packages) {
+    const row = matrix.find((r) => r.directory === pkg.directory);
+    assert.ok(row, `missing matrix row for ${pkg.directory}`);
+    assert.equal(row.name, pkg.name);
+    assert.equal(row.version, pkg.version);
+  }
+});
+
+test("B5.5D mutation inventory aligns with all declared MCP tools", async () => {
+  const audits = await auditAllConnectorMutationInventories(ROOT);
+  assert.equal(audits.length, 45);
+  const bad = audits.filter((a) => !a.ok);
+  assert.equal(
+    bad.length,
+    0,
+    bad.map((b) => `${b.directory}: ${b.detail}`).join("; "),
+  );
+});
+
+test("unknown tool classification fails closed for live mutation", () => {
+  const unknown = classifyToolMutation("github", "github.nonexistent.tool");
+  assert.equal(unknown.known, false);
+  assert.equal(unknown.failClosed, true);
+  const denied = assertToolAuthorizedForLiveMutation(
+    "github",
+    "github.issue.create",
+  );
+  assert.equal(denied.ok, false);
+  const read = assertToolAuthorizedForLiveMutation(
+    "github",
+    "github.repository.get",
+  );
+  assert.equal(read.ok, true);
+});
+
+test("mock github acceptance does not invoke fetch without live gate", async () => {
+  const prevExecute = process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  const prevToken = process.env.OSVA_CONNECTOR_GITHUB_TOKEN;
+  const prevOwner = process.env.OSVA_LIVE_PROVIDER_GITHUB_TEST_OWNER;
+  delete process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  process.env.OSVA_CONNECTOR_GITHUB_TOKEN = "github_pat_testtoken0000000000";
+  process.env.OSVA_LIVE_PROVIDER_GITHUB_TEST_OWNER = "evil";
+  process.env.OSVA_LIVE_PROVIDER_GITHUB_TEST_REPO = "repo";
+  process.env.OSVA_CONNECTOR_GITHUB_ALLOWED_REPOSITORIES = "octo/sandbox";
+  let fetchCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (...args) => {
+    fetchCalls += 1;
+    return originalFetch(...args);
+  };
+  try {
+    const result = await runConnectorLiveAcceptance("github", {
+      repoRoot: ROOT,
+      timeoutMs: 5_000,
+      includeMock: false,
+      spawnImpl: async () => ({
+        timedOut: false,
+        code: 0,
+        stdout: "",
+        stderr: "",
+      }),
+    });
+    const live = result.scenarios.find((s) => s.id === "live_read");
+    assert.equal(live?.status, ACCEPTANCE_STATUS.BLOCKED);
+    assert.equal(fetchCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (prevExecute === undefined) {
+      delete process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+    } else {
+      process.env.OSVA_LIVE_PROVIDER_EXECUTE = prevExecute;
+    }
+    if (prevToken === undefined) {
+      delete process.env.OSVA_CONNECTOR_GITHUB_TOKEN;
+    } else {
+      process.env.OSVA_CONNECTOR_GITHUB_TOKEN = prevToken;
+    }
+    if (prevOwner === undefined) {
+      delete process.env.OSVA_LIVE_PROVIDER_GITHUB_TEST_OWNER;
+    } else {
+      process.env.OSVA_LIVE_PROVIDER_GITHUB_TEST_OWNER = prevOwner;
+    }
+  }
+});
+
+test("evaluateExitCode passes when live scenarios blocked but preflight ok", () => {
+  const code = evaluateExitCode({
+    packages: [
+      {
+        acceptanceStatus: ACCEPTANCE_STATUS.BLOCKED,
+        scenarios: [
+          { id: "preflight_config", status: ACCEPTANCE_STATUS.PASSED },
+          { id: "live_read", status: ACCEPTANCE_STATUS.BLOCKED },
+        ],
+      },
+    ],
+  });
+  assert.equal(code, 0);
 });
 
 test("matrix-only CLI regeneration is stable under prettier --check", async () => {
