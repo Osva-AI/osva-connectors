@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-pipedrive`
 
-**Node.js 24+** · [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk)
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Source-only** until B4 publication. Validate with `pnpm test:package-acceptance:pipedrive`.
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-pipedrive@0.1.0
+npx osva-connector-pipedrive
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Credentials
 
@@ -27,3 +36,20 @@ Pipedrive **API token** and **company domain** (subdomain before `.pipedrive.com
 | `OSVA_CONNECTOR_PIPEDRIVE_ALLOWED_STAGE_IDS`     | optional | Permitted `targetStageId` values               |
 
 Tool reference: [packages/pipedrive/README.md](../packages/pipedrive/README.md). Release: [RELEASE-CHECKLIST-pipedrive.md](./RELEASE-CHECKLIST-pipedrive.md).
+
+## MCP host (stdio)
+
+```json
+{
+  "mcpServers": {
+    "osva-pipedrive": {
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-pipedrive@0.1.0"]
+    }
+  }
+}
+```
+
+On Windows, some hosts accept `"command": "npx.cmd"`.
+
+See [packages/pipedrive/README.md](../packages/pipedrive/README.md) for tools and environment variables.

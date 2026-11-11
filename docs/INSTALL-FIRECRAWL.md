@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-firecrawl`
 
-**Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Published:** `@osva-ai/connector-firecrawl@0.1.0` on npm ([B3 publication record](./B3_PUBLICATION_RECORD.md)).
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-firecrawl@0.1.1
+npx osva-connector-firecrawl
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Firecrawl API key
 
@@ -25,7 +34,7 @@ Outbound HTTPS is fixed to **`https://api.firecrawl.dev/v2`** (`Authorization: B
   "mcpServers": {
     "osva-firecrawl": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-firecrawl@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-firecrawl@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY_FROM_HOST_VAULT}"
       }

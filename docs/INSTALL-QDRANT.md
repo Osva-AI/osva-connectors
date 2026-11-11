@@ -1,6 +1,17 @@
 # Install `@osva-ai/connector-qdrant`
 
-**Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-qdrant@0.1.1
+npx osva-connector-qdrant
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Qdrant cluster URL and API key
 
@@ -31,7 +42,7 @@ Agent tool inputs cannot change the Qdrant base URL.
   "mcpServers": {
     "osva-qdrant": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-qdrant@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-qdrant@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_QDRANT_URL": "https://YOUR-CLUSTER.cloud.qdrant.io",
         "OSVA_CONNECTOR_QDRANT_API_KEY": "${QDRANT_API_KEY_FROM_HOST_VAULT}"

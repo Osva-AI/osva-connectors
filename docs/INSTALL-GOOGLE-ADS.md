@@ -1,10 +1,8 @@
 # Install `@osva-ai/connector-google-ads`
 
-Quickstart for running the Google Ads connector as an MCP stdio server.
-
 **Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0`. The package is **not published yet**; use `pnpm test:package-acceptance:google-ads` or `pnpm pack` until bootstrap publish.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
 
 ## Google Cloud and Google Ads access
 
@@ -38,7 +36,7 @@ Credentials are **never** accepted through MCP tool arguments.
 ## Install from npm (after publication)
 
 ```bash
-npm install @osva-ai/connector-google-ads@0.1.0
+npm install @osva-ai/connector-google-ads@0.1.1
 export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
 export OSVA_CONNECTOR_GOOGLE_ADS_ALLOWED_CUSTOMERS="1234567890"
 npx osva-connector-google-ads
@@ -62,7 +60,7 @@ npx osva-connector-google-ads
   "mcpServers": {
     "osva-google-ads": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-google-ads@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-google-ads@0.1.1"],
       "env": {
         "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/credentials.json",
         "OSVA_CONNECTOR_GOOGLE_ADS_ALLOWED_CUSTOMERS": "1234567890"

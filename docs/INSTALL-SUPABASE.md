@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-supabase`
 
-**Node.js 24+** · `@osva-ai/connector-sdk@1.1.4`
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Source-only in B4.9** — not yet on npm. Validate with `pnpm test:package-acceptance:supabase`.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-supabase@0.1.1
+npx osva-connector-supabase
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Purpose
 
@@ -46,7 +55,8 @@ RLS and grants are configured by the Supabase project admin. Successful reads on
 {
   "mcpServers": {
     "osva-supabase": {
-      "command": "osva-connector-supabase",
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-supabase@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_SUPABASE_PROJECT_URL": "https://abcdefgh.supabase.co",
         "OSVA_CONNECTOR_SUPABASE_PUBLISHABLE_KEY": "eyJ...",

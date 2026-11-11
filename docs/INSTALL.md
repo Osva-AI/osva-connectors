@@ -1,12 +1,10 @@
 # Install `@osva-ai/connector-github`
 
-Quickstart for external developers running the GitHub connector as an MCP stdio server.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Requires Node.js 24+.** The connector depends on the published [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
+**Recommended npm version:** **`0.4.0`** (SDK **`1.1.4`** on the tarball). Older lines (`0.3.x`) remain on the registry with earlier SDK pins; prefer **`0.4.0`** for new installs.
 
-## Install from npm (after first publication)
-
-**Recommended npm version:** **`0.4.0`** (SDK **`1.1.4`** on the tarball, B5 wave publication). Older lines (`0.3.x`) remain on the registry with earlier SDK pins; prefer **`0.4.0`** for new installs.
+## Install from npm
 
 ### POSIX (bash/zsh)
 

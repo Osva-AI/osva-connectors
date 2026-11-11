@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-azure-blob`
 
-**Node.js 24+** · `@osva-ai/connector-sdk@1.1.4`
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-Validate locally with `pnpm test:package-acceptance:azure-blob`.
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-azure-blob@0.1.1
+npx osva-connector-azure-blob
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Required configuration
 
@@ -24,7 +33,8 @@ Uses `@azure/identity` (`DefaultAzureCredential`) with `@azure/storage-blob`.
 {
   "mcpServers": {
     "osva-azure-blob": {
-      "command": "osva-connector-azure-blob",
+      "command": "npx",
+      "args": ["-y", "@osva-ai/connector-azure-blob@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_AZURE_BLOB_ACCOUNT_NAME": "myaccount"
       }

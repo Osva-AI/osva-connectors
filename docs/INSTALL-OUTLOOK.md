@@ -1,8 +1,17 @@
 # Install `@osva-ai/connector-outlook`
 
-**Node.js 24+.** SDK pin: `@osva-ai/connector-sdk@1.1.4`.
+**Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Published npm version:** `@osva-ai/connector-outlook@0.1.1` (install from registry; see [RELEASE-CHECKLIST-OUTLOOK.md](./RELEASE-CHECKLIST-OUTLOOK.md)).
+**Recommended npm version:** **`0.1.1`** (SDK **`1.1.4`** on the tarball). Registry **`0.1.0`** may remain on npm with an earlier SDK pin; prefer **`0.1.1`** for new installs.
+
+## Install from npm
+
+```bash
+npm install @osva-ai/connector-outlook@0.1.1
+npx osva-connector-outlook
+```
+
+Inject secrets via your MCP host configuration — do not commit credentials.
 
 ## Microsoft Graph (delegated)
 
@@ -43,7 +52,7 @@ Missing scopes surface as Graph **401/403**; the connector maps them to `UNAUTHO
   "mcpServers": {
     "osva-outlook": {
       "command": "npx",
-      "args": ["-y", "@osva-ai/connector-outlook@0.1.0"],
+      "args": ["-y", "@osva-ai/connector-outlook@0.1.1"],
       "env": {
         "OSVA_CONNECTOR_OUTLOOK_ACCESS_TOKEN": "${GRAPH_DELEGATED_TOKEN_FROM_HOST_VAULT}"
       }

@@ -1,10 +1,8 @@
 # Install `@osva-ai/connector-gmail`
 
-Quickstart for running the Gmail connector as an MCP stdio server.
-
 **Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Published:** `@osva-ai/connector-gmail@0.1.0` on npm ([B3 publication record](./B3_PUBLICATION_RECORD.md)). For monorepo tarball checks before a patch release, use `pnpm test:package-acceptance:gmail` or `pnpm test:package-acceptance:registry-b3`.
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
 
 ## Google Cloud
 

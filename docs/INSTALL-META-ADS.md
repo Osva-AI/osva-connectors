@@ -1,10 +1,8 @@
 # Install `@osva-ai/connector-meta-ads`
 
-Quickstart for running the Meta Ads connector as an MCP stdio server.
-
 **Requires Node.js 24+.** Depends on [`@osva-ai/connector-sdk@1.1.4`](https://www.npmjs.com/package/@osva-ai/connector-sdk).
 
-**Target first public version:** `0.1.0`. The package is **not published yet**; use `pnpm test:package-acceptance:meta-ads` or `pnpm pack` until bootstrap publish.
+**Recommended npm version:** **`0.1.0`** (SDK **`1.1.4`** on the tarball).
 
 ## Meta developer app and Marketing API
 
