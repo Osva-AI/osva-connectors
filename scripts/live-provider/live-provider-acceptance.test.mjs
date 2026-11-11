@@ -20,7 +20,19 @@ import {
   evaluateMutationPolicy,
   isLiveExecutionEnabled,
 } from "./live-provider-gates.mjs";
-import { INFRASTRUCTURE_DIRECTORIES } from "./live-provider-matrix-meta.mjs";
+import {
+  INFRASTRUCTURE_DIRECTORIES,
+  SAAS_DIRECTORIES,
+} from "./live-provider-matrix-meta.mjs";
+import {
+  evaluateMockMutationSafety,
+  liveMutationGate,
+} from "./scenarios/common.mjs";
+import {
+  MUTATION_CLASS,
+  MUTATION_INVENTORY,
+  verifyMutationInventory,
+} from "./mutation-inventory.mjs";
 import { liveReadGate } from "./scenarios/common.mjs";
 import { redactLiveProviderSecrets } from "./live-provider-redact.mjs";
 
@@ -165,6 +177,87 @@ test("live execution gate cannot be bypassed at scenario boundary", () => {
   assert.equal(gate.status, ACCEPTANCE_STATUS.BLOCKED);
   if (prev !== undefined) {
     process.env.OSVA_LIVE_PROVIDER_EXECUTE = prev;
+  }
+});
+
+test("B5.5C SaaS matrix lists 37 connectors", () => {
+  assert.equal(SAAS_DIRECTORIES.length, 37);
+  assert.ok(SAAS_DIRECTORIES.includes("stripe"));
+  assert.ok(SAAS_DIRECTORIES.includes("github"));
+  assert.ok(!SAAS_DIRECTORIES.includes("aws-s3"));
+});
+
+test("mutation inventory classifies GitHub write tools", () => {
+  const inv = MUTATION_INVENTORY.github;
+  assert.ok(
+    inv["github.issue.create"].includes(MUTATION_CLASS.REVERSIBLE_MUTATION),
+  );
+  const check = verifyMutationInventory("github");
+  assert.equal(check.ok, true);
+});
+
+test("live mutation runner stays disabled under approval flags", () => {
+  const savedExecute = process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  const savedMut = process.env.OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED;
+  const savedDest = process.env.OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED;
+  const savedRunner = process.env.OSVA_LIVE_PROVIDER_MUTATION_RUNNER_ENABLED;
+  delete process.env.OSVA_LIVE_PROVIDER_MUTATION_RUNNER_ENABLED;
+  process.env.OSVA_LIVE_PROVIDER_EXECUTE = "1";
+  process.env.OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED = "1";
+  process.env.OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED = "1";
+  try {
+    const safety = evaluateMockMutationSafety();
+    assert.equal(safety.ok, true);
+    const gate = liveMutationGate();
+    assert.ok(gate);
+    assert.notEqual(gate.status, "PASSED");
+  } finally {
+    if (savedExecute === undefined) {
+      delete process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+    } else {
+      process.env.OSVA_LIVE_PROVIDER_EXECUTE = savedExecute;
+    }
+    if (savedMut === undefined) {
+      delete process.env.OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED;
+    } else {
+      process.env.OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED = savedMut;
+    }
+    if (savedDest === undefined) {
+      delete process.env.OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED;
+    } else {
+      process.env.OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED = savedDest;
+    }
+    if (savedRunner === undefined) {
+      delete process.env.OSVA_LIVE_PROVIDER_MUTATION_RUNNER_ENABLED;
+    } else {
+      process.env.OSVA_LIVE_PROVIDER_MUTATION_RUNNER_ENABLED = savedRunner;
+    }
+  }
+});
+
+test("SaaS preflight without credentials keeps live_read BLOCKED", async () => {
+  const prevExecute = process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  delete process.env.OSVA_LIVE_PROVIDER_EXECUTE;
+  const sample = ["stripe", "shopify", "slack"];
+  for (const directory of sample) {
+    const result = await runConnectorLiveAcceptance(directory, {
+      repoRoot: ROOT,
+      timeoutMs: 5_000,
+      includeMock: false,
+      spawnImpl: async () => ({
+        timedOut: false,
+        code: 0,
+        stdout: "",
+        stderr: "",
+      }),
+    });
+    const live = result.scenarios.find((s) => s.id === "live_read");
+    assert.equal(live?.status, ACCEPTANCE_STATUS.BLOCKED, directory);
+    const liveMut = result.scenarios.find((s) => s.id === "live_mutation");
+    assert.equal(liveMut?.status, ACCEPTANCE_STATUS.NOT_RUN, directory);
+  }
+  if (prevExecute !== undefined) {
+    process.env.OSVA_LIVE_PROVIDER_EXECUTE = prevExecute;
   }
 });
 

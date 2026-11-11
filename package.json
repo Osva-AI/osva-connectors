@@ -53,6 +53,7 @@
     "test:live-provider-acceptance": "node --test scripts/live-provider/live-provider-acceptance.test.mjs",
     "test:live-provider-acceptance:pilot": "node scripts/live-provider/live-provider-acceptance.mjs --pilot",
     "test:live-provider-acceptance:matrix": "node scripts/live-provider/live-provider-acceptance.mjs --matrix-only",
+    "test:live-provider-acceptance:saas": "node scripts/live-provider/live-provider-acceptance.mjs --saas",
     "test:package-acceptance": "node scripts/package-acceptance.mjs",
     "test:package-acceptance:postgres": "node scripts/package-acceptance-postgres.mjs",
     "test:package-acceptance:shopify": "node scripts/package-acceptance-shopify.mjs",

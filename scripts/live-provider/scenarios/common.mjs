@@ -8,6 +8,7 @@ import {
   areMutationsApproved,
   envValueReady,
   isLiveExecutionEnabled,
+  isLiveMutationRunnerEnabled,
 } from "../live-provider-gates.mjs";
 import { redactLiveProviderSecrets } from "../live-provider-redact.mjs";
 import { ACCEPTANCE_STATUS } from "../live-provider-matrix-meta.mjs";
@@ -19,6 +20,9 @@ export const SCENARIO = Object.freeze({
   MOCK_FIXTURE: "mock_fixture",
   LIVE_READ: "live_read",
   LIVE_MUTATION: "live_mutation",
+  MOCK_MUTATION_SAFETY: "mock_mutation_safety",
+  MOCK_UNTRUSTED_CONTENT: "mock_untrusted_content",
+  PREFLIGHT_MUTATION_INVENTORY: "preflight_mutation_inventory",
 });
 
 export function makeScenarioResult(id, status, evidence = "", kind = "read") {
@@ -107,6 +111,13 @@ export function liveReadGate(meta) {
 }
 
 export function liveMutationGate() {
+  if (!isLiveMutationRunnerEnabled()) {
+    return {
+      status: ACCEPTANCE_STATUS.NOT_RUN,
+      evidence:
+        "B5.5C: live mutation runner disabled (OSVA_LIVE_PROVIDER_MUTATION_RUNNER_ENABLED); mock safety only.",
+    };
+  }
   if (!isLiveExecutionEnabled()) {
     return {
       status: ACCEPTANCE_STATUS.NOT_RUN,
@@ -121,6 +132,28 @@ export function liveMutationGate() {
     };
   }
   return null;
+}
+
+/**
+ * In-process checks that mutation approval flags cannot enable live mutation runners.
+ */
+export function evaluateMockMutationSafety() {
+  const gate = liveMutationGate();
+  const runnerDisabled = !isLiveMutationRunnerEnabled();
+  const checks = [];
+  if (!runnerDisabled) {
+    checks.push("live mutation runner must stay disabled in B5.5C");
+  }
+  if (gate === null) {
+    checks.push("liveMutationGate must not open without mutation runner gate");
+  }
+  return {
+    ok: checks.length === 0,
+    detail:
+      checks.length === 0
+        ? "live mutation runner gated; approval flags alone cannot execute writes"
+        : checks.join("; "),
+  };
 }
 
 export async function runVitestFiles({

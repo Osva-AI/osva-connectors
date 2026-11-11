@@ -80,6 +80,10 @@ node --test scripts/live-provider/live-provider-acceptance.test.mjs
 
 Infrastructure acceptance (8 connectors) is documented in [B5_5B_INFRASTRUCTURE_PROVIDER_ACCEPTANCE.md](./B5_5B_INFRASTRUCTURE_PROVIDER_ACCEPTANCE.md).
 
+## B5.5C
+
+SaaS acceptance (37 connectors) and mutation safety are documented in [B5_5C_SAAS_PROVIDER_ACCEPTANCE.md](./B5_5C_SAAS_PROVIDER_ACCEPTANCE.md).
+
 ## Deferred (post B5.5A)
 
 - Live scenarios for remaining 37 connectors (matrix metadata present; runners not implemented).

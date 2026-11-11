@@ -374,7 +374,9 @@ export const CONNECTOR_LIVE_META = {
     mockSmoke: "scripts/package-acceptance-smoke.mjs",
     mockVitest: [
       "test/config.test.ts",
-      "test/stdio-github.integration.test.ts",
+      "test/repository-allowlist.test.ts",
+      "test/untrusted-provider-content.test.ts",
+      "test/issue-create.test.ts",
     ],
     securityBoundaries: ["repo allowlist", "mutation idempotency headers"],
     rateLimitNotes: "GitHub REST rate limit per token.",
@@ -736,6 +738,12 @@ const REMAINING = [
   ["zoho-crm", "Zoho CRM", "OAuth", ["OSVA_CONNECTOR_ZOHO_CRM_ACCESS_TOKEN"]],
 ];
 
+/**
+ * B5.5C: SaaS directories (all matrix entries except infrastructure).
+ * Populated after CONNECTOR_LIVE_META is fully built.
+ */
+export let SAAS_DIRECTORIES = Object.freeze([]);
+
 for (const [directory, provider, authMethod, requiredEnv] of REMAINING) {
   if (CONNECTOR_LIVE_META[directory]) {
     continue;
@@ -762,6 +770,12 @@ for (const [directory, provider, authMethod, requiredEnv] of REMAINING) {
         : "saas_read",
   };
 }
+
+SAAS_DIRECTORIES = Object.freeze(
+  Object.keys(CONNECTOR_LIVE_META)
+    .filter((name) => !INFRASTRUCTURE_DIRECTORIES.includes(name))
+    .sort((a, b) => a.localeCompare(b)),
+);
 
 export function metaForDirectory(directory) {
   const base = CONNECTOR_LIVE_META[directory];

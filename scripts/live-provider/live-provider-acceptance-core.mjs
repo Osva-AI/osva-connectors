@@ -17,17 +17,22 @@ import {
   metaForDirectory,
   PILOT_DIRECTORIES,
   RISK,
+  SAAS_DIRECTORIES,
 } from "./live-provider-matrix-meta.mjs";
 import { redactReportObject } from "./live-provider-redact.mjs";
 import { runAwsS3Scenarios } from "./scenarios/aws-s3.mjs";
 import { runAzureBlobScenarios } from "./scenarios/azure-blob.mjs";
 import { runBigqueryScenarios } from "./scenarios/bigquery.mjs";
 import { runGcsScenarios } from "./scenarios/gcs.mjs";
-import { runGithubScenarios } from "./scenarios/github.mjs";
 import { runPineconeScenarios } from "./scenarios/pinecone.mjs";
 import { runPostgresScenarios } from "./scenarios/postgres.mjs";
 import { runQdrantScenarios } from "./scenarios/qdrant.mjs";
 import { runSnowflakeScenarios } from "./scenarios/snowflake.mjs";
+import { createSaasScenarioRunner } from "./scenarios/saas-factory.mjs";
+import {
+  mutationSummaryForMatrix,
+  SAAS_PRIORITY_T0,
+} from "./mutation-inventory.mjs";
 
 const INFRASTRUCTURE_RUNNERS = Object.freeze({
   "aws-s3": runAwsS3Scenarios,
@@ -40,10 +45,31 @@ const INFRASTRUCTURE_RUNNERS = Object.freeze({
   pinecone: runPineconeScenarios,
 });
 
-const PILOT_RUNNERS = Object.freeze({
+const SAAS_RUNNERS = Object.freeze(
+  Object.fromEntries(
+    SAAS_DIRECTORIES.map((directory) => [
+      directory,
+      createSaasScenarioRunner(directory),
+    ]),
+  ),
+);
+
+const CONNECTOR_RUNNERS = Object.freeze({
   ...INFRASTRUCTURE_RUNNERS,
-  github: runGithubScenarios,
+  ...SAAS_RUNNERS,
 });
+
+function liveProviderCoverageLabel(directory) {
+  if (INFRASTRUCTURE_RUNNERS[directory]) {
+    return "B5.5B infrastructure scenarios";
+  }
+  if (SAAS_RUNNERS[directory]) {
+    return SAAS_PRIORITY_T0.includes(directory)
+      ? "B5.5C priority-0 saas scenarios"
+      : "B5.5C saas preflight";
+  }
+  return "matrix only (deferred)";
+}
 
 const STATUS_RANK = Object.freeze({
   [ACCEPTANCE_STATUS.FAILED]: 5,
@@ -77,16 +103,17 @@ export async function buildLiveProviderMatrix(repoRoot) {
       sandboxNotes: meta.sandboxNotes ?? "",
       mockAcceptanceCoverage: meta.mockSmoke ?? "none",
       mockVitest: meta.mockVitest ?? [],
-      liveProviderCoverage: INFRASTRUCTURE_RUNNERS[connector.directory]
-        ? "B5.5B infrastructure scenarios"
-        : connector.directory === "github"
-          ? "B5.5A pilot scenarios"
-          : "matrix only (deferred)",
+      liveProviderCoverage: liveProviderCoverageLabel(connector.directory),
+      mutationClassification: mutationSummaryForMatrix(connector.directory),
       securityBoundaries: meta.securityBoundaries ?? [],
       rateLimitNotes: meta.rateLimitNotes ?? "",
       cleanup: meta.cleanup ?? "",
       costNotes: meta.costNotes ?? "",
-      pilot: Boolean(meta.pilot || INFRASTRUCTURE_RUNNERS[connector.directory]),
+      pilot: Boolean(
+        meta.pilot ||
+        INFRASTRUCTURE_RUNNERS[connector.directory] ||
+        SAAS_RUNNERS[connector.directory],
+      ),
       acceptanceStatus: ACCEPTANCE_STATUS.NOT_RUN,
     };
   });
@@ -150,7 +177,7 @@ export async function runConnectorLiveAcceptance(directory, options) {
     spawnImpl = spawnWithWallClockDeadline,
   } = options;
   const meta = metaForDirectory(directory);
-  const runner = PILOT_RUNNERS[directory];
+  const runner = CONNECTOR_RUNNERS[directory];
   if (!runner) {
     return {
       directory,
@@ -176,7 +203,7 @@ export async function runConnectorLiveAcceptance(directory, options) {
   const summary = summarizeScenarioStatuses(scenarios);
   return {
     directory,
-    pilot: Boolean(INFRASTRUCTURE_RUNNERS[directory] || directory === "github"),
+    pilot: Boolean(CONNECTOR_RUNNERS[directory]),
     acceptanceStatus: summary.acceptanceStatus,
     scenarios,
     summary,
@@ -189,6 +216,7 @@ export async function runLiveProviderMatrix(options) {
     directories = [],
     pilotOnly = false,
     infrastructureOnly = false,
+    saasOnly = false,
     includeMock = false,
     timeoutMs = Number(process.env.OSVA_LIVE_PROVIDER_TIMEOUT_MS ?? "120000"),
     delayMs = Number(process.env.OSVA_LIVE_PROVIDER_DELAY_MS ?? "250"),
@@ -199,6 +227,8 @@ export async function runLiveProviderMatrix(options) {
   let targets = matrix.map((row) => row.directory);
   if (infrastructureOnly) {
     targets = INFRASTRUCTURE_DIRECTORIES.filter((d) => targets.includes(d));
+  } else if (saasOnly) {
+    targets = SAAS_DIRECTORIES.filter((d) => targets.includes(d));
   } else if (pilotOnly) {
     targets = PILOT_DIRECTORIES.filter((d) => targets.includes(d));
   } else if (directories.length > 0) {
@@ -268,7 +298,7 @@ export async function runLiveProviderMatrix(options) {
 
 export function renderLiveProviderMarkdown(report) {
   const lines = [
-    "# Live provider acceptance report (B5.5B)",
+    "# Live provider acceptance report (B5.5C)",
     "",
     `- Generated: ${report.generatedAt}`,
     `- Platform: ${report.platform}`,
@@ -319,18 +349,18 @@ export function renderLiveProviderMarkdown(report) {
 
 export function renderLiveProviderMatrixDoc(matrix) {
   const lines = [
-    "# OSVA Connectors — live provider acceptance matrix (B5.5B)",
+    "# OSVA Connectors — live provider acceptance matrix (B5.5C)",
     "",
     "Statuses: `PASSED`, `FAILED`, `SKIPPED`, `BLOCKED`, `NOT_RUN`.",
     "Unexecuted live tests remain `NOT_RUN` — never `PASSED`.",
     "",
-    "| Package | Version | Provider | Auth | Risk | Group | Required env | Pilot | Coverage | Status |",
-    "| --- | --- | --- | --- | --- | --- | --- | :---: | --- | --- |",
+    "| Package | Version | Provider | Auth | Risk | Group | Required env | Pilot | Coverage | Mutations | Status |",
+    "| --- | --- | --- | --- | --- | --- | --- | :---: | --- | --- | --- |",
   ];
   for (const row of matrix) {
     const env = (row.requiredEnv ?? []).join(", ") || "(see README)";
     lines.push(
-      `| ${row.name} | ${row.version} | ${row.provider} | ${row.authMethod} | ${row.riskLevel} | ${row.priorityGroup} | ${env} | ${row.pilot ? "yes" : ""} | ${row.liveProviderCoverage ?? ""} | ${row.acceptanceStatus} |`,
+      `| ${row.name} | ${row.version} | ${row.provider} | ${row.authMethod} | ${row.riskLevel} | ${row.priorityGroup} | ${env} | ${row.pilot ? "yes" : ""} | ${row.liveProviderCoverage ?? ""} | ${row.mutationClassification ?? ""} | ${row.acceptanceStatus} |`,
     );
   }
   lines.push("");

@@ -36,6 +36,7 @@ function parseArgs(argv) {
     matrixOnly: false,
     pilot: false,
     infrastructure: false,
+    saas: false,
     mock: false,
     failOnBlocked: false,
     jsonOut: "",
@@ -54,6 +55,8 @@ function parseArgs(argv) {
       flags.pilot = true;
     } else if (arg === "--infrastructure") {
       flags.infrastructure = true;
+    } else if (arg === "--saas") {
+      flags.saas = true;
     } else if (arg === "--mock") {
       flags.mock = true;
     } else if (arg === "--fail-on-blocked") {
@@ -86,27 +89,28 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`live-provider-acceptance — B5.5B infrastructure + B5.5A pilots
+  console.log(`live-provider-acceptance — B5.5C SaaS + B5.5B infrastructure
 
 Defaults to preflight (no provider network calls).
 
 Gates:
-  OSVA_LIVE_PROVIDER_EXECUTE=1              allow live read scenarios
-  OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED=1   allow mutation scenarios (still deferred)
-  OSVA_LIVE_PROVIDER_DESTRUCTIVE_APPROVED=1 destructive (not used)
-  OSVA_LIVE_PROVIDER_RUN_MOCK_FIXTURES=1    run vitest fixture paths (or --mock)
+  OSVA_LIVE_PROVIDER_EXECUTE=1                        allow live read scenarios
+  OSVA_LIVE_PROVIDER_MUTATIONS_APPROVED=1             harness policy only in B5.5C
+  OSVA_LIVE_PROVIDER_MUTATION_RUNNER_ENABLED=1        required for live writes (B5.5D)
+  OSVA_LIVE_PROVIDER_RUN_MOCK_FIXTURES=1              run vitest (or --mock)
 
 Usage:
   node scripts/live-provider/live-provider-acceptance.mjs --matrix-only
+  node scripts/live-provider/live-provider-acceptance.mjs --saas
+  node scripts/live-provider/live-provider-acceptance.mjs --saas --mock
   node scripts/live-provider/live-provider-acceptance.mjs --infrastructure
-  node scripts/live-provider/live-provider-acceptance.mjs --infrastructure --mock
-  node scripts/live-provider/live-provider-acceptance.mjs --pilot [--mock]
-  node scripts/live-provider/live-provider-acceptance.mjs --connector gcs
+  node scripts/live-provider/live-provider-acceptance.mjs --connector stripe --mock
 
 Options:
   --matrix-only       Emit 45-connector matrix only (no scenarios)
-  --infrastructure    Run 8 B5.5B infrastructure connectors
-  --pilot             Run aws-s3, bigquery, github (B5.5A slice)
+  --saas              Run 37 SaaS connectors (B5.5C)
+  --infrastructure    Run 8 infrastructure connectors (B5.5B)
+  --pilot             Run aws-s3, bigquery, github (legacy slice)
   --connector <dir>   Run one connector directory with a runner
   --mock              Include in-repo vitest fixture paths (can be slow)
   --fail-on-blocked   Exit nonzero when overall status is BLOCKED
@@ -154,9 +158,14 @@ async function main() {
     return;
   }
 
-  if (!flags.pilot && !flags.infrastructure && flags.connectors.length === 0) {
+  if (
+    !flags.pilot &&
+    !flags.infrastructure &&
+    !flags.saas &&
+    flags.connectors.length === 0
+  ) {
     throw new Error(
-      "Specify --infrastructure, --pilot, --connector <dir>, or --matrix-only",
+      "Specify --saas, --infrastructure, --pilot, --connector <dir>, or --matrix-only",
     );
   }
 
@@ -165,6 +174,7 @@ async function main() {
     directories: flags.connectors,
     pilotOnly: flags.pilot,
     infrastructureOnly: flags.infrastructure,
+    saasOnly: flags.saas,
     includeMock: flags.mock,
   });
 
