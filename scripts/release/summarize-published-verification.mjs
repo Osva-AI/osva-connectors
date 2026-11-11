@@ -1,0 +1,159 @@
+#!/usr/bin/env node
+/**
+ * B5.6A: Compact summary from published-package-acceptance JSON report.
+ *
+ * Usage:
+ *   node scripts/release/summarize-published-verification.mjs [path-to-report.json]
+ */
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { CHECK, STATUS } from "./published-package-acceptance-core.mjs";
+
+const ROOT = path.dirname(
+  path.dirname(path.dirname(fileURLToPath(import.meta.url))),
+);
+
+async function main() {
+  const arg = process.argv[2];
+  const reportPath = arg
+    ? path.resolve(arg)
+    : path.join(
+        ROOT,
+        "audit-results",
+        "published-acceptance",
+        "b5-6a-windows-full.json",
+      );
+
+  let raw;
+  try {
+    raw = await fs.readFile(reportPath, "utf8");
+  } catch (error) {
+    console.error(`Cannot read report: ${reportPath}`);
+    throw error;
+  }
+  const report = JSON.parse(raw);
+
+  const byOverall = { PASSED: 0, FAILED: 0, SKIPPED: 0 };
+  const checkTotals = {};
+  for (const id of Object.values(CHECK)) {
+    checkTotals[id] = { PASSED: 0, FAILED: 0, SKIPPED: 0 };
+  }
+
+  const failures = [];
+  const provenance = { wave: [], legacy: [] };
+
+  for (const pkg of report.packages ?? []) {
+    byOverall[pkg.overall] = (byOverall[pkg.overall] ?? 0) + 1;
+    for (const check of pkg.checks ?? []) {
+      const bucket = checkTotals[check.id] ?? {
+        PASSED: 0,
+        FAILED: 0,
+        SKIPPED: 0,
+      };
+      bucket[check.status] = (bucket[check.status] ?? 0) + 1;
+      checkTotals[check.id] = bucket;
+      if (check.status === STATUS.FAILED) {
+        failures.push({
+          package: `${pkg.name}@${pkg.version}`,
+          check: check.id,
+          evidence: check.evidence,
+        });
+      }
+      if (check.id === CHECK.PROVENANCE) {
+        const row = `${pkg.name}@${pkg.version}: ${check.status} (${check.evidence})`;
+        if (pkg.wave) {
+          provenance.wave.push(row);
+        } else {
+          provenance.legacy.push(row);
+        }
+      }
+    }
+  }
+
+  const lines = [
+    "# Published verification summary (generated)",
+    "",
+    `- Source report: \`${path.relative(ROOT, reportPath).replace(/\\/g, "/")}\``,
+    `- Generated at (report): ${report.generatedAt ?? "n/a"}`,
+    `- Platform: ${report.platform ?? "n/a"}`,
+    `- Node: ${report.nodeVersion ?? "n/a"}`,
+    `- Concurrency: ${report.concurrency ?? "n/a"}`,
+    "",
+    "## Package outcomes",
+    "",
+    `| Overall | Count |`,
+    `| --- | ---: |`,
+    `| PASSED | ${byOverall.PASSED ?? 0} |`,
+    `| FAILED | ${byOverall.FAILED ?? 0} |`,
+    `| SKIPPED | ${byOverall.SKIPPED ?? 0} |`,
+    "",
+    "## Per-check totals",
+    "",
+    "| Check | PASSED | FAILED | SKIPPED |",
+    "| --- | ---: | ---: | ---: |",
+  ];
+
+  for (const [id, totals] of Object.entries(checkTotals).sort(([a], [b]) =>
+    a.localeCompare(b),
+  )) {
+    lines.push(
+      `| ${id} | ${totals.PASSED ?? 0} | ${totals.FAILED ?? 0} | ${totals.SKIPPED ?? 0} |`,
+    );
+  }
+
+  lines.push(
+    "",
+    "## Version matrix",
+    "",
+    "| Package | Version | Overall | Wave |",
+  );
+  lines.push("| --- | --- | --- | --- |");
+  for (const pkg of report.packages ?? []) {
+    lines.push(
+      `| ${pkg.name} | ${pkg.version} | ${pkg.overall} | ${pkg.wave ? "B5" : "legacy"} |`,
+    );
+  }
+
+  if (failures.length > 0) {
+    lines.push("", "## Failures", "");
+    for (const f of failures) {
+      lines.push(
+        `- **${f.package}** \`${f.check}\`: ${String(f.evidence ?? "").slice(0, 240)}`,
+      );
+    }
+  }
+
+  lines.push(
+    "",
+    "## Provenance (B5 wave — mandatory)",
+    "",
+    ...(provenance.wave.length > 0
+      ? provenance.wave.map((r) => `- ${r}`)
+      : ["- (none in report)"]),
+    "",
+    "## Provenance (legacy — SKIPPED unless mandated)",
+    "",
+    ...(provenance.legacy.length > 0
+      ? provenance.legacy.slice(0, 5).map((r) => `- ${r}`)
+      : ["- (none)"]),
+  );
+  if (provenance.legacy.length > 5) {
+    lines.push(
+      `- … and ${provenance.legacy.length - 5} more (see JSON report)`,
+    );
+  }
+
+  const out = `${lines.join("\n")}\n`;
+  console.log(out);
+}
+
+const entry = fileURLToPath(import.meta.url);
+const invoked = process.argv[1] ? path.resolve(process.argv[1]) : "";
+if (invoked === entry) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}

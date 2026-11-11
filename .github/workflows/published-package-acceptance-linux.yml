@@ -1,0 +1,70 @@
+# B5.6A: Install exact published npm versions on Linux and run published-artifact acceptance.
+# Manual only — does NOT run on push or pull_request. Operator workflow_dispatch only.
+#
+# This is not CI tarball/source acceptance; it uses scripts/release/published-package-acceptance.mjs
+# against registry.npmjs.org. No provider credentials; no live provider HTTP.
+
+name: Published package acceptance (Linux)
+
+on:
+  workflow_dispatch:
+    inputs:
+      all_connectors:
+        description: Run all 45 connectors at workspace package.json versions
+        type: boolean
+        default: true
+      wave_b5_only:
+        description: Run B5 wave (18 OIDC packages) only — ignored when all_connectors is true
+        type: boolean
+        default: false
+      concurrency:
+        description: Parallel package installs (default 1)
+        type: number
+        default: 1
+
+permissions:
+  contents: read
+
+jobs:
+  published_acceptance:
+    name: Registry install acceptance (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Run published package acceptance
+        env:
+          OSVA_PUBLISHED_ACCEPTANCE_CONCURRENCY: ${{ inputs.concurrency }}
+        run: |
+          STAMP=$(date -u +%Y-%m-%dT%H-%M-%SZ)
+          JSON="audit-results/published-acceptance/linux-published-acceptance-${STAMP}.json"
+          MD="audit-results/published-acceptance/linux-published-acceptance-${STAMP}.md"
+          mkdir -p audit-results/published-acceptance
+          if [ "${{ inputs.all_connectors }}" = "true" ]; then
+            node scripts/release/published-package-acceptance.mjs --all-connectors \
+              --concurrency="${{ inputs.concurrency }}" \
+              --json-out="$JSON" \
+              --md-out="$MD"
+          elif [ "${{ inputs.wave_b5_only }}" = "true" ]; then
+            node scripts/release/published-package-acceptance.mjs --wave-b5 \
+              --concurrency="${{ inputs.concurrency }}" \
+              --json-out="$JSON" \
+              --md-out="$MD"
+          else
+            echo "Enable all_connectors or wave_b5_only."
+            exit 1
+          fi
+
+      - name: Upload acceptance reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-acceptance-linux
+          path: audit-results/published-acceptance/linux-published-acceptance-*.{json,md}
+          if-no-files-found: warn

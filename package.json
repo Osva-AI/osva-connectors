@@ -50,6 +50,7 @@
     "test:package-acceptance:ci-shard-b": "node scripts/ci-package-acceptance-shard-b.mjs",
     "test:release-workflows": "node scripts/release/run-release-workflow-tests.mjs",
     "test:published-package-acceptance": "node --test scripts/release/published-package-acceptance.test.mjs",
+    "summarize:published-verification": "node scripts/release/summarize-published-verification.mjs",
     "test:live-provider-acceptance": "node --test scripts/live-provider/live-provider-acceptance.test.mjs",
     "test:live-provider-acceptance:pilot": "node scripts/live-provider/live-provider-acceptance.mjs --pilot",
     "test:live-provider-acceptance:matrix": "node scripts/live-provider/live-provider-acceptance.mjs --matrix-only",
