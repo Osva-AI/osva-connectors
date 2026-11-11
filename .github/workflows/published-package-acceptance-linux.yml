@@ -66,5 +66,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: published-acceptance-linux
-          path: audit-results/published-acceptance/linux-published-acceptance-*.{json,md}
-          if-no-files-found: warn
+          path: audit-results/published-acceptance/
+          if-no-files-found: error
